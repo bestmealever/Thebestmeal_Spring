@@ -8,16 +8,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class ChoicesController {
 
-    private final ChoiceService choiceService;
+//    private final ChoiceService choiceService;
 
     @PostMapping("/recommend")
     public String choice(@RequestBody ChoiceDto choiceDto) {
 //        choiceService.set어쩌고저쩌고(choiceDto)
+
+        choiceDto.getCategoryWant().get(0);
+
+        System.out.println(choiceDto.getCategoryWant());
+        System.out.println(choiceDto.getEmotionWant());
+        System.out.println(choiceDto.getYesterdayEat());
         return "wow";
     }
 }
