@@ -2,6 +2,23 @@ let categoryWant;
 let emotionWant;
 let yesterdayEat;
 
+$(document).ready(function () {
+//index.html - localstorage - username 세팅가능.
+    $("#username").html(localStorage.getItem("username"));
+    $("#logout-text").click(function(){
+        //로그아웃하면 localstorage에 있는 token, username이 삭제.
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        location.href = '/user/login';
+    });
+})
+//api를 호출할 때 localstorage에 값이 있으면 헤더에 토큰값을 넣어서 보내게 된다.
+$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+    if(localStorage.getItem('token')) {
+        jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    }
+});
+
 function want() {
     let btn_val = []
     for (let i = 0; i < 9; i++) {

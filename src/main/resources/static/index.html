@@ -78,7 +78,8 @@
 <!--                Login-->
 <!--            </button>-->
             <button class="btn btn-primary" onclick="onclick=window.location.href = '/user/login'"> Login</button>
-            <a href="/user/signup">회원가입</a>
+            <a id="signup-text" href="/user/signup">회원가입</a>
+            <a id="logout-text" href="/user/logout">로그아웃</a>
         </div>
     </div>
 
@@ -141,6 +142,7 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light"> 오늘 뭐 먹지 ? </h1>
                 <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
+                <div class="header"><span id="username"></span> 님의 로그인 성공!</div>
                 <div>
                     <button type="button" class="main-button" data-bs-toggle="modal" data-bs-target="#SignupPlzModal"
                             onclick="">추천하기

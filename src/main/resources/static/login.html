@@ -13,27 +13,45 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
+    <script>
+        function login() {
+            let info = {
+                username: $("#username").val(),
+                password: $("#password").val()
+            }
+            $.ajax({
+                type: 'POST',
+                url: `/login`,
+                contentType: "application/json",
+                data: JSON.stringify(info),
+                success: function (response) {
+                    localStorage.setItem("token", response['token']);
+                    localStorage.setItem("username", response['username']);
+                    location.href = '/';
+                }
+            })
+        }
+    </script>
+
     <title>로그인 페이지</title>
 </head>
 <body>
 <div id="login-form">
-    <div id="login-title">Log into Select Shop</div>
+    <div id="login-title">로그인 하는 페이지입니다</div>
     <button id="login-kakao-btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=e5f1d3ffd1d48274dc877bd9b20db51c&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code'">
         카카오로 로그인하기
     </button>
     <button id="login-id-btn" onclick="location.href='/user/signup'">
         회원 가입하기
     </button>
-    <div th:if="${loginError}" class="alert alert-danger" role="alert">로그인에 실패하였습니다.</div>
-    <form action="/user/login" method="post">
         <div class="login-id-label">아이디</div>
         <input type="text" name="username" class="login-input-box">
 
         <div class="login-id-label">비밀번호</div>
         <input type="password" name="password" class="login-input-box">
 
-        <button id="login-id-submit">로그인</button>
-    </form>
+        <button id="login-id-submit" onclick="login()">로그인</button>
+
 </div>
 </body>
 </html>
