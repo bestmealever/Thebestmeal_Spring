@@ -28,11 +28,11 @@ public class HomeController {
         return "recommend.html";
     }
 
-    @Secured("ROLE_ADMIN")
-    @GetMapping("/admin")
-    public String admin(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        model.addAttribute("username", userDetails.getUsername());
-        model.addAttribute("admin", true);
-        return "index";
-    }
+//    @Secured("ROLE_ADMIN")
+//    @GetMapping("/admin")
+//    public String admin(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        model.addAttribute("username", userDetails.getUsername());
+//        model.addAttribute("admin", true);
+//        return "index";
+//    }
 }

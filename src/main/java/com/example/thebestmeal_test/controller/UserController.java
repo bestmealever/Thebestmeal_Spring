@@ -47,5 +47,9 @@ public class UserController {
     public String forbidden() {
         return "forbidden";
     }
+    @GetMapping("/user/mypage")
+    public String mypage(Model model) {
+        return "mypage";
+    }
 
 }

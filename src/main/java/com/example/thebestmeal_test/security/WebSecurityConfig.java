@@ -40,7 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
 
         http.authorizeRequests()
-                .antMatchers().permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/css/**").permitAll()
@@ -48,7 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/signup").permitAll()
+                .antMatchers("/signup/**").permitAll()
+                .antMatchers("/assets/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //jwt 인증 실패 -> authenticationEntryPoint

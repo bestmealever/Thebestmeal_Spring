@@ -50,16 +50,33 @@
     </style>
 
     <script>
-        function toRecommend() {
-            console.log('TT')
-            $.ajax({
-                type: "GET",
-                url: "/recommend",
-                success: function (response) {
 
-                }
-            })
-        }
+        $(document).ready(function () {
+            //토큰이 있으면 로그인 화면
+            if (localStorage.getItem("token")) {
+                $("#logout").css("display","block");
+                $("#mypage").css("display","block");
+                $("#login").css("display","none");
+                $("#username").html(localStorage.getItem("username"));
+            } else {
+                //토큰이 없으면 로그아웃된 화면
+                $("#userMessege").empty();
+                $("#logout").css("display","none");
+                $("#mypage").css("display","none");
+            }
+            $("#logout").click(function () {
+                //로그아웃
+                localStorage.removeItem("token");
+                localStorage.removeItem("username");
+                location.href = '/';
+            });
+        })
+        //헤더에 토큰값 넣어 ajax 호출
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            if (localStorage.getItem('token')) {
+                jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+            }
+        });
 
 
     </script>
@@ -74,12 +91,12 @@
                 <strong>오늘 뭐 먹지?</strong>
             </a>
             <!-- Button trigger modal -->
-<!--            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#LoginModal">-->
-<!--                Login-->
-<!--            </button>-->
-            <button class="btn btn-primary" onclick="onclick=window.location.href = '/user/login'"> Login</button>
-            <a id="signup-text" href="/user/signup">회원가입</a>
-            <a id="logout-text" href="/user/logout">로그아웃</a>
+            <!--            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#LoginModal">-->
+            <!--                Login-->
+            <!--            </button>-->
+            <button class="btn btn-primary" onclick="window.location.href = '/user/login'" id="login">로그인</button>
+            <button class="btn btn-primary" id="logout">로그아웃</button>
+            <button class="btn btn-primary" onclick="window.location.href = '/user/mypage'" id="mypage">마이페이지</button>
         </div>
     </div>
 
@@ -142,12 +159,12 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light"> 오늘 뭐 먹지 ? </h1>
                 <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
-                <div class="header"><span id="username"></span> 님의 로그인 성공!</div>
+                <div id="userMessege"><div class="header"><span id="username"></span> 님의 로그인 성공!</div></div>
                 <div>
                     <button type="button" class="main-button" data-bs-toggle="modal" data-bs-target="#SignupPlzModal"
                             onclick="">추천하기
                     </button>
-<!--                    <button class="main-button" onclick="toRecommend()">추천받기</button>-->
+                    <!--                    <button class="main-button" onclick="toRecommend()">추천받기</button>-->
                     <button class="main-button" onclick="window.location.href = '/recommend'">추천받기</button>
                 </div>
             </div>

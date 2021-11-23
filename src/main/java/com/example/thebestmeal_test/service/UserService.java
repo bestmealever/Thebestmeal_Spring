@@ -3,7 +3,9 @@ package com.example.thebestmeal_test.service;
 import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.domain.UserRole;
 import com.example.thebestmeal_test.dto.SignupRequestDto;
+import com.example.thebestmeal_test.dto.idCheckDto;
 import com.example.thebestmeal_test.repository.UserRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,4 +45,13 @@ public class UserService {
         User user = new User(username, password, email, role);
         userRepository.save(user);
     }
+
+    //중복확인
+//    public Boolean checkSameUsername(idCheckDto idDto) {
+//        String username = idDto.getUsername();
+//        Optional<User> found = userRepository.findByUsername(username);
+//        Boolean response = found.isPresent();
+//        System.out.println(response);
+//        return response;
+//    }
 }

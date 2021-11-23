@@ -488,3 +488,12 @@
     margin:0 5px 0 0;
     background-color: #FED7BF;
 }
+
+/*회원가입*/
+.is-success {
+    color:green;
+}
+
+.is-fail {
+    color:red;
+}

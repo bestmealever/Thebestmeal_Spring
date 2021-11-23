@@ -1,8 +1,12 @@
 package com.example.thebestmeal_test.controller;
 
+import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.dto.JwtResponse;
 import com.example.thebestmeal_test.dto.SignupRequestDto;
 import com.example.thebestmeal_test.dto.UserDto;
+import com.example.thebestmeal_test.dto.idCheckDto;
+import com.example.thebestmeal_test.repository.UserRepository;
+import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
 import com.example.thebestmeal_test.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +15,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +31,7 @@ public class UserApiController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -40,6 +49,22 @@ public class UserApiController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+    }
+
+    //아이디 중복확인
+    @PostMapping("/signup/idcheck")
+    public Boolean checkSameUsername(@RequestBody idCheckDto idDto) {
+        String username = idDto.getUsername();
+        Optional<User> found = userRepository.findByUsername(username);
+        Boolean response = found.isPresent();
+        System.out.println(response);
+        return response;
+    }
+
+    //마이페이지
+    @GetMapping("/mypage")
+    public Optional<User> getMyinfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userRepository.findByUsername(userDetails.getUsername());
     }
 
     private void authenticate(String username, String password) throws Exception {
