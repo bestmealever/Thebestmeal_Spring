@@ -9,7 +9,7 @@ public class UserController {
 
     // 회원 로그인 페이지
     @GetMapping("/user/login")
-    public String login() {
+    public String login(Model model) {
         return "login";
     }
 
@@ -21,7 +21,9 @@ public class UserController {
 
     // 회원 가입 페이지
     @GetMapping("/user/signup")
-    public String signup() {
+    public String signup(Model model) {
         return "signup";
     }
+
+
 }
