@@ -1,16 +1,53 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html lang="ko" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
-    <meta charset="UTF-8">
-    <title>회원가입 페이지</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title> 오늘 뭐 먹지? </title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/album/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/mycss.css" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+
+    <!--파비콘-->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon2.ico"/>
+
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <!-- 구글 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
     <script>
         function is_nickname(asValue) {
             var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
@@ -51,26 +88,26 @@
             }
 
             if (password == "") {
-                $("#help-password").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#help-password").text("  비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#password").focus()
                 return;
             } else if (!is_password(password)) {
-                $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
+                $("#help-password").text("  비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
                 $("#password").focus()
                 return
             } else {
-                $("#help-password").text("사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
+                $("#help-password").text("  사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
             }
             if (password2 == "") {
-                $("#help-password2").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
+                $("#help-password2").text("  비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#password2").focus()
                 return;
             } else if (password2 != password) {
-                $("#help-password2").text("비밀번호가 일치하지 않습니다.").removeClass("is-safe").addClass("is-danger")
+                $("#help-password2").text("  비밀번호가 일치하지 않습니다.").removeClass("is-safe").addClass("is-danger")
                 $("#password2").focus()
                 return;
             } else {
-                $("#help-password2").text("비밀번호가 일치합니다.").removeClass("is-danger").addClass("is-success")
+                $("#help-password2").text("  비밀번호가 일치합니다.").removeClass("is-danger").addClass("is-success")
             }
             let info = {
                 username: $("#username").val(),
@@ -112,11 +149,12 @@
                 success: function (response) {
                     if (response == true) {
                         alert("아이디 중복")
-                        $("#help-id").text("이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
+                        $(".help-id").text("  이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
                         $("#username").focus()
                     }
                     else {
-                        $("#help-id").text("사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
+
+                        $(".help-id").text("  사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
                     }
                 }
             });
@@ -125,32 +163,53 @@
     </script>
 </head>
 <body>
-<div id="login-form">
-    <div id="login-title">회원가입하기</div>
 
-
-        <div class="login-id-label">Username</div>
-        <input type="text" name="username" placeholder="Username" class="login-input-box" id="username">
-        <a onclick="idCheck()">중복확인</a>
-        <p id="help-id"></p>
-
-        <div class="login-id-label">패스워드</div>
-        <input type="password" name="password" class="login-input-box" id="password">
-        <p id="help-password"></p>
-
-        <div class="login-id-label">패스워드 재입력</div>
-        <input type="password" name="password" class="login-input-box" id="password2">
-        <p id="help-password2"></p>
-
-        <div class="login-id-label">E-mail</div>
-        <input type="text" name="email" placeholder="E-mail" class="login-input-box" id="email">
-
-        <div>
-            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자
-            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">
+<header>
+    <!--    네비게이션바-->
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="nav-container">
+            <div class="nav-title-box">
+                <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
+                <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
+                <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
+                <a href="/" class="nave-menu-text nav-menu">이세상 음식 전부보기</a>
+            </div>
+            <biv class="nav-botton-box">
+                <button class="nav-button" onclick="window.location.href = '/user/login'" id="login">로그인</button>
+                <button class="nav-button" id="logout">로그아웃</button>
+                <button class="nav-button" onclick="window.location.href = '/user/mypage'" id="mypage">마이페이지</button>
+            </biv>
         </div>
-        <button id="login-id-submit" onclick="signup()">회원 가입</button>
+    </div>
+</header>
 
-</div>
+<main>
+    <div class="log-in-box">
+        <p style="margin-top:30px; margin-bottom: 5px; font-weight: bold; font-size: 12pt;">&nbsp;&nbsp;아이디</p>
+        <div class="box">
+            <div class="signup-button-idcheck-box"><input type="text" id="username" class="signup-input-id" placeholder="아이디"></div>
+            <div class="signup-button-idcheck-box"><button class="signup-button-idcheck" onclick="idCheck()">중복확인</button></div>
+        </div>
+        <div class="help help-id" id="help-id">&nbsp;&nbsp;영문과 숫자 사용 가능. 2-10자 길이</div>
+        <p style="margin-top:15px; margin-bottom: 5px; font-weight: bold; font-size: 12pt;">&nbsp;&nbsp;비밀번호</p>
+        <input type="password" id="password" placeholder="비밀번호" class="signup-input">
+        <div class="help help-password" id="help-password">&nbsp;&nbsp;영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자</div>
+        <input type="password" id="password2" placeholder="비밀번호 재입력" class="signup-input" style="margin-top: 10px;">
+        <div class="help help-password" id="help-password2">&nbsp;&nbsp;비밀번호를 다시 입력해주세요.</div>
+        <p style="margin-top:15px; margin-bottom: 5px; font-weight: bold; font-size: 12pt;">&nbsp;&nbsp;이메일</p>
+        <input type="password" id="email" placeholder="이메일" class="signup-input">
+<!--        <div class="login-button" style="margin-top: 20px;">-->
+<!--            <button class="signup-button kakao">카카오 로그인</button>-->
+<!--            <button class="signup-button">로그인</button>-->
+<!--        </div>-->
+<!--        <hr style="background-color: darkgray; margin-top:40px;">-->
+<!--        <p style="margin-top:30px; margin-bottom: 5px; font-weight: bold; font-size: 12pt; text-align: center; margin-bottom: 20px">아직 회원이 아니시라면 가입해주세요!</p>-->
+        <button onclick="signup()" class="signup-button" style="width: 100%; margin: 20px 0 0;">회원가입</button>
+    </div>
+</main>
+<!--        <div>-->
+<!--            <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자-->
+<!--            <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" class="login-input-box" style="display:none">-->
+<!--        </div>-->
 </body>
 </html>
