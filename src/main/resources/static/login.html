@@ -13,6 +13,9 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
+    <!--카카오 로그인-->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script><meta charset="UTF-8">
+
     <script>
         function login() {
             let info = {
@@ -31,7 +34,28 @@
                 }
             })
         }
-
+        // 카카오 로그인
+        Kakao.init('150169fab72c4abb733d5ccf61c4ac70');
+        function loginWithKakao() {
+            Kakao.Auth.login({
+                success: function(authObj) {
+                    $.ajax({
+                        type: 'POST',
+                        url: `/login/kakao`,
+                        contentType: "application/json",
+                        data: JSON.stringify({'token':authObj['access_token']}),
+                        success: function (response) {
+                            localStorage.setItem("token", response['token']);
+                            localStorage.setItem("username", response['username']);
+                            location.href = '/';
+                        }
+                    })
+                },
+                fail: function(err) {
+                    alert(JSON.stringify(err))
+                },
+            })
+        }
     </script>
 
     <title>로그인 페이지</title>
@@ -39,7 +63,7 @@
 <body>
 <div id="login-form">
     <div id="login-title">로그인 하는 페이지입니다</div>
-    <button id="login-kakao-btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=e5f1d3ffd1d48274dc877bd9b20db51c&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code'">
+    <button id="login-kakao-btn" onclick="loginWithKakao()">
         카카오로 로그인하기
     </button>
     <button id="login-id-btn" onclick="location.href='/user/signup'">

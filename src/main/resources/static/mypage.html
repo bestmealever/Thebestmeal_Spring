@@ -77,15 +77,17 @@
                 url:"/mypage",
                 success:function(response) {
                     console.log(response)
+                    let username = response.username
                     let temp = `
                     <p>닉네임 : ${'response.nickname'}</p>
-                    <p>id : ${'response.username'}</p>
-                    <p>오늘 상태 : ${'response.username'}</p>
+                    <p>id : ${'username'}</p>
+                    <p>오늘 상태 : ffefef</p>
                     `
+                    $('#userInfo').append(temp);
                 }
             })
         })
-        //api를 호출할 때 localstorage에 값이 있으면 헤더에 토큰값을 넣어서 보내게 된다.
+        //api를 호출할 때 localstorage에 값이 있으면 헤더에 토큰값을 넣어서 보내게 된다. 에러 status 마다 ... 다행
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
             if (localStorage.getItem('token')) {
                 jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
@@ -110,12 +112,12 @@
         </div>
     </div>
 </header>
-
 <main>
     <section class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <div id="userMessege"><div class="header"><span id="username"></span> 님의 개인적인 공간</div></div>
+                <div id="userInfo"></div>
             </div>
         </div>
     </section>

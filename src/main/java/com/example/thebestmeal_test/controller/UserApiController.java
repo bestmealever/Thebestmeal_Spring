@@ -1,10 +1,7 @@
 package com.example.thebestmeal_test.controller;
 
 import com.example.thebestmeal_test.domain.User;
-import com.example.thebestmeal_test.dto.JwtResponse;
-import com.example.thebestmeal_test.dto.SignupRequestDto;
-import com.example.thebestmeal_test.dto.UserDto;
-import com.example.thebestmeal_test.dto.idCheckDto;
+import com.example.thebestmeal_test.dto.*;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
@@ -38,6 +35,13 @@ public class UserApiController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto userDto) throws Exception {
         authenticate(userDto.getUsername(), userDto.getPassword());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+    }
+    @PostMapping(value = "/login/kakao")
+    public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
+        String username = userService.kakaoLogin(socialLoginDto.getToken());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }

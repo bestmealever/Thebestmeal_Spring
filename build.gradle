@@ -32,6 +32,9 @@ dependencies {
     // Thymeleaf (뷰 템플릿 엔진)
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation group: 'org.json', name: 'json', version: '20180813'
+
 }
 
 test {
