@@ -1,5 +1,6 @@
 package com.example.thebestmeal_test.domain;
 
+import com.example.thebestmeal_test.dto.FoodRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +31,13 @@ public class Food extends Timestamped {
 
     @OneToOne(mappedBy = "Food")
     private Posting postingId;
+
+    public Food(FoodRequestDto foodRequestDto, Long foodId) {
+        this.foodId = foodId;
+        this.foodName = getFoodName();
+        this.imageUrl = getImageUrl();
+        this.tags = getTags();
+        this.likedCount = getLikedCount();
+        this.postingId = getPostingId();
+    }
 }
