@@ -2,20 +2,20 @@ package com.example.thebestmeal_test.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
-public class Emo {
-
+public class Tag {
     @Id
-    private Long id;
+    private Long tagId;
 
-    @Column
-    private String emo;
+    @Column(nullable = false)
+    private String tagName;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Food foodId;
 }
