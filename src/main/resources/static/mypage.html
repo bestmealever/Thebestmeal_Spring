@@ -91,13 +91,13 @@
                 url:"/mypage",
                 success:function(response) {
                     console.log(response)
-                    let username = response.username
                     let temp = `
-                    <p>닉네임 : ${'response.nickname'}</p>
-                    <p>id : ${'username'}</p>
-                    <p>오늘 상태 : ffefef</p>
+                    <p>@${response['username']}</p>
+                    <p>${response['statusMessage']}</p>
                     `
                     $('#userInfo').append(temp);
+                    let profile_pic = response['profilePhoto'];
+                    $('#profile_pic').attr("src",profile_pic)
                 }
             })
         })
@@ -107,6 +107,22 @@
                 jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
             }
         });
+
+        function saveFoodRecomend() {
+            let info = {
+                "postingFoodName":$("#foodname").val(),
+                "postingMemo":$("#comment").val()
+            }
+            $.ajax({
+                type:"POST",
+                url:"/post",
+                contentType: "application/json",
+                data: JSON.stringify(info),
+                success:function (response) {
+                    alert("저장되었습니다!")
+                }
+            })
+        }
 
     </script>
 
@@ -135,7 +151,7 @@
     <main id="content-wrap">
         <div class="profile" style="width:852px; margin:auto;">
             <div style="width: 70px; display: inline-block;">
-                <img style="width:70px; border-radius: 70px;" src="/static/images/profile_pic.jpg">
+                <img style="width:70px; border-radius: 70px;" src="/static/images/profile_pic.jpg" id="profile_pic">
             </div>
             <div style="width: 750px;">
                 <p>
@@ -150,6 +166,9 @@
             <hr style="margin-top:8px;">
             <div id="userMessege"><div class="header"><span id="username"></span>추천받은 음식이 없습니다.</div></div>
             <div id="userInfo"></div>
+            <input id="foodname">
+            <input id="comment">
+            <button onclick="saveFoodRecomend()">저장</button>
         </div>
 
 
