@@ -29,7 +29,6 @@ public class Posting extends Timestamped{
     @JoinColumn(nullable = false)
     private User user;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
     private Food food;

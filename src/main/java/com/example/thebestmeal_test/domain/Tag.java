@@ -15,16 +15,16 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long tagId;
 
-    @Column(nullable = false)
+    @Column
     private String tagName;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Food foodId;
+    private Food food;
 
     public Tag(PostDto postDto, Food food) {
         this.tagName = postDto.getTag();
-        this.foodId = food;
+        this.food = food;
     }
 }

@@ -25,7 +25,7 @@ public class Food extends Timestamped {
     @Column
     private String imageUrl;
 
-    @OneToMany(mappedBy = "tag")
+    @OneToMany(mappedBy = "food")
     private List<Tag> tags;
 
     public Food(PostDto postDto) {

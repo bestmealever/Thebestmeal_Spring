@@ -150,7 +150,9 @@
         function saveFoodRecomend() {
             let info = {
                 "postingFoodName":$("#foodname").val(),
-                "postingMemo":$("#comment").val()
+                "postingMemo":$("#comment").val(),
+                "foodImgUrl":$("#foodurl").val(),
+                "Tag":$("#tagname1").val()
             }
             $.ajax({
                 type:"POST",
@@ -159,6 +161,7 @@
                 data: JSON.stringify(info),
                 success:function (response) {
                     alert("저장되었습니다!")
+                    window.location.reload();
                 }
             })
         }
@@ -206,8 +209,11 @@
 
             <div id="user-nav">추천받은 음식이 없습니다.</div>
             포스팅 테스트
-            <input id="foodname">
-            <input id="comment">
+            <input id="foodname" placeholder="음식이름">
+            <input id="comment" placeholder="한마디">
+            <input id="foodurl" placeholder="url">
+            <input id="tagname1" placeholder="tag">
+            <input id="tagname2" placeholder="tag">
             <button onclick="saveFoodRecomend()">저장</button>
         </div>
 
