@@ -48,23 +48,37 @@
                 font-size: 3.5rem;
             }
         }
+        #page-container {
+            position: relative;
+            min-height: 100vh;
+        }
+        #content-wrap{
+            padding-bottom: 2.5rem;
+        }
+        #footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 2.5rem;
+        }
+
     </style>
 
     <script>
 
         $(document).ready(function () {
-            //토큰이 있으면 로그인 화면
-            if (localStorage.getItem("token")) {
-                $("#logout").css("display","block");
-                $("#mypage").css("display","block");
-                $("#login").css("display","none");
-                $("#username").html(localStorage.getItem("username"));
-            } else {
-                //토큰이 없으면 로그아웃된 화면
-                $("#userMessege").empty();
-                $("#logout").css("display","none");
-                $("#mypage").css("display","none");
-            }
+            //이페이지는 로그인 된 사람들만 보는 페이지
+            // if (localStorage.getItem("token")) {
+            //     $("#logout").css("display","block");
+            //     $("#mypage").css("display","block");
+            //     $("#login").css("display","none");
+            //     $("#username").html(localStorage.getItem("username"));
+            // } else {
+            //     //토큰이 없으면 로그아웃된 화면
+            //     $("#userMessege").empty();
+            //     $("#logout").css("display","none");
+            //     $("#mypage").css("display","none");
+            // }
             $("#logout").click(function () {
                 //로그아웃
                 localStorage.removeItem("token");
@@ -94,51 +108,66 @@
             }
         });
 
-
     </script>
 
 </head>
 <body>
-
-<header>
-    <div class="navbar navbar-dark bg-dark shadow-sm">
-        <div class="container">
-            <a href="#" class="navbar-brand d-flex align-items-center">
-                <strong>오늘 뭐 먹지?</strong>
-            </a>
-            <button class="btn btn-primary" onclick="onclick=window.location.href = '/user/login'" id="login">로그인</button>
-            <button class="btn btn-primary" onclick="onclick=window.location.href = '/user/login'" id="logout">로그아웃</button>
-            <button class="btn btn-primary" onclick="onclick=window.location.href = '/user/login'" id="mypage">마이페이지</button>
-        </div>
-    </div>
-</header>
-<main>
-    <section class="py-5 text-center container">
-        <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <div id="userMessege"><div class="header"><span id="username"></span> 님의 개인적인 공간</div></div>
-                <div id="userInfo"></div>
+<div id="page-container">
+    <header>
+        <!--    네비게이션바-->
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="nav-container">
+                <div class="nav-title-box">
+                    <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
+                    <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
+                    <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
+                    <a href="/" class="nave-menu-text nav-menu">이세상 음식 전부보기</a>
+                </div>
+                <div class="nav-botton-box">
+                    <button class="nav-button" onclick="window.location.href = '/user/login'" id="login">로그인</button>
+                    <button class="nav-button" onclick="window.location.href = '/user/signup'">회원가입</button>
+                    <!--                <button class="nav-button" id="logout">로그아웃</button>-->
+                    <!--                <button class="nav-button" onclick="window.location.href = '/user/mypage'" id="mypage">마이페이지</button>-->
+                </div>
             </div>
         </div>
-    </section>
+    </header>
+    <main id="content-wrap">
+        <div class="profile" style="width:852px; margin:auto;">
+            <div style="width: 70px; display: inline-block;">
+                <img style="width:70px; border-radius: 70px;" src="/static/images/profile_pic.jpg">
+            </div>
+            <div style="width: 750px;">
+                <p>
+                    @projectjjj<br/>
+                    오늘은 왠지 코딩하기 좋은날
+                </p>
+
+            </div>
+            <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천받은 음식</strong></a>
+            <a href="#" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천한 음식</strong></a>
+            <a href="#" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 남긴 댓글</strong></a>
+            <hr style="margin-top:8px;">
+            <div id="userMessege"><div class="header"><span id="username"></span>추천받은 음식이 없습니다.</div></div>
+            <div id="userInfo"></div>
+        </div>
 
 
+    </main>
 
-
-</main>
-
-<footer class="text-muted py-5">
-    <div class="container">
-        <p class="float-end mb-1">
-            <a href="#">Back to top</a>
-        </p>
-        <p>
-            <strong>오늘 뭐 먹지?</strong> made by
-            <a href="https://github.com/bestmealever">이거사조</a>. <br>
-            이거사조 is Team 4 in 내일배움캠프. <br>
-            Welcome to <a href="https://spartacodingclub.kr/">스파르타코딩클럽</a>.
-        </p>
-    </div>
-</footer>
+    <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
+        <div class="container" >
+            <p class="float-end mb-1">
+                <a href="#">Back to top</a>
+            </p>
+            <p style="color:white; font-size: 11pt; text-decoration: none; ">
+                <strong>오늘 뭐 먹지?</strong> made by
+                <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>
+                이거사조 is Team 4 in 내일배움캠프. <br>
+                Welcome to <a href="https://spartacodingclub.kr/" style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
+            </p>
+        </div>
+    </footer>
+</div>
 </body>
 </html>
