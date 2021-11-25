@@ -79,6 +79,13 @@
             //     $("#logout").css("display","none");
             //     $("#mypage").css("display","none");
             // }
+
+            //api를 호출할 때 localstorage에 값이 있으면 헤더에 토큰값을 넣어서 보내게 된다. 에러 status 마다 ... 다행
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                if (localStorage.getItem('token')) {
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                }
+            });
             $("#logout").click(function () {
                 //로그아웃
                 localStorage.removeItem("token");
@@ -91,22 +98,54 @@
                 url:"/mypage",
                 success:function(response) {
                     console.log(response)
-                    let temp = `
-                    <p>@${response['username']}</p>
-                    <p>${response['statusMessage']}</p>
-                    `
-                    $('#userInfo').append(temp);
+                    // let temp = `
+                    // <p>@${response['username']}</p>
+                    // <p>${response['statusMessage']}</p>
+                    // `
+                    $("#username").html(response['username']);
+                    $('#usercomment').html(response['statusMessage']);
                     let profile_pic = response['profilePhoto'];
                     $('#profile_pic').attr("src",profile_pic)
                 }
             })
         })
-        //api를 호출할 때 localstorage에 값이 있으면 헤더에 토큰값을 넣어서 보내게 된다. 에러 status 마다 ... 다행
-        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-            if (localStorage.getItem('token')) {
-                jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-            }
-        });
+
+        function nav1() {
+            $.ajax({
+                type:"GET",
+                url:"/mypage",
+                success:function(response) {
+                    console.log(response,"nav1에 뿌려질 정보");
+                    let postings = response["postings"];
+                    for (let i = 0; i < postings.length; i++) {
+                        let postingFoodName = postings[i]['postingFoodName']
+                        let postingMemo = postings[i]['postingMemo']
+                        let date = postings[i]['createdAt']
+                        let temp = `
+                        <div class="col">
+                    <div class="card shadow-sm">
+                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#55595c"/>
+                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">${postingFoodName}</text>
+                        </svg>
+
+                        <div class="card-body">
+                            <p class="card-text">${postingMemo}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">${date}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        `
+                        $('#user-nav').append(temp);
+                    }
+                }
+            })
+        }
+
 
         function saveFoodRecomend() {
             let info = {
@@ -150,22 +189,23 @@
     </header>
     <main id="content-wrap">
         <div class="profile" style="width:852px; margin:auto;">
-            <div style="width: 70px; display: inline-block;">
-                <img style="width:70px; border-radius: 70px;" src="/static/images/profile_pic.jpg" id="profile_pic">
+            <div style="margin:30px 20px 20px 20px;">
+                <img style="width:70px; border-radius: 70px;  float:left; " src="/static/images/profile_pic.jpg" id="profile_pic">
             </div>
-            <div style="width: 750px;">
-                <p>
-                    @projectjjj<br/>
-                    오늘은 왠지 코딩하기 좋은날
-                </p>
+            <div style="margin-top:10px; margin-left:20px; float:left; ">
+                <span>@<span id="username"></span><br/><span id="usercomment"></span>
+                </span>
+            </div>
+            <div class="none-box" style="height: 10px; clear:left;"></div>
+            <div class="mypage-nav" style=" clear:left; margin-top: 30px;">
+                <a href="#" onclick="nav1();" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천받은 음식</strong></a>
+                <a href="#" onclick="nav2();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천한 음식</strong></a>
+                <a href="#" onclick="nav3();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 남긴 댓글</strong></a>
+                <hr style="margin-top:8px;">
+            </div>
 
-            </div>
-            <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천받은 음식</strong></a>
-            <a href="#" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천한 음식</strong></a>
-            <a href="#" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 남긴 댓글</strong></a>
-            <hr style="margin-top:8px;">
-            <div id="userMessege"><div class="header"><span id="username"></span>추천받은 음식이 없습니다.</div></div>
-            <div id="userInfo"></div>
+            <div id="user-nav">추천받은 음식이 없습니다.</div>
+            포스팅 테스트
             <input id="foodname">
             <input id="comment">
             <button onclick="saveFoodRecomend()">저장</button>

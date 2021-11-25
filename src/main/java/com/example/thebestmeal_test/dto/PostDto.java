@@ -13,5 +13,7 @@ import javax.persistence.ManyToOne;
 @Setter
 public class PostDto {
     private String postingFoodName;
+    private String Tag;
+    private String foodImgUrl;
     private String postingMemo;
 }

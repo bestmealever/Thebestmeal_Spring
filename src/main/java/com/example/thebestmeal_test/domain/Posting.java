@@ -29,10 +29,16 @@ public class Posting extends Timestamped{
     @JoinColumn(nullable = false)
     private User user;
 
-    public Posting(PostDto postDto, User user) {
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Food food;
+
+    public Posting(PostDto postDto, User user, Food food) {
         this.postingMemo = postDto.getPostingMemo();
         this.postingFoodName = postDto.getPostingFoodName();
         this.user = user;
+        this.food = food;
     }
 
     public Posting(PostDto postDto) {
