@@ -4,6 +4,7 @@ import com.example.thebestmeal_test.dto.PostDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@ToString(exclude = "tags")
 public class Food extends Timestamped {
 
     @GeneratedValue(strategy = GenerationType.AUTO)

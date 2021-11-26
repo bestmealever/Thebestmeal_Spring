@@ -10,16 +10,16 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+//@Entity
 public class Choice extends Timestamped {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Id
-    private Long id;
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    private Long id;
 
-//    public List<String> categoryWant;
-//    public List<String> emotionWant;
-//    public List<String> yesterdayEat;
+    public List<String> categoryWant;
+    public List<String> emotionWant;
+    public List<String> yesterdayEat;
 
 
 }
