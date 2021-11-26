@@ -25,11 +25,12 @@ public class User extends Timestamped{
     @Column
     private String email;
 
-    @Column
+    @Column // 카카오 회원가입을 하지 않은 사람들에게는 Null 값일 수 있어서, Nullable을 별도로 지정하지 않았습니다.
     private Long kakaoId;
 
-    @Column
-    private String role;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRole role;
 
     @Column
     private String profilePhoto;
@@ -37,6 +38,6 @@ public class User extends Timestamped{
     @Column
     private String statusMessage;
 
-    @OneToMany(mappedBy = "User")
-    private List<Posting> posting;
+    @OneToMany(mappedBy = "user")
+    private List<Posting> postings;
 }

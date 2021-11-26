@@ -17,10 +17,10 @@ public class Food extends Timestamped {
     @Id
     private Long foodId;
 
-    @Column
+    @Column(nullable = false)
     private String foodName;
 
-    @Column
+    @Column(nullable = false) // 사진 꼭 추가!
     private String imageUrl;
 
     @OneToMany(mappedBy = "food")

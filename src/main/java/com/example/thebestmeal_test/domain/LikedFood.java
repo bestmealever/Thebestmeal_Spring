@@ -14,9 +14,7 @@ public class LikedFood extends Timestamped{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long likedFoodId;
 
-    @Column(nullable = false)
-    private String likedFoodName;
-
+    @Column
     private Long likedCount;
 
     @OneToOne

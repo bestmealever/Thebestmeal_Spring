@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class PostingRequestDto {
+public class PostDto {
 
     private final PostingRepository postingRepository;
 
+    private String postingFoodName;
     private String postingMemo;
 }
