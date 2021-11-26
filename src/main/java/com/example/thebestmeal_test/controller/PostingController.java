@@ -34,5 +34,6 @@ public class PostingController {
         tagRepository.save(tag);
         Posting posting = new Posting(postDto, user, food2);
         postingRepository.save(posting);
+        System.out.println(tagRepository.findAllByTagName("korean"));
     }
 }
