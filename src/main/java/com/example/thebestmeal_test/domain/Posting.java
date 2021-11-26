@@ -24,6 +24,7 @@ public class Posting extends Timestamped{
     @Column
     private String postingMemo;
 
+    //무한 루프... 방지..
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
