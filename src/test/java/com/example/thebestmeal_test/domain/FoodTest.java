@@ -19,9 +19,4 @@ class FoodTest {
         Long likedFoodCount = 50L;
         Long postingId = 20L;
     }
-
-    FoodRequestDto requestDto = new FoodRequestDto(
-            foodName,
-            imageUrl
-    );
 }
