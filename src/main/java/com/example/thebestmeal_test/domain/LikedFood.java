@@ -21,5 +21,5 @@ public class LikedFood extends Timestamped{
 
     @OneToOne
     @JoinColumn
-    private Food foodId;
+    private Food food;
 }

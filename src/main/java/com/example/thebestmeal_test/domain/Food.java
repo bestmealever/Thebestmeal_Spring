@@ -23,14 +23,14 @@ public class Food extends Timestamped {
     @Column
     private String imageUrl;
 
-    @OneToMany(mappedBy = "Food")
-    private List<Tag> tags = new ArrayList<>();
+    @OneToMany(mappedBy = "food")
+    private List<Tag> tags;
 
-    @OneToOne(mappedBy = "Food")
-    private LikedFood likedCount;
-
-    @OneToOne(mappedBy = "Food")
-    private Posting postingId;
+//    @OneToOne(mappedBy = "Food")
+//    private LikedFood likedCount;
+//
+//    @OneToOne(mappedBy = "Food")
+//    private Posting postingId;
 
 //    public Food(FoodRequestDto foodRequestDto, Long foodId) {
 //        this.foodId = foodId;

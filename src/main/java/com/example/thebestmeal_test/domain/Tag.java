@@ -17,5 +17,5 @@ public class Tag {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Food foodId;
+    private Food food;
 }

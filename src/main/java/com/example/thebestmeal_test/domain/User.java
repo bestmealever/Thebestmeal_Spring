@@ -38,5 +38,5 @@ public class User extends Timestamped{
     private String statusMessage;
 
     @OneToMany(mappedBy = "User")
-    private List<Posting> postingId;
+    private List<Posting> posting;
 }

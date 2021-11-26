@@ -23,9 +23,9 @@ public class Posting extends Timestamped{
 
     @OneToOne
     @JoinColumn(nullable = false)
-    private Food foodId;
+    private Food food;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User userId;
+    private User user;
 }
