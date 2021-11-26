@@ -152,7 +152,7 @@
                 "postingFoodName":$("#foodname").val(),
                 "postingMemo":$("#comment").val(),
                 "foodImgUrl":$("#foodurl").val(),
-                "Tag":$("#tagname1").val()
+                "tag":$("#tagname1").val()
             }
             $.ajax({
                 type:"POST",
@@ -213,7 +213,6 @@
             <input id="comment" placeholder="한마디">
             <input id="foodurl" placeholder="url">
             <input id="tagname1" placeholder="tag">
-            <input id="tagname2" placeholder="tag">
             <button onclick="saveFoodRecomend()">저장</button>
         </div>
 
