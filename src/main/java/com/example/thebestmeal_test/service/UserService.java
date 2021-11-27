@@ -3,9 +3,11 @@ package com.example.thebestmeal_test.service;
 import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.domain.UserRole;
 import com.example.thebestmeal_test.dto.SignupRequestDto;
+import com.example.thebestmeal_test.dto.UserStatusModifyDto;
 import com.example.thebestmeal_test.kakao.KakaoOAuth2;
 import com.example.thebestmeal_test.kakao.KakaoUserInfo;
 import com.example.thebestmeal_test.repository.UserRepository;
+import com.example.thebestmeal_test.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -26,9 +29,20 @@ public class UserService {
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public void updateProfileImg(String uploadImageUrl, User user) {
-//        Optional<User> user1 = userRepository.findById(user.getId());
-        System.out.println("출력되니?");
-        System.out.println(uploadImageUrl);
+        User found = userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        System.out.println(found.getProfilePhoto()); //기본값 출력 -> /images/profile_pic.jpg
+        found.update(uploadImageUrl); //업데이트 해라
+        System.out.println(uploadImageUrl); //업데이트 재료 url 출력
+        System.out.println(found.getProfilePhoto());
+        userRepository.save(found);
+    }
+
+    public void modifyStatusMessage(UserStatusModifyDto statusModifyDto, UserDetailsImpl userDetails) {
+        User found = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        found.update(statusModifyDto);
+        userRepository.save(found);
     }
 
     public void registerUser(SignupRequestDto requestDto) {

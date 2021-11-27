@@ -71,6 +71,12 @@ public class UserApiController {
         return userRepository.findByUsername(userDetails.getUsername());
     }
 
+    @PutMapping("/mypage/statusMessage")
+    public String modifyStatusMessage(@RequestBody UserStatusModifyDto statusModifyDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.modifyStatusMessage(statusModifyDto,userDetails);
+        return "메세지 수정 완료!";
+    }
+
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

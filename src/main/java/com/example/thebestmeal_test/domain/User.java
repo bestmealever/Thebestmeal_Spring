@@ -1,5 +1,6 @@
 package com.example.thebestmeal_test.domain;
 
+import com.example.thebestmeal_test.dto.UserStatusModifyDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,7 +34,6 @@ public class User extends Timestamped {
         this.profilePhoto = "/images/profile_pic.jpg";
     }
 
-
     // ID가 자동으로 생성 및 증가합니다.
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
@@ -65,8 +65,11 @@ public class User extends Timestamped {
     @OneToMany(mappedBy="user")
     private List<Posting> postings;
 
-
     public void update(String uploadImageUrl) {
         this.profilePhoto = uploadImageUrl;
+    }
+
+    public void update(UserStatusModifyDto statusModifyDto) {
+        this.statusMessage = statusModifyDto.getStatusMessage();
     }
 }

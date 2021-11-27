@@ -86,15 +86,11 @@
                 url: "/mypage",
                 success: function (response) {
                     console.log(response)
-                    // let temp = `
-                    // <p>@${response['username']}</p>
-                    // <p>${response['statusMessage']}</p>
-                    // `
                     $("#username").html(response['username']);
                     $('#usercomment').html(response['statusMessage']);
                     let profile_pic = response['profilePhoto'];
                     let temp_img = `
-                    <img style="width:70px; border-radius: 70px;  float:left; " src="${profile_pic}" >`
+                    <img style="width:70px; height:70px; border-radius: 70px;  object-fit: cover; float:left; " src="${profile_pic}" >`
                     // $('#profile_pic').attr("src", "/css/food_sample.jpg");
                     $('#profile_pic').append(temp_img);
                     let temp_nav = `<div class="mypage-nav" style=" clear:left; margin-top: 30px;">
@@ -261,7 +257,54 @@
                 contentType: false,
                 data: images,
                 success: function(response){
-                    alert("업로드 성공")
+                    alert("업로드 성공");
+                    window.location.reload();
+                }
+            })
+        }
+
+        function statusMessageModify() {
+            $.ajax({
+                type: "GET",
+                url: "/mypage",
+                success: function (response) {
+                    console.log(response);
+                    let nowmsg = response['statusMessage']
+                    $("#usercomment").empty()
+                    let input = `
+                                <input type = "text" id = "statusMessage" placeholder="${nowmsg}"/>
+                                <button onclick="statusMessageSave()">저장</button>
+                                <button onclick="statusMessageCancel()">취소</button>
+                                `
+                    $("#usercomment").append(input)
+                    }
+            })
+        }
+
+        function statusMessageSave() {
+            let statusMessage = {
+                "statusMessage":$("#statusMessage").val()
+            }
+            $.ajax({
+                type:"PUT",
+                url:"/mypage/statusMessage",
+                contentType: "application/json",
+                data: JSON.stringify(statusMessage),
+                success:function (response) {
+                    alert("저장되었습니다!")
+                    window.location.reload();
+                }
+            })
+        }
+
+        function statusMessageCancel(){
+            $.ajax({
+                type: "GET",
+                url: "/mypage",
+                success: function (response) {
+                    console.log(response);
+                    $("#usercomment").empty()
+                    $('#usercomment').html(response['statusMessage']);
                 }
             })
         }
@@ -275,6 +318,7 @@
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="nav-container">
                 <div class="nav-title-box">
+
                     <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
                     <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
                     <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
@@ -292,14 +336,18 @@
 
             </div>
             <div style="margin-top:10px; margin-left:20px; float:left; ">
-                <span>@<span id="username"></span><br/><span id="usercomment"></span><span class="badge text-dark" style="background-color: #5ee1b4;">메세지 수정</span>
-                    <form id="images" enctype="multipart/form-data">
-                        <label for="chooseFile">
-                           <span class="badge text-dark" style="background-color: #5ee1b4;">프로필 사진 수정</span>
-                        </label>
+                <span>@</span>
+                <span id="username"></span>
+                <br/>
+                <span id="usercomment"></span><br/>
+                <span class="badge text-dark" style="background-color: #5ee1b4;" onclick="statusMessageModify()">메세지 수정</span>
+                <form id="images" enctype="multipart/form-data" style="display: inline-block;">
+                    <label for="chooseFile">
+                       <span class="badge text-dark" style="background-color: #5ee1b4;">프로필 사진 수정</span>
+                    </label>
                     <input type="file" id="chooseFile" name="images" accept="image/*" onchange="profilePicUpload(this)">
-                    </form>
-                </span>
+                </form>
+
             </div>
             <div class="none-box" style="height: 10px; clear:left;"></div>
             <div id="user-table">
