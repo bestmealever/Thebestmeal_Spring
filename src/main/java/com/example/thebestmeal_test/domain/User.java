@@ -20,7 +20,7 @@ public class User extends Timestamped {
         this.role = role;
         this.kakaoId = 0L;
         this.statusMessage = "한마디해주세요!";
-        this.profilePhoto = "/static/images/profile_pic.jpg";
+        this.profilePhoto = "/images/profile_pic.jpg";
     }
 
     public User(String username, String password, String email, UserRole role,Long kakaoId) {
@@ -30,8 +30,10 @@ public class User extends Timestamped {
         this.role = role;
         this.kakaoId = kakaoId;
         this.statusMessage = "한마디해주세요!";
-        this.profilePhoto = "/static/images/profile_pic.jpg";
+        this.profilePhoto = "/images/profile_pic.jpg";
     }
+
+
     // ID가 자동으로 생성 및 증가합니다.
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
@@ -62,4 +64,9 @@ public class User extends Timestamped {
 
     @OneToMany(mappedBy="user")
     private List<Posting> postings;
+
+
+    public void update(String uploadImageUrl) {
+        this.profilePhoto = uploadImageUrl;
+    }
 }

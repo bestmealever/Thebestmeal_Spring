@@ -1,0 +1,11 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAZBAKZL3E4TVCEQU6
+      secretKey: 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
+    s3:
+      bucket: jmspring
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

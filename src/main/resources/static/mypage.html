@@ -60,6 +60,9 @@
             width: 100%;
             height: 2.5rem;
         }
+        #chooseFile {
+            visibility: hidden;
+        }
 
     </style>
 
@@ -90,7 +93,10 @@
                     $("#username").html(response['username']);
                     $('#usercomment').html(response['statusMessage']);
                     let profile_pic = response['profilePhoto'];
-                    $('#profile_pic').attr("src", profile_pic);
+                    let temp_img = `
+                    <img style="width:70px; border-radius: 70px;  float:left; " src="${profile_pic}" >`
+                    // $('#profile_pic').attr("src", "/css/food_sample.jpg");
+                    $('#profile_pic').append(temp_img);
                     let temp_nav = `<div class="mypage-nav" style=" clear:left; margin-top: 30px;">
                                     <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천받은 음식</strong></a>
                                     <a href="#" onclick="nav2();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천한 음식</strong></a>
@@ -245,7 +251,20 @@
                 $("#heart").removeClass("bi-heart-fill").addClass("bi-heart");
             }
         }
-
+        function profilePicUpload() {
+            let images = new FormData($('#images')[0]);
+            // console.log($('#images')[0][0].files[0])
+            $.ajax({
+                type:"POST",
+                url: "/images",
+                processData: false,
+                contentType: false,
+                data: images,
+                success: function(response){
+                    alert("업로드 성공")
+                }
+            })
+        }
     </script>
 
 </head>
@@ -269,17 +288,25 @@
     </header>
     <main id="content-wrap">
         <div class="profile" style="width:852px; margin:auto;">
-            <div style="margin:30px 20px 20px 20px;">
-                <img style="width:70px; border-radius: 70px;  float:left; " src="/static/images/profile_pic.jpg" id="profile_pic">
+            <div id="profile_pic" style="margin:30px 20px 20px 20px;">
+
             </div>
             <div style="margin-top:10px; margin-left:20px; float:left; ">
-                <span>@<span id="username"></span><br/><span id="usercomment"></span>
+                <span>@<span id="username"></span><br/><span id="usercomment"></span><span class="badge text-dark" style="background-color: #5ee1b4;">메세지 수정</span>
+                    <form id="images" enctype="multipart/form-data">
+                        <label for="chooseFile">
+                           <span class="badge text-dark" style="background-color: #5ee1b4;">프로필 사진 수정</span>
+                        </label>
+                    <input type="file" id="chooseFile" name="images" accept="image/*" onchange="profilePicUpload(this)">
+                    </form>
                 </span>
             </div>
             <div class="none-box" style="height: 10px; clear:left;"></div>
             <div id="user-table">
 
             </div>
+
+            <div class="none-box" style="height: 100px; clear:left;"></div>
             포스팅 테스트 (나중에 삭제)
             <input id="foodname" placeholder="음식이름">
             <input id="comment" placeholder="한마디">

@@ -25,6 +25,12 @@ public class UserService {
     private final KakaoOAuth2 kakaoOAuth2;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
+    public void updateProfileImg(String uploadImageUrl, User user) {
+//        Optional<User> user1 = userRepository.findById(user.getId());
+        System.out.println("출력되니?");
+        System.out.println(uploadImageUrl);
+    }
+
     public void registerUser(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         // 회원 ID 중복 확인
