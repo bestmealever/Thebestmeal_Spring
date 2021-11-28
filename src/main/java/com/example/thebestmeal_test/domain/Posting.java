@@ -15,7 +15,7 @@ public class Posting extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long postingId;
+    private Long idx;
 
     @Column(nullable = false)
     private String postingFoodName;

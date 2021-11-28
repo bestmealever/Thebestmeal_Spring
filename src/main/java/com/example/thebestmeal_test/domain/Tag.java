@@ -10,23 +10,19 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Tag {
+public class Tag extends Timestamped{
     // 별도의 코드값을 지정할까 해서 GenerationType을 지정하지 않았습니다. (ex. category - 10000001, emotion - 50000001)
     // 만약 별도의 코드값을 지정하지 않는다면, GenerationType 지정 후 자동 증가로 설정해도 될 것 같습니다.
     @Id
-    private Long tagId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long idx;
 
     @Column(nullable = false)
-    private String tagName;
+    private String name;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
     private Food food;
 
-    public Tag(TagDto tagDto, Long tagId, String tagName, Food food) {
-        this.tagId = tagDto.getTagId();
-        this.tagName = tagDto.getTagName();
-        this.food = food;
-    }
 }

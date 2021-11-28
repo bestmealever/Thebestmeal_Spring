@@ -15,7 +15,7 @@ public class Food extends Timestamped {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long foodId;
+    private Long idx;
 
     @Column(nullable = false)
     private String foodName;
@@ -26,11 +26,11 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy = "food")
     private List<Tag> tags;
 
-//    @OneToOne(mappedBy = "Food")
-//    private LikedFood likedCount;
-//
-//    @OneToOne(mappedBy = "Food")
-//    private Posting postingId;
+    @OneToOne(mappedBy = "Food")
+    private LikedFood likedFood;
+
+    @OneToOne(mappedBy = "Food")
+    private Posting posting;
 
 //    public Food(FoodRequestDto foodRequestDto, Long foodId) {
 //        this.foodId = foodId;

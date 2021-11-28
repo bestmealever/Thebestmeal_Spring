@@ -12,7 +12,7 @@ public class LikedFood extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long likedFoodId;
+    private Long idx;
 
     @Column
     private Long likedCount;
