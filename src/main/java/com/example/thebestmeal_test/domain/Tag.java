@@ -1,5 +1,6 @@
 package com.example.thebestmeal_test.domain;
 
+import com.example.thebestmeal_test.dto.TagDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,10 @@ public class Tag {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Food food;
+
+    public Tag(TagDto tagDto, Long tagId, String tagName, Food food) {
+        this.tagId = tagDto.getTagId();
+        this.tagName = tagDto.getTagName();
+        this.food = food;
+    }
 }

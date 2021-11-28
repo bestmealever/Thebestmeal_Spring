@@ -1,10 +1,12 @@
 package com.example.thebestmeal_test.domain;
 
 
+import com.example.thebestmeal_test.dto.UserRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -40,4 +42,15 @@ public class User extends Timestamped{
 
     @OneToMany(mappedBy = "user")
     private List<Posting> postings;
+
+    public User(UserRequestDto userRequestDto, String userName, String password, String email, Long kakaoId, UserRole role, String profilePhoto, String statusMessage, Posting postings) {
+        this.userName = userRequestDto.getUserName();
+        this.password = userRequestDto.getPassword();
+        this.email = userRequestDto.getEmail();
+        this.kakaoId = userRequestDto.getKakaoId();
+        this.role = userRequestDto.getRole();
+        this.profilePhoto = userRequestDto.getProfilePhoto();
+        this.statusMessage = userRequestDto.getStatusMessage();
+        this.postings =
+    }
 }

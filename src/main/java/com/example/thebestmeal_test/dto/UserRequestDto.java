@@ -5,8 +5,8 @@ import com.example.thebestmeal_test.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
+@Getter
 public class UserRequestDto {
 
     private final UserRepository userRepository;
@@ -14,7 +14,7 @@ public class UserRequestDto {
     private String userName;
     private String password;
     private String email;
-    private String kakaoId;
+    private Long kakaoId;
     private UserRole role;
     private String profilePhoto;
     private String statusMessage;
