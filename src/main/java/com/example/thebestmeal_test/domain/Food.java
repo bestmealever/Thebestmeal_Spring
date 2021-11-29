@@ -26,10 +26,10 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy = "food")
     private List<Tag> tags;
 
-    @OneToOne(mappedBy = "Food")
+    @OneToOne
     private LikedFood likedFood;
 
-    @OneToOne(mappedBy = "Food")
+    @OneToOne
     private Posting posting;
 
 //    public Food(FoodRequestDto foodRequestDto, Long foodId) {

@@ -18,7 +18,7 @@ public class Tag extends Timestamped{
     private Long idx;
 
     @Column(nullable = false)
-    private String name;
+    private String tagName;
 
     @JsonIgnore
     @ManyToOne

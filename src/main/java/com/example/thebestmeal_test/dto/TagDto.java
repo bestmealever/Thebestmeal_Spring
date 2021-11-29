@@ -11,6 +11,5 @@ public class TagDto {
 
     private final TagRepository tagRepository;
 
-    private Long tagId;
     private String tagName;
 }
