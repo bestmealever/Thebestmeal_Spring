@@ -18,6 +18,9 @@ public class Tag {
     @Column
     private String tagName;
 
+    @Column
+    private String tagType;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -27,4 +30,11 @@ public class Tag {
         this.tagName = postDto.getTag();
         this.food = food;
     }
+
+    public Tag(Food food,String tagName, String tagType) {
+        this.food = food;
+        this.tagName = tagName;
+        this.tagType = tagType;
+    }
+
 }

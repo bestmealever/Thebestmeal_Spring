@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 public class AmazonS3Config {
 
     //    @Value("${cloud.aws.credentials.access-key}")
-    private String accessKey = "AKIAZBAKZL3E3PMXSVUM";
+    private String accessKey = "--";
 
     //    @Value("${cloud.aws.credentials.secret-key}")
-    private String secretKey = "scfd8VSVEqS8XXom5F6peNBLTa2bsk/jHF5U3eu7";
+    private String secretKey = "--";
 
     //    @Value("${cloud.aws.region.static}")
     private String region = "ap-northeast-2";
