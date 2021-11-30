@@ -65,6 +65,9 @@ public class User extends Timestamped {
     @OneToMany(mappedBy="user")
     private List<Posting> postings;
 
+    @OneToOne
+    private LikedFood likedFood;
+
     public void update(String uploadImageUrl) {
         this.profilePhoto = uploadImageUrl;
     }

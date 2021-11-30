@@ -28,6 +28,9 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy = "food")
     private List<Tag> tags;
 
+    @OneToOne(mappedBy = "food")
+    private LikedFood likedFood;
+
     public Food(PostDto postDto) {
         this.name = postDto.getPostingFoodName();
         this.imageUrl = postDto.getFoodImgUrl();

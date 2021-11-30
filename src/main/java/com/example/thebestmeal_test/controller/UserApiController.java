@@ -1,7 +1,11 @@
 package com.example.thebestmeal_test.controller;
 
+import com.example.thebestmeal_test.domain.Food;
+import com.example.thebestmeal_test.domain.LikedFood;
 import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.dto.*;
+import com.example.thebestmeal_test.repository.FoodRepository;
+import com.example.thebestmeal_test.repository.LikedFoodRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
@@ -29,6 +33,8 @@ public class UserApiController {
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final FoodRepository foodRepository;
+    private final LikedFoodRepository likedFoodRepository;
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -71,10 +77,22 @@ public class UserApiController {
         return userRepository.findByUsername(userDetails.getUsername());
     }
 
+    //마이페이지 상태 메세지 수정
     @PutMapping("/mypage/statusMessage")
     public String modifyStatusMessage(@RequestBody UserStatusModifyDto statusModifyDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.modifyStatusMessage(statusModifyDto,userDetails);
         return "메세지 수정 완료!";
+    }
+
+    //좋아요
+    @PostMapping("/liked")
+    public String updateLikeFood(@RequestBody LikedFoodDto likedFoodDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User found = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        Food food = foodRepository.findByName(likedFoodDto.getFoodname());
+        LikedFood likedFood = new LikedFood(food,found);
+        likedFoodRepository.save(likedFood);
+        return "좋아요 업데이트";
     }
 
     private void authenticate(String username, String password) throws Exception {

@@ -55,7 +55,6 @@ public class S3Uploader {
 
     // S3로 프로필 사진 업로드하기
     private String upload(File uploadFile, String dirName,User user) {
-//        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
         Long userId = user.getId();
         int index = uploadFile.getName().lastIndexOf(".");
         String extension = uploadFile.getName().substring(index + 1);
