@@ -4,12 +4,14 @@ import com.example.thebestmeal_test.dto.PostDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@ToString
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

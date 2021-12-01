@@ -16,16 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChoicesController {
 
-    private final TagRepository tagRepository;
-
-//    private final ChoiceService choiceService;
+    private final ChoiceService choiceService;
 
     @PostMapping("/recommend")
     public String choice(@RequestBody ChoiceDto choiceDto) {
-//        choiceService.set어쩌고저쩌고(choiceDto)
-
-        System.out.println(choiceDto.getCategoryWant().get(0));
-        System.out.println(tagRepository.findAllByTagName("korean"));
+        choiceService.toChoiceService(choiceDto);
         return "wow";
     }
 }

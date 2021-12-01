@@ -4,6 +4,7 @@ import com.example.thebestmeal_test.dto.PostDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
