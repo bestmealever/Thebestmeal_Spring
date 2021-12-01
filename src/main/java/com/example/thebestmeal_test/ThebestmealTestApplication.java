@@ -32,7 +32,7 @@ public class ThebestmealTestApplication {
 //    public CommandLineRunner demo(FoodRepository foodRepository,TagRepository tagRepository) {
 //        return (args) -> {
 //
-//            String path = "/Users/macbookpro/IdeaProjects/Thebestmeal_Spring5/src/main/resources/"; // 현재폴더의 디렉토리 가지고 오기.
+//            String path = "/Users/macbookpro/IdeaProjects/Thebestmeal_Spring6/src/main/resources/"; // 현재폴더의 디렉토리 가지고 오기.
 //            File title = new File(path + "food_final_title.csv");
 //            File url = new File(path + "food_final_url.csv");
 //            File emotion = new File(path + "food_final_emotion.csv");

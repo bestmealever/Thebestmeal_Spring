@@ -45,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/recommend").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/**.html").permitAll()
+                .antMatchers("/signup.html").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/user/**").permitAll()
@@ -57,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/post/**").permitAll()
                 .antMatchers("/static/images/**").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/liked/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //jwt 인증 실패 -> authenticationEntryPoint
@@ -65,8 +67,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin()
-                .loginPage("/user/login")
-                .failureUrl("/user/login/error")
+                .loginPage("/login.html")
+                .failureUrl("/login.html")
                 .defaultSuccessUrl("/")
                 .permitAll()	//허용
                 .and()

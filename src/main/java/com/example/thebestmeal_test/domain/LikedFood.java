@@ -1,6 +1,7 @@
 package com.example.thebestmeal_test.domain;
 
 import com.example.thebestmeal_test.dto.LikedFoodDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,11 +15,13 @@ public class LikedFood extends Timestamped{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idx;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn
     private User user;
 
-    @OneToOne
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn
     private Food food;
 
