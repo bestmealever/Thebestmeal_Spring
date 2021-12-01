@@ -22,18 +22,18 @@ public class PostingController {
     private final FoodRepository foodRepository;
     private final TagRepository tagRepository;
 
-    @PostMapping("/post")
-    public void postFood(@RequestBody PostDto postDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?")
-        );
-        Food food = new Food(postDto);
-        foodRepository.save(food);
-        Food food2 = foodRepository.findByName(postDto.getPostingFoodName());
-        Tag tag = new Tag(postDto, food2);
-        tagRepository.save(tag);
-        Posting posting = new Posting(postDto, user, food2);
-        postingRepository.save(posting);
-        System.out.println(tagRepository.findAllByTagName("korean"));
-    }
+//    @PostMapping("/post")
+//    public void postFood(@RequestBody PostDto postDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+//                () -> new NullPointerException("그런 사람 없는데요?")
+//        );
+//        Food food = new Food(postDto);
+//        foodRepository.save(food);
+//        Food food2 = foodRepository.findByName(postDto.getPostingFoodName());
+//        Tag tag = new Tag(postDto, food2);
+//        tagRepository.save(tag);
+//        Posting posting = new Posting(postDto, user, food2);
+//        postingRepository.save(posting);
+//        System.out.println(tagRepository.findAllByTagName("korean"));
+//    }
 }
