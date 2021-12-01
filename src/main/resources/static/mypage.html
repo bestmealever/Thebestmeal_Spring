@@ -211,6 +211,9 @@
                 "foodImgUrl":$("#foodurl").val(),
                 "tag":$("#tagname1").val()
             }
+
+            console.log(info);
+
             $.ajax({
                 type:"POST",
                 url:"/post",
