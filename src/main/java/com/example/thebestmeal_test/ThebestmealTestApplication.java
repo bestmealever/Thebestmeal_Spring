@@ -28,6 +28,10 @@ public class ThebestmealTestApplication {
 
     }
 
+    public static void main_test(String[] args) {
+        System.out.println("test");
+    }
+
 //    @Bean
 //    public CommandLineRunner demo(FoodRepository foodRepository,TagRepository tagRepository) {
 //        return (args) -> {
