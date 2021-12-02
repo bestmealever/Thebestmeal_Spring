@@ -8,5 +8,6 @@ import java.util.List;
 public interface FoodRepository extends JpaRepository<Food, Long> {
 
     Food findByName(String name);
-
+    List<Food> findTop9ByOrderByIdAsc();
+    List<Food> findTop12ByOrderByLikedFoodDesc();
 }

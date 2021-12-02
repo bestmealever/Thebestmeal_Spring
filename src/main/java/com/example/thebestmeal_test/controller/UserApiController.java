@@ -71,6 +71,57 @@ public class UserApiController {
         return response;
     }
 
+    //food 보여주기
+    @GetMapping("/liked")
+    public List<Food> getFoodList() {
+//        return foodRepository.findTop9ByOrderByIdAsc();
+        return foodRepository.findTop12ByOrderByLikedFoodDesc();
+    }
+
+    //food 보여주기
+    @GetMapping("/liked/{id}")
+    public Food getFood(@PathVariable Long id) {
+        return foodRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("없습니다")
+        );
+    }
+
+    //food 보여주기 로그인 사용자
+    @GetMapping("/likedCheck/{id}")
+    public Boolean likedCheck(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return likedFoodCheckd(id,userDetails);
+    }
+
+    //좋아요
+    @PostMapping("/liked/{id}")
+    public Boolean updateLikeFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
+        Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
+        Boolean response = likedFoodFound.isPresent();
+        System.out.println(response);
+        if (response == true) {
+            return response;
+        } else {
+            LikedFood likedFood = new LikedFood(food,user);
+            likedFoodRepository.save(likedFood);
+        }
+        return response;
+    }
+
+    //좋아요 취소
+    @DeleteMapping("/liked/{id}")
+    public String deleteLikedFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
+        Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
+        Long LikedFoodId = likedFoodFound.get().getIdx();
+        likedFoodRepository.deleteById(LikedFoodId);
+        return "삭제!";
+    }
+
     //마이페이지
     @GetMapping("/mypage")
     public Optional<User> getMyinfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -84,17 +135,6 @@ public class UserApiController {
         return "메세지 수정 완료!";
     }
 
-    //좋아요
-    @PostMapping("/liked")
-    public String updateLikeFood(@RequestBody LikedFoodDto likedFoodDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User found = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findByName(likedFoodDto.getFoodname());
-        LikedFood likedFood = new LikedFood(food,found);
-        likedFoodRepository.save(likedFood);
-        return "좋아요 업데이트";
-    }
-
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -103,6 +143,16 @@ public class UserApiController {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
+    }
+
+    private Boolean likedFoodCheckd(Long id, UserDetailsImpl userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
+        Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
+        Boolean response = likedFoodFound.isPresent();
+        System.out.println(response);
+        return response;
     }
 
 //    @PostMapping("/liked")
