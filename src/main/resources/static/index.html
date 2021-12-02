@@ -72,22 +72,22 @@
                             $.ajax({
                                 type:"GET",
                                 url:`/likedCheck/${foodList['id']}`,
-                                async: false,
+                                // async: false,
                                 success:function (response) {
-                                    let class_heart = response == true ? "bi bi-heart-fill" : "bi bi-heart"
+                                    let class_heart = response == true ? "bi-heart-fill" : "bi-heart"
                                     let temp = `
-                                                <div id="${foodList['id']}" style="width:275px; margin-left:5px; margin-right: 5px; border:1px solid gainsboro; border-radius: 5px; float: left">
-                                                    <div class="foodimage" style='width: 275px; height: 275px; border-top-left-radius: 5px; border-top-right-radius: 5px;
-                                                                                        background-image:url("${foodList['imageUrl']}")' ;></div>
-                                                    <div class="foodinfo" style="width: 240px; padding: 20px;">
-                                                        <p style="font-size: 12pt; font-weight: bold; margin: 0 0 5px 0;">${foodList['name']}</p>
-                                                        <i class="bi ${class_heart}" id="heart" onclick="heart('${foodList['id']}')"></i><span>${foodList['likedFood'].length}</span>
-                                                        <p style="font-size: 10pt; margin: 0px; line-height: 15pt;">${foodList['name']}</p>
+                                                <div id="${foodList['id']}" class="foodListCard">
+                                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")' ;></div>
+                                                    <div class="foodInfo">
+                                                        <p class="foodListCardName">${foodList['name']}</p>
+                                                        <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                                        <p class="foodListCardTags" id="tags${foodList['id']}""></p>
                                                     </div>
                                                 </div>
                                                 `
                                     $('#foodList').append(temp);
                                     //정렬이 id 순서대로 안이루어지는 이유는 아마도 통신 속도때문? async: false 로 해결!
+                                    Tag(foodList);
                                 }
                             })
                         }
@@ -109,17 +109,17 @@
                             console.log(foodList);
                             console.log(foodList['id']);
                             let temp = `
-                                <div id="${foodList['id']}" style="width:275px; margin-left:5px; margin-right: 5px; border:1px solid gainsboro; border-radius: 5px; float: left">
-                                    <div class="foodimage" style='width: 275px; height: 275px; border-top-left-radius: 5px; border-top-right-radius: 5px;
-                                                                        background-image:url("${foodList['imageUrl']}")' ;></div>
-                                    <div class="foodinfo" style="width: 240px; padding: 20px;">
-                                        <p style="font-size: 12pt; font-weight: bold; margin: 0 0 5px 0;">${foodList['name']}</p>
-                                        <i class="bi bi-heart" id="heart" onclick="alert('로그인후 이용해주세요')"></i><span>좋아요수:${foodList['likedFood'].length}</span>
-                                        <p style="font-size: 10pt; margin: 0px; line-height: 15pt;">${foodList['name']}</p>
+                                <div id="${foodList['id']}"  class="foodListCard">
+                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")' ;></div>
+                                    <div class="foodInfo">
+                                        <p class="foodListCardName">${foodList['name']}</p>
+                                        <i class="bi bi-heart" id="heart" onclick="alert('로그인후 이용해주세요')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
                                     </div>
                                 </div>
                                     `
                             $('#foodList').append(temp);
+                            Tag(foodList);
                         }
                     }
                 })
@@ -138,9 +138,58 @@
                 }
             });
         })
+        function Tag(foodList) {
+            for (let i=0; i<foodList['tags'].length; i++) {
+                let tags = foodList['tags'][i]
+                let tag = tags['tagName']
+                if (tag === "korean") {
+                    let tag_korean = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">한식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_korean);
+                }else if (tag === "western") {
+                    let tag_western = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">양식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_western);
+                }else if (tag === "chinese") {
+                    let tag_chinese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">중식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_chinese);
+                }else if (tag === "japanese") {
+                    let tag_japanese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">일식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_japanese);
+                }else if (tag === "supper") {
+                    let tag_supper = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">야식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_supper);
+                }else if (tag === "snack") {
+                    let tag_snack = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">분식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_snack);
+                }else if (tag === "fastfood") {
+                    let tag_fastfood = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">패스트푸드</span>`
+                    $(`#tags${foodList['id']}`).append(tag_fastfood);
+                }else if (tag === "salad") {
+                    let tag_salad = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">샐러드</span>`
+                    $(`#tags${foodList['id']}`).append(tag_salad);
+                } else if (tag === "many_time") {
+                    let tag_manytime = `<span class="badge text-dark" style="background-color: lightgray;margin-left:5px;">시간 많을 때</span>`
+                    $(`#tags${foodList['id']}`).append(tag_manytime);
+                } else if (tag === "perfect") {
+                    let tag_perfect = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">완벽한 식사</span>`
+                    $(`#tags${foodList['id']}`).append(tag_perfect);
+                }else if (tag === "stressed") {
+                    let tag_stressed = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">스트레스 받을 때</span>`
+                    $(`#tags${foodList['id']}`).append(tag_stressed);
+                }else if (tag === "fatty") {
+                    let tag_fatty = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">기름 진거 땡길 때</span>`
+                    $(`#tags${foodList['id']}`).append(tag_fatty);
+                }else if (tag === "no_time") {
+                    let tag_notime = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">시간 없을 떄</span>`
+                    $(`#tags${foodList['id']}`).append(tag_notime);
+                }else if (tag === "needsugar") {
+                    let tag_needsugar = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">당 땡겨</span>`
+                    $(`#tags${foodList['id']}`).append(tag_needsugar);
+                }
+            }
+        }
         function heart(id) {
-            if ($("#heart").hasClass("bi-heart")) {
-                $("#heart").removeClass("bi-heart").addClass("bi-heart-fill");
+            if ($(`#heart${id}`).hasClass("bi bi-heart")) {
+                $(`#heart${id}`).removeClass("bi-heart").addClass("bi-heart-fill");
                 console.log(id);
                 $.ajax({
                     type:"POST",
@@ -151,7 +200,7 @@
                     }
                 })
             } else {
-                $("#heart").removeClass("bi-heart-fill").addClass("bi-heart");
+                $(`#heart${id}`).removeClass("bi-heart-fill").addClass("bi-heart");
                 console.log(id);
                 $.ajax({
                     type:"DELETE",
@@ -247,7 +296,7 @@
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <h1 class="fw-light"> 오늘 뭐 먹지 ? </h1>
                     <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
-                    <div id="userMessege"><div class="header"><span id="username"></span> 님의 로그인 성공!</div></div>
+                    <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>
                     <div>
                         <button type="button" class="main-button" data-bs-toggle="modal" data-bs-target="#SignupPlzModal"
                                 onclick="">추천하기
@@ -257,7 +306,7 @@
                 </div>
             </div>
         </section>
-        <div id="foodList" style="width:65%; margin:auto; height: 1200px;">
+        <div id="foodList" style="width:65%; margin:auto; height: 1400px;">
         </div>
 
     </main>

@@ -124,6 +124,52 @@
     color: black;
 }
 
+/*메인 음식 리스트*/
+/*음식들 카드*/
+.foodListCard {
+    width:275px;
+    margin:0 10px 20px 10px;
+    border:1px solid gainsboro;
+    border-radius: 5px;
+    float: left;
+}
+.foodImage {
+    width: 275px;
+    height: 230px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-position: center;
+    background-size: cover;
+}
+
+.foodInfo {
+    width: 275px;
+    height: 140px;
+    padding: 20px;
+}
+
+.foodListCardName {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+}
+
+.foodListCardTags {
+    font-size: 10pt;
+    margin: 10px 0 0 0;
+    line-height: 15pt;
+}
+
+.bi {
+    color : crimson;
+}
+
+.likedLength {
+    margin : 0 5px 0 5px;
+    font-size: 11pt;
+    color: dimgray;
+}
+
 /*카테고리 버튼 구성 창 틀 (별 차이 없는 듯..?)*/
 /*.button-group {*/
 /*    display: block;*/
