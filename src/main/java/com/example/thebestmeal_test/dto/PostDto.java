@@ -8,12 +8,14 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.List;
 
 @Getter
 @Setter
 public class PostDto {
     private String postingFoodName;
-    private String Tag;
+    private List<String> postingEmo;
+    private List<String> postingCat;
     private String foodImgUrl;
     private String postingMemo;
 }

@@ -28,12 +28,12 @@ public class Tag {
     @JoinColumn(nullable = false)
     private Food food;
 
-    public Tag(PostDto postDto, Food food) {
-        this.tagName = postDto.getTag();
-        this.food = food;
-    }
+//    public Tag(PostDto postDto, Food food) {
+//        this.tagName = postDto.getTag();
+//        this.food = food;
+//    }
 
-    public Tag(Food food,String tagName, String tagType) {
+    public Tag(Food food, String tagName, String tagType) {
         this.food = food;
         this.tagName = tagName;
         this.tagType = tagType;

@@ -3,7 +3,7 @@
 let postingFoodName;
 let postingCat;
 let postingEmo;
-let postingUrl;
+let foodImgUrl;
 let postingMemo;
 
 
@@ -120,7 +120,6 @@ function step3() {
         alert('선택바람')
     } else {
         postingEmo = btn_val
-        postingTag = postingEmo + postingCat
         console.log(postingEmo)
 
                 let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.4 음식 사진과 음식 소개를 부탁드려요! </p>
@@ -166,59 +165,58 @@ function step3() {
 
         //아직 쓰질 못함..
 
-function foodPicUpload() {
-    let postingUrl = new FormData($('#images')[0]);
-    // console.log($('#images')[0][0].files[0])
-    $.ajax({
-        type:"POST",
-        url: "/images",
-        processData: false,
-        contentType: false,
-        data: images,
-        success: function(response){
-            alert("업로드 성공");
-            window.location.reload();
-        }
-    })
-}
+// function foodPicUpload() {
+//     let foodImgUrl = new FormData($('#images')[0]);
+//     // console.log($('#images')[0][0].files[0])
+//     $.ajax({
+//         type:"POST",
+//         url: "/images",
+//         processData: false,
+//         contentType: false,
+//         data: images,
+//         success: function(response){
+//             alert("업로드 성공");
+//             window.location.reload();
+//         }
+//     })
+// }
 
 
 
 function save() {
 //category,emotion..
+    foodImgUrl = $('#foodurl').val();
+    postingMemo = $('#comment').val();
+
     let data = {
         "postingFoodName": postingFoodName,
-        "postingCat": postingTag(type),
+        "postingCat": postingCat,
         "postingEmo": postingEmo,
-        "foodImgUrl": $('#foodurl').val(),
-        // 2차 시도는 아래로 바꿔볼 것
-        // "tag": postingEmo, postingCat,
-        // "foodImgUrl": postingUrl,
-        "postingMemo":  $('#comment').val()
+        "foodImgUrl": foodImgUrl,
+        "postingMemo":  postingMemo
     }
 
     console.log(data)
 
     $.ajax({
         type: "POST",
-        url: "/post",
+        url: "/api/post",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(data),
         success: function (response) {
-            if (response['result'] === 'fail') {
-                // 선택하지 않았을 경우 경고
-                $("#modal-post3").addClass("is-active");
-            }
-        }
-    })
-}
+                alert("추천해주셔서 감사합니다!");
+                window.location.reload();
+
+        },
+    });
+ }
+
 // 이전 파이썬 코드 + s3에 이미지 저장 + 미리보기 하는 코드 (추후 수정 필요)
 
-<!--이미지 미리보기 이벤트-->
+// 이미지 미리보기 이벤트 이미지 업로드는 포스팅과 별도로 할지?
 
-//이미지 업로드는 별도로 해야할지도 모름.
+//맨 마지막 추천한 음식은 ~ 코드 작업 중 (내가 추천한.. 데이터들 가져올 때)
 
-//맨 마지막 페이지 구현 시 응용 (내가 추천한.. 데이터들 가져올 때)
 // function makeListPost(article, index) {
 //     let tags ='';
 //     for (let i=0; i<article['tags'].length; i++) {
@@ -245,7 +243,7 @@ function save() {
 // }
 
 
-//js 풀버전
+//파이썬 버전 코드
 //
 // function save() {
 //     let form_data = new FormData($('#upload-file')[0]);
