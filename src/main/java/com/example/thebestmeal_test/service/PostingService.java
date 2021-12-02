@@ -18,7 +18,4 @@ public class PostingService {
     private final PostingRepository postingRepository;
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
-
-//        System.out.println
-
-}
+    }
