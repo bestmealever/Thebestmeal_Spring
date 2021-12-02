@@ -1,6 +1,5 @@
 package com.example.thebestmeal_test.service;
 
-import com.example.thebestmeal_test.domain.Food;
 import com.example.thebestmeal_test.domain.Tag;
 import com.example.thebestmeal_test.dto.ChoiceDto;
 import com.example.thebestmeal_test.repository.FoodRepository;
@@ -8,7 +7,6 @@ import com.example.thebestmeal_test.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
