@@ -33,8 +33,13 @@ public class PostingController {
     @PostMapping("/post")
     public void postFood(@RequestBody PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?")
-        );
+                () -> new NullPointerException("그런 사람 없는데요?"));
+
+        //1
+
+//        //2
+//        Food namecheck = foodRepository.findByName(postDto.getPostingFoodName()).orElseThrow(() -> new NullPointerException)
+
        //food 저장
         Food food = new Food(postDto);
         foodRepository.save(food);
@@ -51,6 +56,30 @@ public class PostingController {
         postingRepository.save(posting);
 
     }
+
+//    @GetMapping("/api/dupcheck")
+//    public static boolean isUnique(@RequestBody PostDto postDto)
+//    postDto.getPostingFoodName())
+//                if (foodRepository.findByName(postDto.getPostingFoodName())!= null) {
+//        return ("이미 존재하는 음식입니다!");
+//    }
+
+    //post 에서 foodname check 는 어떤 순서로 부르지?
+    //Boolean 타입으로 받아야 하나? 어떻게 받아서 페이지에 어떻게 전해주지?
+    //name check 를 안넣고,
+//    @GetMapping("/foodnamecheck")
+//    //@requestParam (required = false) (searchTag가 들어가있지 않아도 허용해줌)
+//    public Boolean nameCheck(@RequestParam(required = false) String postingFoodName){
+//        if (foodRepository.findAllByName(postingFoodName))!= null {
+//            exception("이미 존재하는 음식입니다!");
+//        }
+//        else {
+//           // 어떻게넘기지..?
+//        }
+//    }
+    // POST 요청.. isboolean체크. (1) 컨트롤러에서 exists =
+
+
 }
 
 

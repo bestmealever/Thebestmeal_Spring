@@ -23,13 +23,27 @@ $(document).ready(function () {
 
 
 function step1() {
-    let food = $("#foodname1").val(); {
+    let food = $("#foodname1").val();
+    postingFoodName = food
+    {
         // 빈칸일 경우 경고
         if (food == '') {
             alert('선택바람')
-        } else {
-            console.log(food)
-            postingFoodName = food
+        }
+
+        else if (
+            $.ajax({
+                type: "GET",
+                url: "/api/dupcheck",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                success: function (response)
+        ) {
+
+        }
+
+
+        else {
             let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.2 어떤 종류의 음식인가요? </p>
                                          <progress class="progress is-normal" value="25" max="100">25%</progress>
                                          <div class="button-group-in">
