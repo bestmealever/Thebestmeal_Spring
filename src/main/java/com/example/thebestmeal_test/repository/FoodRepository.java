@@ -9,5 +9,5 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
     Food findByName(String name);
     List<Food> findTop9ByOrderByIdAsc();
-    List<Food> findTop9ByOrderByLikedFoodDesc();
+    List<Food> findTop12ByOrderByLikedFoodDesc();
 }

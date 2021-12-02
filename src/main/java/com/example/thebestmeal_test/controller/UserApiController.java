@@ -75,7 +75,7 @@ public class UserApiController {
     @GetMapping("/liked")
     public List<Food> getFoodList() {
 //        return foodRepository.findTop9ByOrderByIdAsc();
-        return foodRepository.findTop9ByOrderByLikedFoodDesc();
+        return foodRepository.findTop12ByOrderByLikedFoodDesc();
     }
 
     //food 보여주기
