@@ -193,7 +193,7 @@ function save() {
         "postingCat": postingCat,
         "postingEmo": postingEmo,
         "foodImgUrl": foodImgUrl,
-        "postingMemo":  postingMemo
+        "postingMemo": postingMemo
     }
 
     console.log(data)
@@ -205,9 +205,28 @@ function save() {
         data: JSON.stringify(data),
         success: function (response) {
                 alert("추천해주셔서 감사합니다!");
-                window.location.reload();
+                        let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>
+                            <progress class="progress is-normal" value="100" max="100">100%</progress>
+                            <div id="posting_result_img" style="background-image:url('${foodImgUrl}')"></div>
+                            <div class="posting_result">
+                                <p class="posting_title">당신의 추천 음식</p>
+                                <p class="posting_foodname">${postingFoodName}</p>
+                                <p class="posting_comment">${postingMemo}</p>
+                                <p>
+                                <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">${postingFoodName}</span>
+                                <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">존맛탱</span>
+                                <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">추천감사</span>
+                                </p>
+                            </div>
+                            <div class="button-group-out">
+                               <button class="button next-stage" onclick="window.location.href='/'">홈</button>
+                            </div>
+                            `
+            let btnGroup = $('#button-group')
+            btnGroup.empty()
+            btnGroup.append(temp_html)
+        }
 
-        },
     });
  }
 
