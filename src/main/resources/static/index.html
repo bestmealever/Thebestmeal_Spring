@@ -12,7 +12,8 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css" integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
+          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
     <link href="css/mycss.css" rel="stylesheet">
 
     <!-- Bootstrap -->
@@ -65,15 +66,15 @@
                     url: "/liked",
                     success: function (response) {
                         console.log(response)
-                        for (let i = 0; i<response.length; i++) {
+                        for (let i = 0; i < response.length; i++) {
                             let foodList = response[i]
                             console.log(foodList);
                             console.log(foodList['id']);
                             $.ajax({
-                                type:"GET",
-                                url:`/likedCheck/${foodList['id']}`,
+                                type: "GET",
+                                url: `/likedCheck/${foodList['id']}`,
                                 // async: false,
-                                success:function (response) {
+                                success: function (response) {
                                     let class_heart = response == true ? "bi-heart-fill" : "bi-heart"
                                     let temp = `
                                                 <div id="${foodList['id']}" class="foodListCard">
@@ -104,7 +105,7 @@
                     url: "/liked",
                     success: function (response) {
                         console.log(response);
-                        for (let i = 0; i<response.length; i++) {
+                        for (let i = 0; i < response.length; i++) {
                             let foodList = response[i]
                             console.log(foodList);
                             console.log(foodList['id']);
@@ -138,32 +139,33 @@
                 }
             });
         })
+
         function Tag(foodList) {
-            for (let i=0; i<foodList['tags'].length; i++) {
+            for (let i = 0; i < foodList['tags'].length; i++) {
                 let tags = foodList['tags'][i]
                 let tag = tags['tagName']
                 if (tag === "korean") {
                     let tag_korean = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">한식</span>`
                     $(`#tags${foodList['id']}`).append(tag_korean);
-                }else if (tag === "western") {
+                } else if (tag === "western") {
                     let tag_western = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">양식</span>`
                     $(`#tags${foodList['id']}`).append(tag_western);
-                }else if (tag === "chinese") {
+                } else if (tag === "chinese") {
                     let tag_chinese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">중식</span>`
                     $(`#tags${foodList['id']}`).append(tag_chinese);
-                }else if (tag === "japanese") {
+                } else if (tag === "japanese") {
                     let tag_japanese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">일식</span>`
                     $(`#tags${foodList['id']}`).append(tag_japanese);
-                }else if (tag === "supper") {
+                } else if (tag === "supper") {
                     let tag_supper = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">야식</span>`
                     $(`#tags${foodList['id']}`).append(tag_supper);
-                }else if (tag === "snack") {
+                } else if (tag === "snack") {
                     let tag_snack = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">분식</span>`
                     $(`#tags${foodList['id']}`).append(tag_snack);
-                }else if (tag === "fastfood") {
+                } else if (tag === "fastfood") {
                     let tag_fastfood = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">패스트푸드</span>`
                     $(`#tags${foodList['id']}`).append(tag_fastfood);
-                }else if (tag === "salad") {
+                } else if (tag === "salad") {
                     let tag_salad = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">샐러드</span>`
                     $(`#tags${foodList['id']}`).append(tag_salad);
                 } else if (tag === "many_time") {
@@ -172,29 +174,30 @@
                 } else if (tag === "perfect") {
                     let tag_perfect = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">완벽한 식사</span>`
                     $(`#tags${foodList['id']}`).append(tag_perfect);
-                }else if (tag === "stressed") {
+                } else if (tag === "stressed") {
                     let tag_stressed = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">스트레스 받을 때</span>`
                     $(`#tags${foodList['id']}`).append(tag_stressed);
-                }else if (tag === "fatty") {
+                } else if (tag === "fatty") {
                     let tag_fatty = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">기름 진거 땡길 때</span>`
                     $(`#tags${foodList['id']}`).append(tag_fatty);
-                }else if (tag === "no_time") {
+                } else if (tag === "no_time") {
                     let tag_notime = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">시간 없을 떄</span>`
                     $(`#tags${foodList['id']}`).append(tag_notime);
-                }else if (tag === "needsugar") {
+                } else if (tag === "needsugar") {
                     let tag_needsugar = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">당 땡겨</span>`
                     $(`#tags${foodList['id']}`).append(tag_needsugar);
                 }
             }
         }
+
         function heart(id) {
             if ($(`#heart${id}`).hasClass("bi bi-heart")) {
                 $(`#heart${id}`).removeClass("bi-heart").addClass("bi-heart-fill");
                 console.log(id);
                 $.ajax({
-                    type:"POST",
-                    url:`/liked/${id}`,
-                    success:function(response) {
+                    type: "POST",
+                    url: `/liked/${id}`,
+                    success: function (response) {
                         console.log(response);
                         window.location.reload();
                     }
@@ -203,9 +206,9 @@
                 $(`#heart${id}`).removeClass("bi-heart-fill").addClass("bi-heart");
                 console.log(id);
                 $.ajax({
-                    type:"DELETE",
-                    url:`/liked/${id}`,
-                    success:function(response) {
+                    type: "DELETE",
+                    url: `/liked/${id}`,
+                    success: function (response) {
                         console.log(response);
                         window.location.reload();
                     }
@@ -232,13 +235,15 @@
                 <div class="nav-botton-box">
                     <button class="nav-button" onclick="window.location.href = '/login.html'" id="login">로그인</button>
                     <button class="nav-button" id="logout">로그아웃</button>
-                    <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지</button>
+                    <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Modal -->
-        <div class="modal fade modal-signin" tabindex="-1" role="dialog" id="LoginModal" aria-labelledby="exampleModalLabel"
+        <div class="modal fade modal-signin" tabindex="-1" role="dialog" id="LoginModal"
+             aria-labelledby="exampleModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content rounded-5 shadow">
@@ -298,7 +303,8 @@
                     <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
                     <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>
                     <div>
-                        <button type="button" class="main-button" data-bs-toggle="modal" data-bs-target="#SignupPlzModal"
+                        <button type="button" class="main-button" data-bs-toggle="modal"
+                                data-bs-target="#SignupPlzModal"
                                 onclick="">추천하기
                         </button>
                         <button class="main-button" onclick="window.location.href ='/recommend.html'">추천받기</button>
@@ -311,7 +317,7 @@
 
     </main>
     <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
-        <div class="container" >
+        <div class="container">
             <p class="float-end mb-1">
                 <a href="#">Back to top</a>
             </p>
@@ -319,7 +325,8 @@
                 <strong>오늘 뭐 먹지?</strong> made by
                 <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>
                 이거사조 is Team 4 in 내일배움캠프. <br>
-                Welcome to <a href="https://spartacodingclub.kr/" style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
+                Welcome to <a href="https://spartacodingclub.kr/"
+                              style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
             </p>
         </div>
     </footer>
