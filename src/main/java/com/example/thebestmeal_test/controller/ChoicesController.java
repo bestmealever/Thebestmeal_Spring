@@ -1,8 +1,10 @@
 package com.example.thebestmeal_test.controller;
 
+import com.example.thebestmeal_test.domain.Food;
 import com.example.thebestmeal_test.dto.ChoiceDto;
 import com.example.thebestmeal_test.repository.TagRepository;
 import com.example.thebestmeal_test.service.ChoiceService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +21,8 @@ public class ChoicesController {
     private final ChoiceService choiceService;
 
     @PostMapping("/recommend")
-    public String choice(@RequestBody ChoiceDto choiceDto) {
-        choiceService.toChoiceService(choiceDto);
-        return "wow";
+    public List<Food> choice(@RequestBody ChoiceDto choiceDto) {
+        return choiceService.toChoiceService(choiceDto);
     }
 }
 

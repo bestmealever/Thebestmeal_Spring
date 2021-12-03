@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
-//    Food findByName(String name); //Optional 로 바꿈.
-    Optional <Food> findByName(String name);
-
+    Optional<Food> findByName(String name);
+    List<Food> findTop9ByOrderByIdAsc();
+    List<Food> findTop12ByOrderByLikedFoodDesc();
+    List<Food> findAllByNameIn(List<String> name);
+    List<Food> findNameAndImageUrlByNameIn(List<String> name);
 }

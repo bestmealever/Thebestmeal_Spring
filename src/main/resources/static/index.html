@@ -12,13 +12,15 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css" integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
+          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
     <link href="css/mycss.css" rel="stylesheet">
 
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"></script>
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
     <!--파비콘-->
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon2.ico"/>
@@ -54,15 +56,74 @@
         $(document).ready(function () {
             //토큰이 있으면 로그인 화면
             if (localStorage.getItem("token")) {
-                $("#logout").css("display","");
-                $("#mypage").css("display","");
-                $("#login").css("display","none");
+                $("#logout").css("display", "");
+                $("#mypage").css("display", "");
+                $("#login").css("display", "none");
                 $("#username").html(localStorage.getItem("username"));
+                //로그인 된 사용자의 food, 좋아요 하트 적용
+                $.ajax({
+                    type: "GET",
+                    url: "/liked",
+                    success: function (response) {
+                        console.log(response)
+                        for (let i = 0; i < response.length; i++) {
+                            let foodList = response[i]
+                            console.log(foodList);
+                            console.log(foodList['id']);
+                            $.ajax({
+                                type: "GET",
+                                url: `/likedCheck/${foodList['id']}`,
+                                // async: false,
+                                success: function (response) {
+                                    let class_heart = response == true ? "bi-heart-fill" : "bi-heart"
+                                    let temp = `
+                                                <div id="${foodList['id']}" class="foodListCard">
+                                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")' ;></div>
+                                                    <div class="foodInfo">
+                                                        <p class="foodListCardName">${foodList['name']}</p>
+                                                        <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                                        <p class="foodListCardTags" id="tags${foodList['id']}""></p>
+                                                    </div>
+                                                </div>
+                                                `
+                                    $('#foodList').append(temp);
+                                    //정렬이 id 순서대로 안이루어지는 이유는 아마도 통신 속도때문? async: false 로 해결!
+                                    Tag(foodList);
+                                }
+                            })
+                        }
+                    }
+                })
             } else {
                 //토큰이 없으면 로그아웃된 화면
                 $("#userMessege").empty();
-                $("#logout").css("display","none");
-                $("#mypage").css("display","none");
+                $("#logout").css("display", "none");
+                $("#mypage").css("display", "none");
+                //로그인 안된 푸드 리스트
+                $.ajax({
+                    type: "GET",
+                    url: "/liked",
+                    success: function (response) {
+                        console.log(response);
+                        for (let i = 0; i < response.length; i++) {
+                            let foodList = response[i]
+                            console.log(foodList);
+                            console.log(foodList['id']);
+                            let temp = `
+                                <div id="${foodList['id']}"  class="foodListCard">
+                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")' ;></div>
+                                    <div class="foodInfo">
+                                        <p class="foodListCardName">${foodList['name']}</p>
+                                        <i class="bi bi-heart" id="heart" onclick="alert('로그인후 이용해주세요')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
+                                    </div>
+                                </div>
+                                    `
+                            $('#foodList').append(temp);
+                            Tag(foodList);
+                        }
+                    }
+                })
             }
             $("#logout").click(function () {
                 //로그아웃
@@ -70,178 +131,205 @@
                 localStorage.removeItem("username");
                 location.href = '/';
             });
+
+            //헤더에 토큰값 넣어 ajax 호출
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                if (localStorage.getItem('token')) {
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                }
+            });
         })
-        //헤더에 토큰값 넣어 ajax 호출
-        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-            if (localStorage.getItem('token')) {
-                jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+
+        function Tag(foodList) {
+            for (let i = 0; i < foodList['tags'].length; i++) {
+                let tags = foodList['tags'][i]
+                let tag = tags['tagName']
+                if (tag === "korean") {
+                    let tag_korean = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">한식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_korean);
+                } else if (tag === "western") {
+                    let tag_western = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">양식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_western);
+                } else if (tag === "chinese") {
+                    let tag_chinese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">중식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_chinese);
+                } else if (tag === "japanese") {
+                    let tag_japanese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">일식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_japanese);
+                } else if (tag === "supper") {
+                    let tag_supper = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">야식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_supper);
+                } else if (tag === "snack") {
+                    let tag_snack = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">분식</span>`
+                    $(`#tags${foodList['id']}`).append(tag_snack);
+                } else if (tag === "fastfood") {
+                    let tag_fastfood = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">패스트푸드</span>`
+                    $(`#tags${foodList['id']}`).append(tag_fastfood);
+                } else if (tag === "salad") {
+                    let tag_salad = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">샐러드</span>`
+                    $(`#tags${foodList['id']}`).append(tag_salad);
+                } else if (tag === "many_time") {
+                    let tag_manytime = `<span class="badge text-dark" style="background-color: lightgray;margin-left:5px;">시간 많을 때</span>`
+                    $(`#tags${foodList['id']}`).append(tag_manytime);
+                } else if (tag === "perfect") {
+                    let tag_perfect = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">완벽한 식사</span>`
+                    $(`#tags${foodList['id']}`).append(tag_perfect);
+                } else if (tag === "stressed") {
+                    let tag_stressed = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">스트레스 받을 때</span>`
+                    $(`#tags${foodList['id']}`).append(tag_stressed);
+                } else if (tag === "fatty") {
+                    let tag_fatty = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">기름 진거 땡길 때</span>`
+                    $(`#tags${foodList['id']}`).append(tag_fatty);
+                } else if (tag === "no_time") {
+                    let tag_notime = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">시간 없을 떄</span>`
+                    $(`#tags${foodList['id']}`).append(tag_notime);
+                } else if (tag === "needsugar") {
+                    let tag_needsugar = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">당 땡겨</span>`
+                    $(`#tags${foodList['id']}`).append(tag_needsugar);
+                }
             }
-        });
-        function heart() {
-            if ($("#heart").hasClass("bi-heart")) {
-                $("#heart").removeClass("bi-heart").addClass("bi-heart-fill");
-                // $.ajax({
-                //     type:"POST",
-                //     url:"/liked",
-                //     contentType: "application/json",
-                //     data:JSON.stringify(link),
-                //     success:function(response) {
-                //         $('#좋아요숫자').empty();
-                //         $.ajax({
-                //             type:"GET",
-                //             url:"/liked",
-                //             success:function(response) {
-                //                 let cnt = response['cnt']
-                //                 $('#좋아요숫자').append(cnt);
-                //             }
-                //         })
-                //     }
-                // })
+        }
+
+        function heart(id) {
+            if ($(`#heart${id}`).hasClass("bi bi-heart")) {
+                $(`#heart${id}`).removeClass("bi-heart").addClass("bi-heart-fill");
+                console.log(id);
+                $.ajax({
+                    type: "POST",
+                    url: `/liked/${id}`,
+                    success: function (response) {
+                        console.log(response);
+                        window.location.reload();
+                    }
+                })
             } else {
-                $("#heart").removeClass("bi-heart-fill").addClass("bi-heart");
+                $(`#heart${id}`).removeClass("bi-heart-fill").addClass("bi-heart");
+                console.log(id);
+                $.ajax({
+                    type: "DELETE",
+                    url: `/liked/${id}`,
+                    success: function (response) {
+                        console.log(response);
+                        window.location.reload();
+                    }
+                })
             }
         }
     </script>
 
 </head>
 <body>
+<div id="page-container">
+    <header>
 
-<header>
+        <!--    네비게이션바-->
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="nav-container">
+                <div class="nav-title-box">
 
-    <!--    네비게이션바-->
-    <div class="navbar navbar-dark bg-dark shadow-sm">
-        <div class="nav-container">
-            <div class="nav-title-box">
-
-                <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
-                <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
-                <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
-                <a href="/" class="nave-menu-text nav-menu">이세상 음식 전부보기</a>
-            </div>
-            <div class="nav-botton-box">
-                <button class="nav-button" onclick="window.location.href = '/login.html'" id="login">로그인</button>
-                <button class="nav-button" id="logout">로그아웃</button>
-                <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade modal-signin" tabindex="-1" role="dialog" id="LoginModal" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content rounded-5 shadow">
-                <div class="modal-header p-5 pb-4 border-bottom-0">
-                    <!-- <h5 class="modal-title">Modal title</h5> -->
-                    <h2 class="fw-bold mb-0">Sign up for free</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
+                    <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
+                    <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
+                    <a href="/" class="nave-menu-text nav-menu">이세상 음식 전부보기</a>
                 </div>
-
-                <div class="modal-body p-5 pt-0">
-                    <form class="">
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control rounded-4" id="floatingInput"
-                                   placeholder="name@example.com">
-                            <label for="floatingInput">Email address</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control rounded-4" id="floatingPassword"
-                                   placeholder="Password">
-                            <label for="floatingPassword">Password</label>
-                        </div>
-                        <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" type="submit">Sign up</button>
-                        <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
-                        <hr class="my-4">
-                        <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
-                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" type="submit">
-                            <svg class="bi me-1" width="16" height="16">
-                                <use xlink:href="#twitter"/>
-                            </svg>
-                            Sign up with Twitter
-                        </button>
-                        <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-4" type="submit">
-                            <svg class="bi me-1" width="16" height="16">
-                                <use xlink:href="#facebook"/>
-                            </svg>
-                            Sign up with Facebook
-                        </button>
-                        <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-4" type="submit">
-                            <svg class="bi me-1" width="16" height="16">
-                                <use xlink:href="#github"/>
-                            </svg>
-                            Sign up with GitHub
-                        </button>
-                    </form>
+                <div class="nav-botton-box">
+                    <button class="nav-button" onclick="window.location.href = '/login.html'" id="login">로그인</button>
+                    <button class="nav-button" id="logout">로그아웃</button>
+                    <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
 
-</header>
-
-<main>
-    <section class="py-5 text-center container">
-        <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light"> 오늘 뭐 먹지 ? </h1>
-                <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
-                <div id="userMessege"><div class="header"><span id="username"></span> 님의 로그인 성공!</div></div>
-                <div>
-                    <!--                   연결은 되었으나 로그인 시 모달 안뜨게 처리 필요 -->
-                    <button class="main-button" onclick="window.location.href='/posting.html'">추천하기</button>
-                    <!--                    <button type="button" class="main-button" data-bs-toggle="modal" data-bs-target="#SignupPlzModal"-->
-                    <!--                            onclick="window.location.hef='/posting'">추천하기-->
-                    <!--                    </button>-->
-                    <button class="main-button" onclick="window.location.href ='/recommend.html'">추천받기</button>
-                </div>
-            </div>
-        </div>
         <!-- Modal -->
-        <div class="modal fade" id="SignupPlzModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        <div class="modal fade modal-signin" tabindex="-1" role="dialog" id="LoginModal"
+             aria-labelledby="exampleModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content rounded-5 shadow">
+                    <div class="modal-header p-5 pb-4 border-bottom-0">
+                        <!-- <h5 class="modal-title">Modal title</h5> -->
+                        <h2 class="fw-bold mb-0">Sign up for free</h2>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        로그인 후 이용해주세요!
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                    <div class="modal-body p-5 pt-0">
+                        <form class="">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control rounded-4" id="floatingInput"
+                                       placeholder="name@example.com">
+                                <label for="floatingInput">Email address</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control rounded-4" id="floatingPassword"
+                                       placeholder="Password">
+                                <label for="floatingPassword">Password</label>
+                            </div>
+                            <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" type="submit">Sign up</button>
+                            <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
+                            <hr class="my-4">
+                            <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
+                            <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" type="submit">
+                                <svg class="bi me-1" width="16" height="16">
+                                    <use xlink:href="#twitter"/>
+                                </svg>
+                                Sign up with Twitter
+                            </button>
+                            <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-4" type="submit">
+                                <svg class="bi me-1" width="16" height="16">
+                                    <use xlink:href="#facebook"/>
+                                </svg>
+                                Sign up with Facebook
+                            </button>
+                            <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-4" type="submit">
+                                <svg class="bi me-1" width="16" height="16">
+                                    <use xlink:href="#github"/>
+                                </svg>
+                                Sign up with GitHub
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-<div class="foodList" style="width:60%; margin:auto;">
-    <div id="${id}" style="width:275px; margin-left:5px; margin-right: 5px; border:1px solid gainsboro; border-radius: 5px; float: left">
-        <div class="foodimage" style='width: 275px; height: 275px; border-top-left-radius: 5px; border-top-right-radius: 5px;
-                                            /*background-image:url("/images/food_sample.jpg")*/ background-color: black' ;></div>
-        <div class="foodinfo" style="width: 240px; padding: 20px;">
-            <p style="font-size: 12pt; font-weight: bold; margin: 0 0 5px 0;">${postingFoodName}</p>
-            <i class="bi bi-heart" id="heart" onclick="heart('${id}')"></i>
-            <p style="font-size: 10pt; margin: 0px; line-height: 15pt;">${postingMemo}</p>
+
+    </header>
+
+    <main>
+        <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light"> 오늘 뭐 먹지 ? </h1>
+                    <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
+                    <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>
+                    <div>
+                        <button type="button" class="main-button" data-bs-toggle="modal"
+                                data-bs-target="#SignupPlzModal"
+                                onclick="">추천하기
+                        </button>
+                        <button class="main-button" onclick="window.location.href ='/recommend.html'">추천받기</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div id="foodList" class="foodCardList">
         </div>
-    </div>
+
+    </main>
+    <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
+        <div class="container">
+            <p class="float-end mb-1">
+                <a href="#">Back to top</a>
+            </p>
+            <p style="color:white; font-size: 11pt; text-decoration: none; ">
+                <strong>오늘 뭐 먹지?</strong> made by
+                <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>
+                이거사조 is Team 4 in 내일배움캠프. <br>
+                Welcome to <a href="https://spartacodingclub.kr/"
+                              style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
+            </p>
+        </div>
+    </footer>
 </div>
-</main>
-
-<footer class="text-muted py-5">
-    <div class="container">
-        <p class="float-end mb-1">
-            <a href="#">Back to top</a>
-        </p>
-        <p>
-            <strong>오늘 뭐 먹지?</strong> made by
-            <a href="https://github.com/bestmealever">이거사조</a>. <br>
-            이거사조 is Team 4 in 내일배움캠프. <br>
-            Welcome to <a href="https://spartacodingclub.kr/">스파르타코딩클럽</a>.
-        </p>
-    </div>
-</footer>
-<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </body>
 </html>

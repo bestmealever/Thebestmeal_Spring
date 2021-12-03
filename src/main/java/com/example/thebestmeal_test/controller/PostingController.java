@@ -1,4 +1,5 @@
 package com.example.thebestmeal_test.controller;
+
 import com.example.thebestmeal_test.domain.Food;
 import com.example.thebestmeal_test.domain.Posting;
 import com.example.thebestmeal_test.domain.Tag;
@@ -13,9 +14,11 @@ import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.PostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,9 +31,7 @@ public class PostingController {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final TagRepository tagRepository;
-
     private final PostingService postingService;
-
 
     @PostMapping("/post")
     public void postFood(@RequestBody PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -65,10 +66,6 @@ public class PostingController {
         Boolean response = found.isPresent();
         System.out.println(response);
         return response;
-//        postingService.foodCheck(foodCheckDto);
         }
     }
-
-
-
 

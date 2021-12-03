@@ -1,22 +1,8 @@
 package com.example.thebestmeal_test;
 
-import com.example.thebestmeal_test.domain.Food;
-import com.example.thebestmeal_test.domain.Tag;
-import com.example.thebestmeal_test.repository.FoodRepository;
-import com.example.thebestmeal_test.repository.TagRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @EnableJpaAuditing
 @SpringBootApplication
@@ -24,14 +10,13 @@ public class ThebestmealTestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ThebestmealTestApplication.class, args);
-
     }
 
 //    @Bean
 //    public CommandLineRunner demo(FoodRepository foodRepository,TagRepository tagRepository) {
 //        return (args) -> {
 //
-//            String path = "/Users/macbookpro/IdeaProjects/Thebestmeal_Spring5/src/main/resources/"; // 현재폴더의 디렉토리 가지고 오기.
+//            String path = "/Users/macbookpro/IdeaProjects/Thebestmeal_Spring6/src/main/resources/"; // 현재폴더의 디렉토리 가지고 오기.
 //            File title = new File(path + "food_final_title.csv");
 //            File url = new File(path + "food_final_url.csv");
 //            File emotion = new File(path + "food_final_emotion.csv");
@@ -55,7 +40,6 @@ public class ThebestmealTestApplication {
 //                emotionLine = br3.readLine();
 //                categoryLine = br4.readLine();
 
-
 //                //food
 //                Food food = new Food(titleLine,urlLine);
 //                foodRepository.save(food);
@@ -70,5 +54,4 @@ public class ThebestmealTestApplication {
 //            }
 //        };
 //    }
-
 }
