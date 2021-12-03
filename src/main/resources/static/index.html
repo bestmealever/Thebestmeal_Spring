@@ -83,7 +83,7 @@
                                                     <div class="foodInfo">
                                                         <p class="foodListCardName">${foodList['name']}</p>
                                                         <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
-                                                        <p class="foodListCardTags" id="tags${foodList['id']}""></p>
+                                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
                                                     </div>
                                                 </div>
                                                 `
@@ -92,7 +92,6 @@
                                     Tag(foodList);
                                 }
                             })
-
                         }
                     }
                 })
@@ -143,7 +142,7 @@
         })
 
         function Tag(foodList) {
-            for (let i = 0; i < foodList.length; i++) {
+            for (let i = 0; i < foodList['tags'].length; i++) {
                 let tags = foodList['tags'][i]
                 let tag = tags['tagName']
                 if (tag === "korean") {

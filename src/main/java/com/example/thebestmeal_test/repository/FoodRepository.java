@@ -10,7 +10,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
     Food findByName(String name);
     List<Food> findTop9ByOrderByIdAsc();
-    @EntityGraph(attributePaths = {"tags","likedFood"})
+//    @EntityGraph(attributePaths = {"tags","likedFood"})
     List<Food> findTop12ByOrderByLikedFoodDesc();
     List<Food> findAllByNameIn(List<String> name);
     List<Food> findNameAndImageUrlByNameIn(List<String> name);

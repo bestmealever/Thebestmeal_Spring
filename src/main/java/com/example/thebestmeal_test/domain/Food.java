@@ -28,7 +28,7 @@ public class Food extends Timestamped {
     private String imageUrl;
 
     @OneToMany(mappedBy = "food")
-    private Set<Tag> tags;
+    private List<Tag> tags;
 
     @OneToMany(mappedBy = "food")
     private List<LikedFood> likedFood;
