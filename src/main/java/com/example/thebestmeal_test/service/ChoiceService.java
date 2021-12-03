@@ -47,8 +47,6 @@ public class ChoiceService {
                     }
                 }
                 resultList.addAll(noDup(FoodNameForCat, FoodNameForEmo));
-                System.out.println(resultList);
-
             } else {
                 List<String> FoodNameForEmo = new ArrayList<>();
                 List<Tag> tmpTagEmotion = tagRepository.findAllByTagNameIn(emotionWant);
@@ -60,8 +58,6 @@ public class ChoiceService {
                 }
 
                 resultList.addAll(FoodNameForEmo.stream().distinct().collect(Collectors.toList()));
-
-                System.out.println(resultList);
             }
         } else {
             List<String> FoodNameForCat = new ArrayList<>();
@@ -82,8 +78,8 @@ public class ChoiceService {
                 }
             }
 
-            resultList.addAll(noDup(FoodNameForCat, FoodNameForEmo));
             System.out.println(resultList);
+            resultList.addAll(noDup(FoodNameForCat, FoodNameForEmo));
         }
 
         // ObjectMapper mapper = new ObjectMapper();
