@@ -9,6 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class Food extends Timestamped {
     private String imageUrl;
 
     @OneToMany(mappedBy = "food")
-    private List<Tag> tags;
+    private Set<Tag> tags;
 
     @OneToMany(mappedBy = "food")
     private List<LikedFood> likedFood;

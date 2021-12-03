@@ -51,6 +51,13 @@ public class UserApiController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
+
+//    //카카오 로그인 callback
+//    @GetMapping("/user/kakao/callback")
+//    public String kakaoLogin(String code) {
+//        userService.kakaoLogin(code);
+//        return "redirect:/";
+//    }
     //회원가입
     @PostMapping(value = "/signup")
     public ResponseEntity<?> createUser(@RequestBody SignupRequestDto userDto) throws Exception {
@@ -155,5 +162,4 @@ public class UserApiController {
         return response;
     }
 
-//    @PostMapping("/liked")
 }

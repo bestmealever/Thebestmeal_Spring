@@ -159,6 +159,28 @@
                 }
             });
         }
+        // 카카오 로그인
+        Kakao.init('150169fab72c4abb733d5ccf61c4ac70');
+        function loginWithKakao() {
+            Kakao.Auth.login({
+                success: function(authObj) {
+                    $.ajax({
+                        type: 'POST',
+                        url: `/login/kakao`,
+                        contentType: "application/json",
+                        data: JSON.stringify({'token':authObj['access_token']}),
+                        success: function (response) {
+                            localStorage.setItem("token", response['token']);
+                            localStorage.setItem("username", response['username']);
+                            location.href = '/';
+                        }
+                    })
+                },
+                fail: function(err) {
+                    alert(JSON.stringify(err))
+                },
+            })
+        }
 
     </script>
 </head>
