@@ -89,7 +89,8 @@ public class UserApiController {
     public String updateLikeFood(@RequestBody LikedFoodDto likedFoodDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User found = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
                 () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findByName(likedFoodDto.getFoodname());
+//                Food food = foodRepository.findByName(likedFoodDto.getFoodname()).get(); optional 시 et() 사용
+        Food food = foodRepository.findByName(likedFoodDto.getFoodname()).get();
         LikedFood likedFood = new LikedFood(food,found);
         likedFoodRepository.save(likedFood);
         return "좋아요 업데이트";

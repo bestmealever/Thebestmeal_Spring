@@ -1,5 +1,3 @@
-//foodname -> postingfood
-//
 let postingFoodName;
 let postingCat;
 let postingEmo;
@@ -13,38 +11,42 @@ $(document).ready(function () {
             jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         }
     });
-    // $("#logout").click(function () {
-    //     //로그아웃
-    //     localStorage.removeItem("token");
-    //     localStorage.removeItem("username");
-    //     location.href = '/';
-    // });
+
+    $("#logout").click(function () {
+        //로그아웃
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        location.href = '/';
+    });
 })
 
 
 function step1() {
+
     let food = $("#foodname1").val();
     postingFoodName = food
-    {
-        // 빈칸일 경우 경고
-        if (food == '') {
-            alert('선택바람')
-        }
 
-        else if (
-            $.ajax({
-                type: "GET",
-                url: "/api/dupcheck",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(data),
-                success: function (response)
-        ) {
+        if (postingFoodName == "") {
+        alert('선택바람')
+        return;
+    }
+    //중복체크
+    let data = {"postingFoodName": postingFoodName};
 
-        }
+        $.ajax({
+            type: "POST",
+            url: "/api/foodcheck",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            success: function (response) {
+                if (response == true) {
+                alert('앗, 이미 있는 음식이에요!')
+                return;
 
-
-        else {
-            let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.2 어떤 종류의 음식인가요? </p>
+            }
+    //중복 없을 시 진행
+                else {
+                    let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.2 어떤 종류의 음식인가요? </p>
                                          <progress class="progress is-normal" value="25" max="100">25%</progress>
                                          <div class="button-group-in">
                                                 <input type="checkbox" id="chk1" class="select-category" value="korean">
@@ -74,12 +76,18 @@ function step1() {
                                           <div class="button-group-out">
                                              <button class="button next-stage" onclick="step2()">다음</button>
                                           </div>`
-            let btnGroup = $('#button-group')
-            btnGroup.empty();
-            btnGroup.append(temp_html);
+                    let btnGroup = $('#button-group')
+                    btnGroup.empty();
+                    btnGroup.append(temp_html);
+                }
+        }
+        })
+
+    {
+
         }
     }
-}
+
 
 function step2() {
     let btn_val = []
@@ -198,7 +206,7 @@ function step3() {
 
 
 function save() {
-//category,emotion..
+
     foodImgUrl = $('#foodurl').val();
     postingMemo = $('#comment').val();
 
