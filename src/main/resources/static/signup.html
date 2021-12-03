@@ -66,7 +66,7 @@
             var box = document.getElementById("admin-token");
 
             // If the checkbox is checked, display the output text
-            if (checkBox.checked == true){
+            if (checkBox.checked == true) {
                 box.style.display = "block";
             } else {
                 box.style.display = "none";
@@ -74,10 +74,10 @@
         }
 
         function signup() {
-            let username= $("#username").val();
-            let password= $("#password").val();
-            let password2= $("#password2").val();
-            let email= $("#email").val();
+            let username = $("#username").val();
+            let password = $("#password").val();
+            let password2 = $("#password2").val();
+            let email = $("#email").val();
 
             if ($("#username").hasClass("is-danger")) {
                 alert("아이디를 다시 확인해주세요.")
@@ -140,7 +140,7 @@
                 $("#username").focus()
                 return;
             }
-            let info = { "username" : $("#username").val()};
+            let info = {"username": $("#username").val()};
             $.ajax({
                 type: "POST",
                 url: `/signup/idcheck`,
@@ -151,8 +151,7 @@
                         alert("아이디 중복")
                         $(".help-id").text("  이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
                         $("#username").focus()
-                    }
-                    else {
+                    } else {
 
                         $(".help-id").text("  사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
                     }
@@ -208,8 +207,11 @@
     <div class="log-in-box">
         <p style="margin-top:30px; margin-bottom: 5px; font-weight: bold; font-size: 12pt;">&nbsp;&nbsp;아이디</p>
         <div class="box">
-            <div class="signup-button-idcheck-box"><input type="text" id="username" class="signup-input-id" placeholder="아이디"></div>
-            <div class="signup-button-idcheck-box"><button class="signup-button-idcheck" onclick="idCheck()">중복확인</button></div>
+            <div class="signup-button-idcheck-box"><input type="text" id="username" class="signup-input-id"
+                                                          placeholder="아이디"></div>
+            <div class="signup-button-idcheck-box">
+                <button class="signup-button-idcheck" onclick="idCheck()">중복확인</button>
+            </div>
         </div>
         <div class="help help-id" id="help-id">&nbsp;&nbsp;영문과 숫자 사용 가능. 2-10자 길이</div>
         <p style="margin-top:15px; margin-bottom: 5px; font-weight: bold; font-size: 12pt;">&nbsp;&nbsp;비밀번호</p>
