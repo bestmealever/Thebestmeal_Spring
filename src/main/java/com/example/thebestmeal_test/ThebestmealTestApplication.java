@@ -1,23 +1,8 @@
 package com.example.thebestmeal_test;
 
-import com.example.thebestmeal_test.domain.Food;
-import com.example.thebestmeal_test.domain.Tag;
-import com.example.thebestmeal_test.repository.FoodRepository;
-import com.example.thebestmeal_test.repository.TagRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @EnableJpaAuditing
 @SpringBootApplication
@@ -25,11 +10,6 @@ public class ThebestmealTestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ThebestmealTestApplication.class, args);
-
-    }
-
-    public static void main_test(String[] args) {
-        System.out.println("test");
     }
 
 //    @Bean
@@ -59,7 +39,6 @@ public class ThebestmealTestApplication {
 //                urlLine = br2.readLine();
 //                emotionLine = br3.readLine();
 //                categoryLine = br4.readLine();
-
 
 //                //food
 //                Food food = new Food(titleLine,urlLine);
