@@ -142,6 +142,17 @@ public class UserApiController {
         return "메세지 수정 완료!";
     }
 
+    //좋아요
+    @PostMapping("/liked")
+    public String updateLikeFood(@RequestBody LikedFoodDto likedFoodDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User found = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        Food food = foodRepository.findByName(likedFoodDto.getFoodname()).get();
+        LikedFood likedFood = new LikedFood(food,found);
+        likedFoodRepository.save(likedFood);
+        return "좋아요 업데이트";
+    }
+
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

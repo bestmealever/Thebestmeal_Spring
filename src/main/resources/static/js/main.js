@@ -199,50 +199,36 @@ function feeling() {
             success: function (response) {
                 foodObjArray = response
                 foodObjArrayNum = 0
-                alert("통신성공!")
-                console.log(response[0])
-                let temp_html = `<div class="question-h">
-                                    <p class="todays">${foodObjArray[foodObjArrayNum]['name']} <span id="recommend">${foodObjArray[foodObjArrayNum]['name']}</span> ${foodObjArray[foodObjArrayNum]['name']}
-                                    </p>
-                                </div>
-                                <div class="mealimg" style="background-image: url('${foodObjArray[foodObjArrayNum]['imageUrl']}"
-                                     alt="${foodObjArray[foodObjArrayNum]['name']}"></div>
-                                <div class="button-group-out">
-                                    <button class="button next-stage" onclick="">이거 먹을게요!</button>
-                                    <button class="button next-stage" onclick="retry()">마음에 안들어요...</button>
-                                </div>`
-                let btnGroup = $('#button-group')
-                btnGroup.empty()
-                btnGroup.append(temp_html)
+                selectFoodOnClient()
             }
         })
-
     }
 }
 
 function feeling_no() {
-    alert('선택할게 없어요 하나이상 선태해주세요')
+    alert('여기도 수정해야 됨...')
 }
 
-function retry() {
-    foodObjArrayNum += 1
+function selectFoodOnClient(foodObjArrayNum = 0) {
 
-    if (foodObjArrayNum < foodObjArray.length) {
-        let temp_html = `<div class="question-h">
-                                    <p class="todays">${foodObjArray[foodObjArrayNum]['name']} <span id="recommend">${foodObjArray[foodObjArrayNum]['name']}</span> ${foodObjArray[foodObjArrayNum]['name']}
-                                    </p>
-                                </div>
-                                <div class="mealimg" style="background-image: url('${foodObjArray[foodObjArrayNum]['imageUrl']}"
-                                     alt="${foodObjArray[foodObjArrayNum]['name']}"></div>
-                                <div class="button-group-out">
-                                    <button class="button next-stage" onclick="">이거 먹을게요!</button>
-                                    <button class="button next-stage" onclick="retry()">마음에 안들어요...</button>
-                                </div>`
-        let btnGroup = $('#button-group')
-        btnGroup.empty()
-        btnGroup.append(temp_html)
-    } else {
-        alert("더 이상 추천할 음식이 없어요...ㅠ")
+    if (foodObjArrayNum < 0) {
+        foodObjArrayNum = foodObjArray.length - 1
+    } else if (foodObjArrayNum >= foodObjArray.length) {
+        foodObjArrayNum = 0
     }
+    let temp_html = `<div class="question-h">
+                        <p class="todays">${foodObjArray[foodObjArrayNum]['name']} <span id="recommend">${foodObjArray[foodObjArrayNum]['name']}</span> ${foodObjArray[foodObjArrayNum]['name']}
+                        </p>
+                    </div>
+                    <div class="mealimg" style="background-image: url('${foodObjArray[foodObjArrayNum]['imageUrl']}"
+                         alt="${foodObjArray[foodObjArrayNum]['name']}"></div>
+                    <div class="button-group-out">
+                        <button class="button next-stage" onclick="selectFoodOnClient(${foodObjArrayNum - 1})">이전 추천 음식</button>
+                        <button class="button next-stage" onclick="">이거 먹을게요!</button>
+                        <button class="button next-stage" onclick="selectFoodOnClient(${foodObjArrayNum + 1})">다음 추천 음식</button>
+                    </div>`
+    let btnGroup = $('#button-group')
+    btnGroup.empty()
+    btnGroup.append(temp_html)
 }
 
