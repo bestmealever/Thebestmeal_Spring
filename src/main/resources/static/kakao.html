@@ -98,7 +98,7 @@
             <div>
                 <form onsubmit="searchPlaces(); return false;">
 <!--                    키워드 밸류값이 들어가야 하는 부분-->
-                    키워드 : <input type="text" value="서울시청 맛집" id="keyword" size="15">
+                    키워드 : <input type="text" value="첨단맛집" id="keyword" size="15">
                     <button type="submit" onclick="getCurrentPosBtn()">검색하기</button>
                 </form>
             </div>
@@ -108,7 +108,11 @@
         <div id="pagination"></div>
     </div>
 
+
     <script>
+        //마커를 담을 배열입니다
+        let markers = [];
+
         let mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
                 center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
@@ -119,6 +123,8 @@
         let map = new kakao.maps.Map(mapContainer, mapOption);
     </script>
 </main>
+
+
 <footer class="text-muted py-5">
     <div class="container">
         <p>
@@ -130,27 +136,27 @@
     </div>
 </footer>
 
+
+
 <script> // 로직이 짜여지는 script part
 
 
-// // 현재 위치를 받아오는 함수 생성
-// function locationLoadSuccess(pos) {
-//     // 현재 위치 받아오기
-//     let currentPos = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-//
-//     // 지도 이동(기존 위치와 가깝다면 부드럽게 이동)
-//     map.panTo(currentPos);
-//
-//     //
-// }
-//
-// function locationLoadError(pos) {
-//     alert('위치 정보를 가져오는데 실패했습니다.');
-// }
-//
-// function getCurrentPosBtn() {
-//     navigator.geolocation.getCurrentPosition(locationLoadSuccess, locationLoadError)
-// }
+// 현재 위치를 받아오는 함수 생성
+function locationLoadSuccess(position) {
+    // 현재 위치 받아오기
+    let currentPos = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    // 지도 이동(기존 위치와 가깝다면 부드럽게 이동)
+    map.panTo(currentPos);
+}
+
+function locationLoadError(pos) {
+    alert('위치 정보를 가져오는데 실패했습니다.');
+}
+
+function getCurrentPosBtn() {
+    navigator.geolocation.getCurrentPosition(locationLoadSuccess, locationLoadError)
+}
 
 
 // 장소 검색 객체를 생성합니다.
@@ -166,9 +172,6 @@ map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
 let zoomControl = new kakao.maps.ZoomControl();
 map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
-//마커를 담을 배열입니다
-let markers = [];
 
 // 마커를 클릭하면 장소명을 표출할 인포윈도우입니다.
 let infowindow = new kakao.maps.InfoWindow({zIndex:1});
