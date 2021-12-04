@@ -26,27 +26,27 @@ function step1() {
     let food = $("#foodname1").val();
     postingFoodName = food
 
-        if (postingFoodName == "") {
+    if (postingFoodName == "") {
         alert('선택바람')
         return;
     }
     //중복체크
     let data = {"postingFoodName": postingFoodName};
 
-        $.ajax({
-            type: "POST",
-            url: "/api/foodcheck",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(data),
-            success: function (response) {
-                if (response == true) {
+    $.ajax({
+        type: "POST",
+        url: "/api/foodcheck",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(data),
+        success: function (response) {
+            if (response == true) {
                 alert('앗, 이미 있는 음식이에요!')
                 return;
 
             }
-    //중복 없을 시 진행
-                else {
-                    let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.2 어떤 종류의 음식인가요? </p>
+            //중복 없을 시 진행
+            else {
+                let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.2 어떤 종류의 음식인가요? </p>
                                          <progress class="progress is-normal" value="25" max="100">25%</progress>
                                          <div class="button-group-in">
                                                 <input type="checkbox" id="chk1" class="select-category" value="korean">
@@ -76,17 +76,14 @@ function step1() {
                                           <div class="button-group-out">
                                              <button class="button next-stage" onclick="step2()">다음</button>
                                           </div>`
-                    let btnGroup = $('#button-group')
-                    btnGroup.empty();
-                    btnGroup.append(temp_html);
-                }
+                let btnGroup = $('#button-group')
+                btnGroup.empty();
+                btnGroup.append(temp_html);
+            }
         }
-        })
+    })
 
-    {
-
-        }
-    }
+}
 
 
 function step2() {
@@ -102,7 +99,7 @@ function step2() {
     } else {
         console.log(btn_val)
         postingCat = btn_val
-                let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.3 어떨 때 먹으면 좋아요? </p>
+        let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.3 어떨 때 먹으면 좋아요? </p>
                                  <progress class="progress is-normal" value="50" max="100">50%</progress>
                                  <div class="button-group-in">
                                     <input type="checkbox" id="chk1" class="select-category" value="no_time">
@@ -124,11 +121,11 @@ function step2() {
                                  <div class="button-group-out">
                                     <button class="button next-stage" onclick="step3()">다음</button>
                                  </div>`
-                let btnGroup = $('#button-group')
-                btnGroup.empty()
-                btnGroup.append(temp_html)
-            }
-        }
+        let btnGroup = $('#button-group')
+        btnGroup.empty()
+        btnGroup.append(temp_html)
+    }
+}
 
 function step3() {
     let btn_val = []
@@ -144,7 +141,7 @@ function step3() {
         postingEmo = btn_val
         console.log(postingEmo)
 
-                let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.4 음식 사진과 음식 소개를 부탁드려요! </p>
+        let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.4 음식 사진과 음식 소개를 부탁드려요! </p>
                                 <progress class="progress is-normal" value="75" max="100">75%</progress>
                                 <div class = "form-group">
 <!--                                s3 전 임시로 넣어보기 url -->
@@ -178,14 +175,14 @@ function step3() {
                                     <button type="button" class="button next-stage" onclick="save()">저장</button>
                                 </div>`
 
-                let btnGroup = $('#button-group')
-                btnGroup.empty()
-                btnGroup.append(temp_html)
-            }
+        let btnGroup = $('#button-group')
+        btnGroup.empty()
+        btnGroup.append(temp_html)
+    }
 
-        }
+}
 
-        //아직 쓰질 못함..
+//아직 쓰질 못함..
 
 // function foodPicUpload() {
 //     let foodImgUrl = new FormData($('#images')[0]);
@@ -202,7 +199,6 @@ function step3() {
 //         }
 //     })
 // }
-
 
 
 function save() {
@@ -226,8 +222,8 @@ function save() {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(data),
         success: function (response) {
-                alert("추천해주셔서 감사합니다!");
-                        let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>
+            alert("추천해주셔서 감사합니다!");
+            let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>
                             <progress class="progress is-normal" value="100" max="100">100%</progress>
                             <div id="posting_result_img" style="background-image:url('${foodImgUrl}')"></div>
                             <div class="posting_result">
@@ -250,7 +246,7 @@ function save() {
         }
 
     });
- }
+}
 
 // 이전 파이썬 코드 + s3에 이미지 저장 + 미리보기 하는 코드 (추후 수정 필요)
 
