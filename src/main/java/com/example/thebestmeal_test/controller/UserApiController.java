@@ -74,15 +74,19 @@ public class UserApiController {
         String username = idDto.getUsername();
         Optional<User> found = userRepository.findByUsername(username);
         Boolean response = found.isPresent();
-        System.out.println(response);
         return response;
     }
 
     //food 보여주기
     @GetMapping("/liked")
     public List<Food> getFoodList() {
-//        return foodRepository.findTop9ByOrderByIdAsc();
         return foodRepository.findTop12ByOrderByLikedFoodDesc();
+    }
+
+    //likedfood 개수
+    @GetMapping("/liked/count/{id}")
+    public List<LikedFood> getFoodLikedCount(@PathVariable Long id) {
+        return likedFoodRepository.findByFood_Id(id);
     }
 
     //food 보여주기
@@ -102,15 +106,16 @@ public class UserApiController {
     //좋아요
     @PostMapping("/liked/{id}")
     public Boolean updateLikeFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-        Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
-        Boolean response = likedFoodFound.isPresent();
-        System.out.println(response);
+        Boolean response = likedFoodCheckd(id,userDetails);
         if (response == true) {
             return response;
         } else {
+            Food food = foodRepository.findById(id).orElseThrow(
+                    ()->new NullPointerException("그런 음식 없어요")
+            );
+            User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                    ()->new NullPointerException("그런 사람 없어요")
+            );
             LikedFood likedFood = new LikedFood(food,user);
             likedFoodRepository.save(likedFood);
         }
@@ -142,17 +147,6 @@ public class UserApiController {
         return "메세지 수정 완료!";
     }
 
-    //좋아요
-    @PostMapping("/liked")
-    public String updateLikeFood(@RequestBody LikedFoodDto likedFoodDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User found = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findByName(likedFoodDto.getFoodname()).get();
-        LikedFood likedFood = new LikedFood(food,found);
-        likedFoodRepository.save(likedFood);
-        return "좋아요 업데이트";
-    }
-
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -169,7 +163,6 @@ public class UserApiController {
         Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
         Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
         Boolean response = likedFoodFound.isPresent();
-        System.out.println(response);
         return response;
     }
 

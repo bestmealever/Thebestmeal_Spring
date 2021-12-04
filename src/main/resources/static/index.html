@@ -61,7 +61,8 @@
                 $("#mypage").css("display", "");
                 $("#login").css("display", "none");
                 $("#username").html(localStorage.getItem("username"));
-                //로그인 된 사용자의 food, 좋아요 하트 적용
+
+                //로그인 된 사용자의 인덱스, 하트를 눌렀는지 확인해서 노출
                 $.ajax({
                     type: "GET",
                     url: "/liked",
@@ -71,27 +72,7 @@
                             let foodList = response[i]
                             console.log(foodList);
                             console.log(foodList['id']);
-                            $.ajax({
-                                type: "GET",
-                                url: `/likedCheck/${foodList['id']}`,
-                                // async: false,
-                                success: function (response) {
-                                    let class_heart = response == true ? "bi-heart-fill" : "bi-heart"
-                                    let temp = `
-                                                <div id="${foodList['id']}" class="foodListCard">
-                                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-                                                    <div class="foodInfo">
-                                                        <p class="foodListCardName">${foodList['name']}</p>
-                                                        <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
-                                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-                                                    </div>
-                                                </div>
-                                                `
-                                    $('#foodList').append(temp);
-                                    //정렬이 id 순서대로 안이루어지는 이유는 아마도 통신 속도때문? async: false 로 해결!
-                                    Tag(foodList);
-                                }
-                            })
+                            getList(foodList);
                         }
                     }
                 })
@@ -100,7 +81,7 @@
                 $("#userMessege").empty();
                 $("#logout").css("display", "none");
                 $("#mypage").css("display", "none");
-                //로그인 안된 푸드 리스트
+                //로그인 안된 사용자 인덱스
                 $.ajax({
                     type: "GET",
                     url: "/liked",
@@ -125,6 +106,32 @@
                         }
                     }
                 })
+            }
+            function getList(foodList) {
+                $.ajax({
+                    type: "GET",
+                    url: `/likedCheck/${foodList['id']}`,
+                    // async: false,
+                    success: function (response) {
+                        getList2(response,foodList)
+                    }
+                })
+            }
+            function getList2(response,foodList){
+                let class_heart = response === true ? "bi-heart-fill" : "bi-heart"
+                let temp = `
+                            <div id="${foodList['id']}" class="foodListCard">
+                                <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
+                                <div class="foodInfo">
+                                    <p class="foodListCardName">${foodList['name']}</p>
+                                    <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                    <p class="foodListCardTags" id="tags${foodList['id']}"></p>
+                                </div>
+                            </div>
+                            `
+                $('#foodList').append(temp);
+                //정렬이 id 순서대로 안이루어지는 이유는 아마도 통신 속도때문? async: false 로 해결!
+                Tag(foodList);
             }
             $("#logout").click(function () {
                 //로그아웃

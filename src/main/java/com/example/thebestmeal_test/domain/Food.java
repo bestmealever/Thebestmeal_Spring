@@ -28,10 +28,10 @@ public class Food extends Timestamped {
     private String imageUrl;
 
     @OneToMany(mappedBy = "food")
-    private List<Tag> tags;
+    private Set<Tag> tags;
 
     @OneToMany(mappedBy = "food")
-    private List<LikedFood> likedFood;
+    private Set<LikedFood> likedFood;
 
     public Food(PostDto postDto) {
         this.name = postDto.getPostingFoodName();
