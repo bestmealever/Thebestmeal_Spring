@@ -6,20 +6,20 @@ let postingMemo;
 
 
 $(document).ready(function () {
+
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
         if (localStorage.getItem('token')) {
             jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         }
-    });
 
-    $("#logout").click(function () {
-        //로그아웃
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
-        location.href = '/';
-    });
+        $("#logout").click(function () {
+            //로그아웃
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            location.href = '/';
+        });
+    })
 })
-
 
 function step1() {
 
