@@ -224,7 +224,7 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
                          alt="${foodObjArray[foodObjArrayNum]['name']}"></div>
                     <div class="button-group-out">
                         <button class="button next-stage" onclick="selectFoodOnClient(${foodObjArrayNum - 1})">이전 추천 음식</button>
-                        <button class="button next-stage" onclick="">이거 먹을게요!</button>
+                        <button class="button next-stage" onclick="viewKakao()">이거 먹을게요!</button>
                         <button class="button next-stage" onclick="selectFoodOnClient(${foodObjArrayNum + 1})">다음 추천 음식</button>
                     </div>`
     let btnGroup = $('#button-group')
@@ -232,3 +232,14 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
     btnGroup.append(temp_html)
 }
 
+
+// 카카오 페이지로 이동
+function viewKakao() {
+    $.ajax({
+        type: "GET",
+        url: "/kakao.html",
+        success: function() {
+            window.location.href = '/kakao.html'
+        }
+    })
+}
