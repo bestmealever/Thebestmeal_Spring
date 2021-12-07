@@ -70,8 +70,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin()
-                .loginPage("/login.html")
-                .failureUrl("/login.html")
+                .loginPage("/index.html")
+                .failureUrl("/index.html")
                 .defaultSuccessUrl("/")
                 .permitAll()	//허용
                 .and()

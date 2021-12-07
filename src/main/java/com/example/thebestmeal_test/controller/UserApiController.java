@@ -48,6 +48,14 @@ public class UserApiController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
+//    @PostMapping(value = "/login/kakao")
+//    public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
+//        String username = userService.kakaoLogin(socialLoginDto.getToken());
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//        final String token = jwtTokenUtil.generateToken(userDetails);
+//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+//    }
+
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
         String username = userService.kakaoLogin(socialLoginDto.getToken());
@@ -83,8 +91,14 @@ public class UserApiController {
     }
 
     //food 보여주기
+//    @GetMapping("/liked")
+//    public List<Food> getFoodList() {
+//        return foodRepository.findTop12ByOrderByLikedFoodDesc();
+//    }
+
     @GetMapping("/liked")
-    public List<Food> getFoodList() {
+    public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println(userDetails.getUser().getUsername());
         return foodRepository.findTop12ByOrderByLikedFoodDesc();
     }
 
