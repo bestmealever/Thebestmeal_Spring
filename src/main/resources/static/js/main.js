@@ -4,6 +4,7 @@ let yesterdayEat;
 
 let foodObjArray;
 let foodObjArrayNum;
+let foodName;
 
 function want() {
     let btn_val = []
@@ -216,6 +217,7 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
     } else if (foodObjArrayNum >= foodObjArray.length) {
         foodObjArrayNum = 0
     }
+    foodName = foodObjArray[foodObjArrayNum]['name']
     let temp_html = `<div class="question-h">
                         <p class="todays">${foodObjArray[foodObjArrayNum]['name']} <span id="recommend">${foodObjArray[foodObjArrayNum]['name']}</span> ${foodObjArray[foodObjArrayNum]['name']}
                         </p>
@@ -224,7 +226,7 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
                          alt="${foodObjArray[foodObjArrayNum]['name']}"></div>
                     <div class="button-group-out">
                         <button class="button next-stage" onclick="selectFoodOnClient(${foodObjArrayNum - 1})">이전 추천 음식</button>
-                        <button class="button next-stage" onclick="">이거 먹을게요!</button>
+                        <button class="button next-stage" onclick="viewKakao(foodName)">이거 먹을게요!</button>
                         <button class="button next-stage" onclick="selectFoodOnClient(${foodObjArrayNum + 1})">다음 추천 음식</button>
                     </div>`
     let btnGroup = $('#button-group')
@@ -232,3 +234,20 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
     btnGroup.append(temp_html)
 }
 
+
+// 카카오 페이지로 이동
+function viewKakao(foodName) {
+    // console.log(foodName)
+    // window.location.href = `/api/kakao?foodName=${foodName}`
+    // window.location.href = `/api/kakao`
+    window.location.href = `kakao.html?foodName=${foodName}`
+
+
+    // $.ajax({
+    //     type: "GET",
+    //     url: "/api/kakao",
+    //     // data: {foodName:foodName},
+    //     success: function() {
+    //     }
+    // })
+}
