@@ -7,6 +7,7 @@ import com.example.thebestmeal_test.dto.*;
 import com.example.thebestmeal_test.repository.FoodRepository;
 import com.example.thebestmeal_test.repository.LikedFoodRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
+import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
 import com.example.thebestmeal_test.util.JwtTokenUtil;
@@ -20,7 +21,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +38,7 @@ public class UserApiController {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final LikedFoodRepository likedFoodRepository;
+    private final AwsService awsService;
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -58,6 +62,7 @@ public class UserApiController {
 //        userService.kakaoLogin(code);
 //        return "redirect:/";
 //    }
+
     //회원가입
     @PostMapping(value = "/signup")
     public ResponseEntity<?> createUser(@RequestBody SignupRequestDto userDto) throws Exception {
@@ -145,6 +150,14 @@ public class UserApiController {
     public String modifyStatusMessage(@RequestBody UserStatusModifyDto statusModifyDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.modifyStatusMessage(statusModifyDto,userDetails);
         return "메세지 수정 완료!";
+    }
+
+    //마이페이지 이미지 업로드
+    @PostMapping("/images")
+    public String upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        User user = userDetails.getUser();
+        awsService.upload(multipartFile, "profile_pic", user);
+        return "사진 업로드 성공!";
     }
 
     private void authenticate(String username, String password) throws Exception {

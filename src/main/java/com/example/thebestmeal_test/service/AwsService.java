@@ -1,4 +1,4 @@
-package com.example.thebestmeal_test.s3;
+package com.example.thebestmeal_test.service;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -23,12 +24,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
-public class S3Uploader {
+@Service
+public class AwsService {
 
     private final AmazonS3Client amazonS3Client;
     private final UserService userService;
@@ -48,7 +50,8 @@ public class S3Uploader {
         Long userId = user.getId();
         String originalFilename = multipartFile.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
-        String fileName = dirName + "/" + userId + "_" + "profile" + extension;   // S3에 저장된 파일 이름
+        String randaom = random();
+        String fileName = dirName + "/" + userId + "_" + "profile" + "_" + randaom + extension;   // S3에 저장된 파일 이름
 
         InputStream inputStream = multipartFile.getInputStream();
         putS3(fileName, inputStream, objectMetadata); // s3로 업로드
@@ -58,6 +61,21 @@ public class S3Uploader {
         System.out.println(uploadImageUrl);
         userService.updateProfileImg(uploadImageUrl, user);
         return uploadImageUrl;
+    }
+
+    private String random() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit,rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
     }
 
     // S3로 업로드
