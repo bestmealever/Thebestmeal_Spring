@@ -29,7 +29,8 @@ public class S3Uploader {
     private final UserService userService;
 
 //    @Value("${cloud.aws.s3.bucket}")
-    public String bucket = "jmspring";  // S3 버킷 이름
+public String bucket = "1203weekly";  // S3 버킷 이름
+//    public String bucket = "jmspring";  // S3 버킷 이름
 
 //    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
 //        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
