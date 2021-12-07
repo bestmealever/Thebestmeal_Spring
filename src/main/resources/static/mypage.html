@@ -203,28 +203,6 @@
             })
         }
 
-        //포스팅 부분 테스트 나중에 삭제!
-        function saveFoodRecomend() {
-            let info = {
-                "postingFoodName":$("#foodname").val(),
-                "postingMemo":$("#comment").val(),
-                "foodImgUrl":$("#foodurl").val(),
-                "tag":$("#tagname1").val()
-            }
-
-            console.log(info);
-
-            $.ajax({
-                type:"POST",
-                url:"/post",
-                contentType: "application/json",
-                data: JSON.stringify(info),
-                success:function (response) {
-                    alert("저장되었습니다!")
-                    window.location.reload();
-                }
-            })
-        }
 
         function heart() {
             if ($("#heart").hasClass("bi-heart")) {

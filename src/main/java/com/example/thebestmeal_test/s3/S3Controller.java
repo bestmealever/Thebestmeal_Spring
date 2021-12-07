@@ -17,12 +17,6 @@ public class S3Controller {
 
     private final S3Uploader s3Uploader;
 
-//    @PostMapping("/images")
-//    public String upload(@RequestParam("images") MultipartFile multipartFile) throws IOException {
-//        s3Uploader.upload(multipartFile, "profile_pic");
-//        return "사진 업로드 성공!";
-//    }
-
     @PostMapping("/images")
     public String upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         User user = userDetails.getUser();
