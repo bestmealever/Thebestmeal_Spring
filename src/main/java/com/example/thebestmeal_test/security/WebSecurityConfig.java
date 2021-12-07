@@ -61,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/static/images/**").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/liked/**").permitAll()
+                .antMatchers("/liked/count/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //jwt 인증 실패 -> authenticationEntryPoint

@@ -7,6 +7,7 @@ import com.example.thebestmeal_test.dto.*;
 import com.example.thebestmeal_test.repository.FoodRepository;
 import com.example.thebestmeal_test.repository.LikedFoodRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
+import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
 import com.example.thebestmeal_test.util.JwtTokenUtil;
@@ -20,7 +21,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +38,7 @@ public class UserApiController {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final LikedFoodRepository likedFoodRepository;
+    private final AwsService awsService;
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -51,6 +55,14 @@ public class UserApiController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
+
+//    //카카오 로그인 callback
+//    @GetMapping("/user/kakao/callback")
+//    public String kakaoLogin(String code) {
+//        userService.kakaoLogin(code);
+//        return "redirect:/";
+//    }
+
     //회원가입
     @PostMapping(value = "/signup")
     public ResponseEntity<?> createUser(@RequestBody SignupRequestDto userDto) throws Exception {
@@ -67,15 +79,19 @@ public class UserApiController {
         String username = idDto.getUsername();
         Optional<User> found = userRepository.findByUsername(username);
         Boolean response = found.isPresent();
-        System.out.println(response);
         return response;
     }
 
     //food 보여주기
     @GetMapping("/liked")
     public List<Food> getFoodList() {
-//        return foodRepository.findTop9ByOrderByIdAsc();
         return foodRepository.findTop12ByOrderByLikedFoodDesc();
+    }
+
+    //likedfood 개수
+    @GetMapping("/liked/count/{id}")
+    public List<LikedFood> getFoodLikedCount(@PathVariable Long id) {
+        return likedFoodRepository.findByFood_Id(id);
     }
 
     //food 보여주기
@@ -95,15 +111,16 @@ public class UserApiController {
     //좋아요
     @PostMapping("/liked/{id}")
     public Boolean updateLikeFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-        Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
-        Boolean response = likedFoodFound.isPresent();
-        System.out.println(response);
+        Boolean response = likedFoodCheckd(id,userDetails);
         if (response == true) {
             return response;
         } else {
+            Food food = foodRepository.findById(id).orElseThrow(
+                    ()->new NullPointerException("그런 음식 없어요")
+            );
+            User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                    ()->new NullPointerException("그런 사람 없어요")
+            );
             LikedFood likedFood = new LikedFood(food,user);
             likedFoodRepository.save(likedFood);
         }
@@ -135,15 +152,12 @@ public class UserApiController {
         return "메세지 수정 완료!";
     }
 
-    //좋아요
-    @PostMapping("/liked")
-    public String updateLikeFood(@RequestBody LikedFoodDto likedFoodDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User found = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findByName(likedFoodDto.getFoodname()).get();
-        LikedFood likedFood = new LikedFood(food,found);
-        likedFoodRepository.save(likedFood);
-        return "좋아요 업데이트";
+    //마이페이지 이미지 업로드
+    @PostMapping("/images")
+    public String upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        User user = userDetails.getUser();
+        awsService.upload(multipartFile, "profile_pic", user);
+        return "사진 업로드 성공!";
     }
 
     private void authenticate(String username, String password) throws Exception {
@@ -162,9 +176,7 @@ public class UserApiController {
         Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
         Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
         Boolean response = likedFoodFound.isPresent();
-        System.out.println(response);
         return response;
     }
 
-//    @PostMapping("/liked")
 }
