@@ -234,20 +234,22 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
     btnGroup.append(temp_html)
 }
 
-
 // 카카오 페이지로 이동
 function viewKakao(foodName) {
-    // console.log(foodName)
-    // window.location.href = `/api/kakao?foodName=${foodName}`
-    // window.location.href = `/api/kakao`
-    window.location.href = `kakao.html?foodName=${foodName}`
-
-
-    // $.ajax({
-    //     type: "GET",
-    //     url: "/api/kakao",
-    //     // data: {foodName:foodName},
-    //     success: function() {
-    //     }
-    // })
+    console.log('TT')
+    $.ajax({
+        type: "GET",
+        url: "/api/recommended",
+        success: function (response) {
+            console.log(response)
+            window.location.href = `kakao.html?foodName=${foodName}`
+        }
+    })
+    $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+        if (localStorage.getItem('token')) {
+            jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+        }
+    })
 }
+
+

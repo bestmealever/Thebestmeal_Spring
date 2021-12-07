@@ -65,6 +65,9 @@ public class User extends Timestamped {
     @OneToMany(mappedBy="user")
     private List<Posting> postings;
 
+    @OneToMany(mappedBy="user")
+    private List<Recommended> recoFoods;
+
     @OneToOne
     private LikedFood likedFood;
 
