@@ -37,17 +37,17 @@ public class UserController {
 //        return "signup";
 //    }
 
-    // 회원 가입 요청 처리
-    @PostMapping("/user/signup")
-    public String registerUser(SignupRequestDto requestDto) {
-        userService.registerUser(requestDto);
-        return "redirect:/";
-    }
-
-    @GetMapping("/user/forbidden")
-    public String forbidden() {
-        return "forbidden";
-    }
+//    // 회원 가입 요청 처리
+//    @PostMapping("/user/signup")
+//    public String registerUser(SignupRequestDto requestDto) {
+//        userService.registerUser(requestDto);
+//        return "redirect:/";
+//    }
+//
+//    @GetMapping("/user/forbidden")
+//    public String forbidden() {
+//        return "forbidden";
+//    }
 
 //    @GetMapping("/user/mypage")
 //    public String mypage(Model model) {

@@ -203,28 +203,6 @@
             })
         }
 
-        //포스팅 부분 테스트 나중에 삭제!
-        function saveFoodRecomend() {
-            let info = {
-                "postingFoodName":$("#foodname").val(),
-                "postingMemo":$("#comment").val(),
-                "foodImgUrl":$("#foodurl").val(),
-                "tag":$("#tagname1").val()
-            }
-
-            console.log(info);
-
-            $.ajax({
-                type:"POST",
-                url:"/post",
-                contentType: "application/json",
-                data: JSON.stringify(info),
-                success:function (response) {
-                    alert("저장되었습니다!")
-                    window.location.reload();
-                }
-            })
-        }
 
         function heart() {
             if ($("#heart").hasClass("bi-heart")) {
@@ -325,7 +303,6 @@
                     <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
                     <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
                     <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
-                    <a href="/" class="nave-menu-text nav-menu">이세상 음식 전부보기</a>
                 </div>
                 <div class="nav-botton-box">
                     <button class="nav-button" id="logout">로그아웃</button>
