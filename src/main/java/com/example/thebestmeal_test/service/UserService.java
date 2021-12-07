@@ -1,11 +1,13 @@
 package com.example.thebestmeal_test.service;
 
+import com.example.thebestmeal_test.domain.Food;
 import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.domain.UserRole;
 import com.example.thebestmeal_test.dto.SignupRequestDto;
 import com.example.thebestmeal_test.dto.UserStatusModifyDto;
 import com.example.thebestmeal_test.kakao.KakaoOAuth2;
 import com.example.thebestmeal_test.kakao.KakaoUserInfo;
+import com.example.thebestmeal_test.repository.FoodRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final FoodRepository foodRepository;
     private final AuthenticationManager authenticationManager;
     private final KakaoOAuth2 kakaoOAuth2;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -43,6 +46,18 @@ public class UserService {
                 () -> new NullPointerException("그런 사람 없는데요?"));
         found.update(statusModifyDto);
         userRepository.save(found);
+    }
+
+    public void updateCnt(Long id) {
+        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("굿"));
+        food.update(+1);
+        foodRepository.save(food);
+    }
+
+    public void updateCntM(Long id) {
+        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("굿"));
+        food.update(-1);
+        foodRepository.save(food);
     }
 
     public void registerUser(SignupRequestDto requestDto) {

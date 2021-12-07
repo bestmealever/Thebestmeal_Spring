@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.example.thebestmeal_test.domain.User;
+import com.example.thebestmeal_test.dto.PostDto;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
@@ -40,6 +41,25 @@ public class AwsService {
 
     @Value("${cloud.aws.s3.uri}")
     public String s3Uri;  // S3 버킷 이름
+
+    public String uploadFoodImg(MultipartFile multipartFile) throws IOException {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(multipartFile.getContentType());
+        objectMetadata.setContentLength(multipartFile.getBytes().length); //이미지 변환
+
+        String originalFilename = multipartFile.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+        String randaom = random();
+        String fileName = "food" + "/" + randaom + extension;   // S3에 저장된 파일 이름
+
+        InputStream inputStream = multipartFile.getInputStream();
+        putS3(fileName, inputStream, objectMetadata); // s3로 업로드
+
+        String uploadImageUrl = s3Uri + fileName; //url
+
+        System.out.println(uploadImageUrl);
+        return uploadImageUrl;
+    }
 
 
     public String upload(MultipartFile multipartFile, String dirName,User user) throws IOException {

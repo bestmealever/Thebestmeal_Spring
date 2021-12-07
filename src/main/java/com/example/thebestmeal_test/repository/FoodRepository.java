@@ -10,10 +10,14 @@ import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
     Optional<Food> findByName(String name);
+
+    @EntityGraph(attributePaths = {"tags"})
+    List<Food> findTop12ByOrderByCntDesc();
+//
+//    List<Food> findTop12ByLikedFoodIsNullOrderByCntDesc();
+
     @EntityGraph(attributePaths = {"tags","likedFood"})
-    List<Food> findTop12ByOrderByLikedFoodDesc();
-    @EntityGraph(attributePaths = {"tags","likedFood"})
-    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByLikedFoodDesc(User user);
+    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user);
 
     List<Food> findAllByNameIn(List<String> name);
     List<Food> findNameAndImageUrlByNameIn(List<String> name);

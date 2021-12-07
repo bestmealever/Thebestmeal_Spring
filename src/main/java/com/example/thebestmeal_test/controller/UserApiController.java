@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -90,16 +91,14 @@ public class UserApiController {
         return response;
     }
 
-    //food 보여주기
-//    @GetMapping("/liked")
-//    public List<Food> getFoodList() {
-//        return foodRepository.findTop12ByOrderByLikedFoodDesc();
-//    }
 
     @GetMapping("/liked")
     public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println(userDetails.getUser().getUsername());
-        return foodRepository.findTop12ByOrderByLikedFoodDesc();
+        if(userDetails != null) {
+            return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
+        } else {
+            return foodRepository.findTop12ByOrderByCntDesc();
+        }
     }
 
     //likedfood 개수
@@ -123,6 +122,7 @@ public class UserApiController {
     }
 
     //좋아요
+    @Transactional
     @PostMapping("/liked/{id}")
     public Boolean updateLikeFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Boolean response = likedFoodCheckd(id,userDetails);
@@ -137,6 +137,7 @@ public class UserApiController {
             );
             LikedFood likedFood = new LikedFood(food,user);
             likedFoodRepository.save(likedFood);
+            userService.updateCnt(id);
         }
         return response;
     }
@@ -150,6 +151,7 @@ public class UserApiController {
         Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
         Long LikedFoodId = likedFoodFound.get().getIdx();
         likedFoodRepository.deleteById(LikedFoodId);
+        userService.updateCntM(id);
         return "삭제!";
     }
 

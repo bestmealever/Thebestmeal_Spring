@@ -55,41 +55,59 @@
     <script>
         $(document).ready(function () {
             //토큰이 있으면 로그인 화면
+
+            // 헤더에 토큰값 넣어 ajax 호출
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    if (localStorage.getItem('token')) {
+                        jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                    }
+                });
             if (localStorage.getItem("token")) {
                 $("#logout").css("display", "");
                 $("#mypage").css("display", "");
                 $("#login").css("display", "none");
                 $("#username").html(localStorage.getItem("username"));
 
-                //로그인 된 사용자의 인덱스, 하트를 눌렀는지 확인해서 노출
-                $.ajax({
-                    type: "GET",
-                    url: "/liked",
-                    success: function (response) {
-                        console.log(response)
-                    }
-                })
             } else {
                 //토큰이 없으면 로그아웃된 화면
                 $("#userMessege").empty();
                 $("#logout").css("display", "none");
                 $("#mypage").css("display", "none");
-                //로그인 안된 사용자 인덱스
-                $.ajax({
-                    type: "GET",
-                    url: "/liked",
-                    success: function (response) {
-                        console.log(response);
-                        for (let i = 0; i < response.length; i++) {
+            }
+            $.ajax({
+                type: "GET",
+                url: "/liked",
+                success: function (response) {
+                    console.log(response);
+                    for (let i = 0; i < response.length; i++) {
+                        if (localStorage.getItem("token")) {
+                            let class_heart = response[i]['likedFood'].length === 1 ? "bi-heart-fill" : "bi-heart"
                             let foodList = response[i]
                             console.log(foodList);
                             console.log(foodList['id']);
+                            console.log(foodList['likedFood'])
                             let temp = `
                                 <div id="${foodList['id']}"  class="foodListCard">
                                     <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
                                     <div class="foodInfo">
                                         <p class="foodListCardName">${foodList['name']}</p>
-                                        <i class="bi bi-heart" id="heart" onclick="alert('로그인후 이용해주세요')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                        <i class="bi ${class_heart}" id="heart${foodList['id']}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['cnt']}</span>
+                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
+                                    </div>
+                                </div>
+                                    `
+                            $('#foodList').append(temp);
+                            Tag(foodList);
+                        } else {
+                            let foodList = response[i]
+                            console.log(foodList);
+                            console.log(foodList['id'])
+                            let temp = `
+                                <div id="${foodList['id']}"  class="foodListCard">
+                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
+                                    <div class="foodInfo">
+                                        <p class="foodListCardName">${foodList['name']}</p>
+                                        <i class="bi bi-heart" id="heart${foodList['id']}" onclick="alert('로그인 후 이용해주세요!')"></i><span class="likedLength">${foodList['cnt']}</span>
                                         <p class="foodListCardTags" id="tags${foodList['id']}"></p>
                                     </div>
                                 </div>
@@ -98,34 +116,9 @@
                             Tag(foodList);
                         }
                     }
-                })
-            }
-            // function getList(foodList) {
-            //     $.ajax({
-            //         type: "GET",
-            //         url: `/likedCheck/${foodList['id']}`,
-            //         async: false,
-            //         success: function (response) {
-            //             getList2(response,foodList)
-            //         }
-            //     })
-            // }
-            // function getList2(response,foodList){
-            //     let class_heart = response === true ? "bi-heart-fill" : "bi-heart"
-            //     let temp = `
-            //                 <div id="${foodList['id']}" class="foodListCard">
-            //                     <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-            //                     <div class="foodInfo">
-            //                         <p class="foodListCardName">${foodList['name']}</p>
-            //                         <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
-            //                         <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-            //                     </div>
-            //                 </div>
-            //                 `
-            //     $('#foodList').append(temp);
-            //     //정렬이 id 순서대로 안이루어지는 이유는 아마도 통신 속도때문? async: false 로 해결!
-            //     Tag(foodList);
-            // }
+                }
+            })
+
             $("#logout").click(function () {
                 //로그아웃
                 localStorage.removeItem("token");
@@ -140,99 +133,6 @@
                 }
             });
         })
-        // $(document).ready(function () {
-        //     //토큰이 있으면 로그인 화면
-        //     if (localStorage.getItem("token")) {
-        //         $("#logout").css("display", "");
-        //         $("#mypage").css("display", "");
-        //         $("#login").css("display", "none");
-        //         $("#username").html(localStorage.getItem("username"));
-        //
-        //         //로그인 된 사용자의 인덱스, 하트를 눌렀는지 확인해서 노출
-        //         $.ajax({
-        //             type: "GET",
-        //             url: "/liked",
-        //             success: function (response) {
-        //                 console.log(response)
-        //                 for (let i = 0; i < response.length; i++) {
-        //                     let foodList = response[i]
-        //                     console.log(foodList);
-        //                     console.log(foodList['id']);
-        //                     getList(foodList);
-        //                 }
-        //             }
-        //         })
-        //     } else {
-        //         //토큰이 없으면 로그아웃된 화면
-        //         $("#userMessege").empty();
-        //         $("#logout").css("display", "none");
-        //         $("#mypage").css("display", "none");
-        //         //로그인 안된 사용자 인덱스
-        //         $.ajax({
-        //             type: "GET",
-        //             url: "/liked",
-        //             success: function (response) {
-        //                 console.log(response);
-        //                 for (let i = 0; i < response.length; i++) {
-        //                     let foodList = response[i]
-        //                     console.log(foodList);
-        //                     console.log(foodList['id']);
-        //                     let temp = `
-        //                         <div id="${foodList['id']}"  class="foodListCard">
-        //                             <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-        //                             <div class="foodInfo">
-        //                                 <p class="foodListCardName">${foodList['name']}</p>
-        //                                 <i class="bi bi-heart" id="heart" onclick="alert('로그인후 이용해주세요')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
-        //                                 <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-        //                             </div>
-        //                         </div>
-        //                             `
-        //                     $('#foodList').append(temp);
-        //                     Tag(foodList);
-        //                 }
-        //             }
-        //         })
-        //     }
-        //     function getList(foodList) {
-        //         $.ajax({
-        //             type: "GET",
-        //             url: `/likedCheck/${foodList['id']}`,
-        //             async: false,
-        //             success: function (response) {
-        //                 getList2(response,foodList)
-        //             }
-        //         })
-        //     }
-        //     function getList2(response,foodList){
-        //         let class_heart = response === true ? "bi-heart-fill" : "bi-heart"
-        //         let temp = `
-        //                     <div id="${foodList['id']}" class="foodListCard">
-        //                         <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-        //                         <div class="foodInfo">
-        //                             <p class="foodListCardName">${foodList['name']}</p>
-        //                             <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
-        //                             <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-        //                         </div>
-        //                     </div>
-        //                     `
-        //         $('#foodList').append(temp);
-        //         //정렬이 id 순서대로 안이루어지는 이유는 아마도 통신 속도때문? async: false 로 해결!
-        //         Tag(foodList);
-        //     }
-        //     $("#logout").click(function () {
-        //         //로그아웃
-        //         localStorage.removeItem("token");
-        //         localStorage.removeItem("username");
-        //         location.href = '/';
-        //     });
-        //
-        //     //헤더에 토큰값 넣어 ajax 호출
-        //     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-        //         if (localStorage.getItem('token')) {
-        //             jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-        //         }
-        //     });
-        // })
 
         function Tag(foodList) {
             for (let i = 0; i < foodList['tags'].length; i++) {

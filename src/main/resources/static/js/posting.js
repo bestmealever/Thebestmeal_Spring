@@ -148,7 +148,7 @@ function step3() {
                                 <progress class="progress is-normal" value="75" max="100">75%</progress>
                                 <div class = "form-group">
 <!--                                s3 전 임시로 넣어보기 url -->
-                                            <input id="foodurl" placeholder="url">
+                                            <input id="foodurl" type="file" name="avatar" />
                                             <!--코멘트-->
                                             <div style="width:450px;  float: left;">
                                                 <input class="input is-rounded" style="text-align: center; height:200px; border-radius: 20px;  margin: 10px 0 0 0; word-wrap: break-word;" type="text" id="comment" placeholder="이 음식을 소개해주세요! (최대 45자까지 입력 가능합니다)" maxlength='45'>
@@ -210,21 +210,22 @@ function save() {
     foodImgUrl = $('#foodurl').val();
     postingMemo = $('#comment').val();
 
-    let data = {
-        "postingFoodName": postingFoodName,
-        "postingCat": postingCat,
-        "postingEmo": postingEmo,
-        "foodImgUrl": foodImgUrl,
-        "postingMemo": postingMemo
-    }
+    let data = new FormData();
+    data.append( "postingFoodName", postingFoodName );
+    data.append( "postingCat", postingCat );
+    data.append( "postingEmo", postingEmo );
+    data.append( "foodImgUrl", $("#foodurl")[0].files[0] );
+    data.append( "postingMemo", postingMemo );
+
 
     console.log(data)
 
     $.ajax({
         type: "POST",
         url: "/api/post",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(data),
+        processData: false,
+        contentType: false,
+        data: data,
         success: function (response) {
                 alert("추천해주셔서 감사합니다!");
                         let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>

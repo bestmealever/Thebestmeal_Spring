@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,19 +28,32 @@ public class Food extends Timestamped {
     @Column
     private String imageUrl;
 
+    @Column
+    @ColumnDefault("0")
+    private int cnt;
+
     @OneToMany(mappedBy = "food")
     private Set<Tag> tags;
 
     @OneToMany(mappedBy = "food")
     private Set<LikedFood> likedFood;
 
-    public Food(PostDto postDto) {
-        this.name = postDto.getPostingFoodName();
-        this.imageUrl = postDto.getFoodImgUrl();
-    }
+//    public Food(PostDto postDto) {
+//        this.name = postDto.getPostingFoodName();
+//        this.imageUrl = postDto.getFoodImgUrl();
+//    }
 
     public Food(String name, String imageUrl) {
         this.name = name;
         this.imageUrl = imageUrl;
+    }
+
+    public Food(PostDto postDto, String foodImgUrl) {
+        this.name = postDto.getPostingFoodName();
+        this.imageUrl = foodImgUrl;
+    }
+
+    public void update(int cnt) {
+        this.cnt += cnt;
     }
 }
