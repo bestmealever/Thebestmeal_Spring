@@ -6,9 +6,11 @@ import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.dto.*;
 import com.example.thebestmeal_test.repository.FoodRepository;
 import com.example.thebestmeal_test.repository.LikedFoodRepository;
+import com.example.thebestmeal_test.repository.RecommendedRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
-import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
+import com.example.thebestmeal_test.service.AwsService;
+import com.example.thebestmeal_test.service.RecommendedService;
 import com.example.thebestmeal_test.service.UserService;
 import com.example.thebestmeal_test.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,8 @@ public class UserApiController {
     private final FoodRepository foodRepository;
     private final LikedFoodRepository likedFoodRepository;
     private final AwsService awsService;
+    private final RecommendedRepository recommendedRepository;
+    private final RecommendedService recommendedService;
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -141,8 +145,8 @@ public class UserApiController {
 
     //마이페이지
     @GetMapping("/mypage")
-    public Optional<User> getMyinfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userRepository.findByUsername(userDetails.getUsername());
+    public MyPageDto getMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return recommendedService.toMyPageInfo(userDetails);
     }
 
     //마이페이지 상태 메세지 수정

@@ -1,9 +1,7 @@
 package com.example.thebestmeal_test.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -26,4 +24,9 @@ public class Recommended extends Timestamped {
     @ManyToOne
     @JoinColumn
     private User user;
+
+    public Recommended(Food food, User user) {
+        this.user = user;
+        this.food = food;
+    }
 }

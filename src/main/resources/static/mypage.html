@@ -19,7 +19,8 @@
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"></script>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css" integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
+          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
     <!--파비콘-->
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon2.ico"/>
 
@@ -27,6 +28,8 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script src="js/main.js" rel="script"></script>
 
     <!-- 구글 폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,19 +50,23 @@
                 font-size: 3.5rem;
             }
         }
+
         #page-container {
             position: relative;
             min-height: 100vh;
         }
-        #content-wrap{
+
+        #content-wrap {
             padding-bottom: 2.5rem;
         }
+
         #footer {
             position: absolute;
             bottom: 0;
             width: 100%;
             height: 2.5rem;
         }
+
         #chooseFile {
             visibility: hidden;
         }
@@ -67,7 +74,6 @@
     </style>
 
     <script>
-
         $(document).ready(function () {
             $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                 if (localStorage.getItem('token')) {
@@ -86,9 +92,9 @@
                 url: "/mypage",
                 success: function (response) {
                     console.log(response)
-                    $("#username").html(response['username']);
-                    $('#usercomment').html(response['statusMessage']);
-                    let profile_pic = response['profilePhoto'];
+                    $("#username").html(response['user']['username']);
+                    $('#usercomment').html(response['user']['statusMessage']);
+                    let profile_pic = response['user']['profilePhoto'];
                     let temp_img = `
                     <img style="width:70px; height:70px; border-radius: 70px;  object-fit: cover; float:left; " src="${profile_pic}" >`
                     // $('#profile_pic').attr("src", "/css/food_sample.jpg");
@@ -101,26 +107,35 @@
                                 </div>
                                 <div id="user-nav"></div>`
                     $('#user-table').append(temp_nav);
-                    let postings = response["postings"];
-                    for (let i = 0; i < postings.length; i++) {
-                        let postingFoodName = postings[i]['postingFoodName']
-                        let postingMemo = postings[i]['postingMemo']
-                        let date = postings[i]['createdAt']
+
+                    for (let i = 0; i < response['foods'].length; i++) {
+                        let foodList = response['foods'][i]
+                        console.log(foodList);
+                        console.log(foodList['id']);
                         let temp = `
-                    <p>내가 추천받은 음식 : ${postingFoodName},${postingMemo},,${date}</p>
-                        `
-                        $('#user-nav').append(temp);
+                                <div id="${foodList['id']}"  class="foodListCard">
+                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
+                                    <div class="foodInfo">
+                                        <p class="foodListCardName">${foodList['name']}</p>
+                                        <i class="bi bi-heart" id="heart" onclick=""></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
+                                    </div>
+                                </div>
+                                    `
+                        $('#foodList').append(temp);
+                        Tag(foodList);
                     }
                 }
             })
         })
+
         //내가 추천받은 음식 클릭시
         function nav1() {
             $.ajax({
-                type:"GET",
-                url:"/mypage",
-                success:function(response) {
-                    console.log(response,"nav1에 뿌려질 정보");
+                type: "GET",
+                url: "/mypage",
+                success: function (response) {
+                    console.log(response, "nav1에 뿌려질 정보");
                     $('#user-table').empty();
                     $('#user-nav').empty();
                     let temp_nav = `<div class="mypage-nav" style=" clear:left; margin-top: 30px;">
@@ -144,13 +159,14 @@
                 }
             })
         }
+
         //내가 추천한 음식 클릭시
         function nav2() {
             $.ajax({
-                type:"GET",
-                url:"/mypage",
-                success:function(response) {
-                    console.log(response,"nav2에 뿌려질 정보");
+                type: "GET",
+                url: "/mypage",
+                success: function (response) {
+                    console.log(response, "nav2에 뿌려질 정보");
                     $('#user-table').empty();
                     $('#user-nav').empty();
                     let temp_nav = `<div class="mypage-nav" style=" clear:left; margin-top: 30px;">
@@ -182,13 +198,14 @@
                 }
             })
         }
+
         //내가 남긴 댓글 클릭시
         function nav3() {
             $.ajax({
-                type:"GET",
-                url:"/mypage",
-                success:function(response) {
-                    console.log(response,"nav3에 뿌려질 정보");
+                type: "GET",
+                url: "/mypage",
+                success: function (response) {
+                    console.log(response, "nav3에 뿌려질 정보");
                     let postings = response["postings"];
                     for (let i = 0; i < postings.length; i++) {
                         let postingFoodName = postings[i]['postingFoodName']
@@ -228,16 +245,17 @@
                 $("#heart").removeClass("bi-heart-fill").addClass("bi-heart");
             }
         }
+
         function profilePicUpload() {
             let images = new FormData($('#images')[0]);
             // console.log($('#images')[0][0].files[0])
             $.ajax({
-                type:"POST",
+                type: "POST",
                 url: "/images",
                 processData: false,
                 contentType: false,
                 data: images,
-                success: function(response){
+                success: function (response) {
                     alert("업로드 성공");
                     window.location.reload();
                 }
@@ -258,27 +276,27 @@
                                 <button onclick="statusMessageCancel()">취소</button>
                                 `
                     $("#usercomment").append(input)
-                    }
+                }
             })
         }
 
         function statusMessageSave() {
             let statusMessage = {
-                "statusMessage":$("#statusMessage").val()
+                "statusMessage": $("#statusMessage").val()
             }
             $.ajax({
-                type:"PUT",
-                url:"/mypage/statusMessage",
+                type: "PUT",
+                url: "/mypage/statusMessage",
                 contentType: "application/json",
                 data: JSON.stringify(statusMessage),
-                success:function (response) {
+                success: function (response) {
                     alert("저장되었습니다!")
                     window.location.reload();
                 }
             })
         }
 
-        function statusMessageCancel(){
+        function statusMessageCancel() {
             $.ajax({
                 type: "GET",
                 url: "/mypage",
@@ -320,10 +338,11 @@
                 <span id="username"></span>
                 <br/>
                 <span id="usercomment"></span><br/>
-                <span class="badge text-dark" style="background-color: #5ee1b4;" onclick="statusMessageModify()">메세지 수정</span>
+                <span class="badge text-dark" style="background-color: #5ee1b4;"
+                      onclick="statusMessageModify()">메세지 수정</span>
                 <form id="images" enctype="multipart/form-data" style="display: inline-block;">
                     <label for="chooseFile">
-                       <span class="badge text-dark" style="background-color: #5ee1b4;">프로필 사진 수정</span>
+                        <span class="badge text-dark" style="background-color: #5ee1b4;">프로필 사진 수정</span>
                     </label>
                     <input type="file" id="chooseFile" name="images" accept="image/*" onchange="profilePicUpload(this)">
                 </form>
@@ -331,14 +350,12 @@
             </div>
             <div class="none-box" style="height: 10px; clear:left;"></div>
             <div id="user-table">
-
             </div>
-
-            <div class="none-box" style="height: 100px; clear:left;"></div>
+            <div id="foodList" class="foodCardList"></div>
         </div>
     </main>
     <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
-        <div class="container" >
+        <div class="container">
             <p class="float-end mb-1">
                 <a href="#">Back to top</a>
             </p>
@@ -346,7 +363,8 @@
                 <strong>오늘 뭐 먹지?</strong> made by
                 <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>
                 이거사조 is Team 4 in 내일배움캠프. <br>
-                Welcome to <a href="https://spartacodingclub.kr/" style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
+                Welcome to <a href="https://spartacodingclub.kr/"
+                              style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
             </p>
         </div>
     </footer>

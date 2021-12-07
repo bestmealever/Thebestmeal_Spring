@@ -33,6 +33,9 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy = "food")
     private Set<LikedFood> likedFood;
 
+    @OneToMany(mappedBy="food")
+    private List<Recommended> recommendeds;
+
     public Food(PostDto postDto) {
         this.name = postDto.getPostingFoodName();
         this.imageUrl = postDto.getFoodImgUrl();
