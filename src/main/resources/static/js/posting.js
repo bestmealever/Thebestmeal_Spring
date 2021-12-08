@@ -144,33 +144,19 @@ function step3() {
         let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.4 음식 사진과 음식 소개를 부탁드려요! </p>
                                 <progress class="progress is-normal" value="75" max="100">75%</progress>
                                 <div class = "form-group">
+                  
 <!--                                s3 전 임시로 넣어보기 url -->
-                                            <input id="foodurl" placeholder="url">
+                                            <input id="foodimages" type="file" name="avatar" />
                                             <!--코멘트-->
                                             <div style="width:450px;  float: left;">
                                                 <input class="input is-rounded" style="text-align: center; height:200px; border-radius: 20px;  margin: 10px 0 0 0; word-wrap: break-word;" type="text" id="comment" placeholder="이 음식을 소개해주세요! (최대 45자까지 입력 가능합니다)" maxlength='45'>
                                             </div>
+<!--                                           JS 안되서 주석처리한 코드. -->
+                                            <!--   <form id="foodimages" enctype="multipart/form-data" style="display: inline-block;">-->
+<!--                                <input type="file" id="foodimages" name="images" accept="image/*">-->
                                 </div>
                                     
-                                <!--파일 업로더-->
-<!--                                <div class="form-group">-->
-<!--                                    <div class="file is-small">-->
-<!--                                        <form id="upload-file">-->
-<!--                                            <label class="file-label" for="post-url"  name="file">-->
-<!--                                                <input class="file-input" id="post-url" type="file"  name="file" accept="image/*" onchange="foodPicUpload;"/>-->
-<!--                                                <span class="file-cta">-->
-<!--                                               <span class="file-icon"><i class="fa fa-upload"></i></span><span class="file-label">음식 사진 내 컴퓨터에서 업로드</span></span>-->
-<!--                                            </label>-->
-<!--                                            &lt;!&ndash;이미지 미리보기&ndash;&gt;-->
-<!--                                            <div id="image_container"></div>-->
-<!--                                            &lt;!&ndash;코멘트&ndash;&gt;-->
-<!--                                            <div style="width:450px;  float: left;">-->
-<!--                                                <input class="input is-rounded" style="text-align: center; height:200px; border-radius: 20px;  margin: 10px 0 0 0; word-wrap: break-word;" type="text" id="comment" placeholder="이 음식을 소개해주세요! (최대 45자까지 입력 가능합니다)" maxlength='45'>-->
-<!--                                            </div>-->
-<!--                                        </form>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-                                <!--다음 버튼-->
+
                                 <div class="button-group-out">
                                     <button type="button" class="button next-stage" onclick="save()">저장</button>
                                 </div>`
@@ -182,45 +168,52 @@ function step3() {
 
 }
 
-//아직 쓰질 못함..
 
 // function foodPicUpload() {
-//     let foodImgUrl = new FormData($('#images')[0]);
+//     foodImgUrl = new FormData($('#foodimages')[0]);
 //     // console.log($('#images')[0][0].files[0])
-//     $.ajax({
-//         type:"POST",
-//         url: "/images",
-//         processData: false,
-//         contentType: false,
-//         data: images,
-//         success: function(response){
-//             alert("업로드 성공");
-//             window.location.reload();
-//         }
-//     })
+//     // $.ajax({
+//     //     type:"POST",
+//     //     url: "/api/post",
+//     //     processData: false,
+//     //     contentType: false,
+//     //     data: foodImgUrl,
+//     //     success: function(response){
+//     //         alert("업로드 성공");
+//     //     }
+//     // })
 // }
 
 
 function save() {
-
-    foodImgUrl = $('#foodurl').val();
+    foodImgUrl = $('#foodimages').val();
     postingMemo = $('#comment').val();
 
-    let data = {
-        "postingFoodName": postingFoodName,
-        "postingCat": postingCat,
-        "postingEmo": postingEmo,
-        "foodImgUrl": foodImgUrl,
-        "postingMemo": postingMemo
-    }
+    let data = new FormData();
+    data.append( "postingFoodName", postingFoodName);
+    data.append( "postingCat", postingCat);
+    data.append("postingEmo", postingEmo);
+    data.append("imageUrl", $('#foodimages')[0].files[0] );
+    data.append( "postingMemo", postingMemo);
+
+
+    // let data = {
+    //     "postingFoodName": postingFoodName,
+    //     "postingCat": postingCat,
+    //     "postingEmo": postingEmo,
+    //     "postingMemo": postingMemo
+    // }
+
+    // data.append("foodImgUrl", $('#foodimages')[0].files[0]);
 
     console.log(data)
 
     $.ajax({
         type: "POST",
         url: "/api/post",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(data),
+        processData: false,
+        contentType: false,
+        data: data,
         success: function (response) {
             alert("추천해주셔서 감사합니다!");
             let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>

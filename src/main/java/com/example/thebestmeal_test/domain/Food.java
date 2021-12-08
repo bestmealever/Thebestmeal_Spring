@@ -25,7 +25,8 @@ public class Food extends Timestamped {
     private String name;
 
     @Column
-    private String imageUrl;
+     private String imageUrl;
+//   private String foodImgUrl;
 
     @OneToMany(mappedBy = "food")
     private Set<Tag> tags;
@@ -33,9 +34,9 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy = "food")
     private Set<LikedFood> likedFood;
 
-    public Food(PostDto postDto) {
+    public Food(PostDto postDto, String imageUrl) {
         this.name = postDto.getPostingFoodName();
-        this.imageUrl = postDto.getFoodImgUrl();
+        this.imageUrl = imageUrl;
     }
 
     public Food(String name, String imageUrl) {

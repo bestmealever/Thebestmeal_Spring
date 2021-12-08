@@ -11,14 +11,15 @@ import com.example.thebestmeal_test.repository.PostingRepository;
 import com.example.thebestmeal_test.repository.TagRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
+import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.service.PostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,14 +33,17 @@ public class PostingController {
     private final FoodRepository foodRepository;
     private final TagRepository tagRepository;
     private final PostingService postingService;
+    private final AwsService awsService;
 
+    @Transactional
     @PostMapping("/post")
-    public void postFood(@RequestBody PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        public void postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new NullPointerException("그런 사람 없는데요?"));
 
 //       food 저장
-        Food food = new Food(postDto);
+        String imageUrl = awsService.uploadFoodImg(postDto.getImageUrl());
+        Food food = new Food(postDto, imageUrl);
         foodRepository.save(food);
         //category 저장
 //        List<String> items1 = Arrays.asList(postDto.getPostingTag());
@@ -66,6 +70,16 @@ public class PostingController {
         Boolean response = found.isPresent();
         System.out.println(response);
         return response;
-        }
     }
+
+    //postingclass 와 FoodClass에 동시 저장.
+//    @PostMapping("/foodimgupload")
+//    public String foodupload(@RequestParam("foodimages") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+//        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+//                () -> new NullPointerException("그런 사람 없는데요?"));
+//        Posting posting =
+//                awsService.foodupload(multipartFile, "food_pic", posting);
+//        return "사진 업로드 성공!";
+//    }
+}
 
