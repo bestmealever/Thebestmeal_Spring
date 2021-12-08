@@ -1,10 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
-
 name: Thebestmeal CI/CD
 
 on:
@@ -13,43 +6,53 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  DOCKER_IMAGE: ghcr.io/bestmealever/thebestmeal_spring
+  VERSION: ${{ github.sha }}
+
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Check out source code
+        uses: actions/checkout@v2
+      - name: Set up docker buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Cache docker layers
+        uses: actions/cache@v2
         with:
-          java-version: '1.8'
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ env.VERSION }} # runner 설정에서 읽어들일거에요.
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew clean build
-
-      # 전송할 파일을 담을 디렉토리 생성
-      - name: Make Directory for deliver
-        run: mkdir deploy
-
-      # Jar 파일 Copy
-      - name: Copy Jar
-        run: cp ./build/libs/*.jar ./deploy/
-
-      # 압축파일 형태로 전달
-      - name: Make zip file
-        run: zip -r -qq -j ./thebestmeal.zip ./deploy
-
-      # S3 Bucket으로 copy
-      - name: Deliver to AWS S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{'{{' }} secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{'{{' }} secrets.AWS_SECRET_ACCESS_KEY }}
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [ self-hosted, label-development ]
+    steps:
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+      - name: Docker run
         run: |
-          aws s3 cp \
-          --region ap-northeast-2 \
-          --acl private \
-      ./thebestmeal.zip s3://thebestmeal/
+          docker ps -q --filter "name=thebestmeal" | grep -q . && docker stop thebestmeal && docker rm -fv thebestmeal
+          docker run -d -p 8080:8080 --name cicd --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
