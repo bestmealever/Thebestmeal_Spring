@@ -43,10 +43,10 @@ public class Food extends Timestamped {
 //        this.imageUrl = postDto.getFoodImgUrl();
 //    }
 
-    public Food(String name, String imageUrl) {
-        this.name = name;
-        this.imageUrl = imageUrl;
-    }
+//    public Food(String name, String imageUrl) {
+//        this.name = name;
+//        this.imageUrl = imageUrl;
+//    }
 
     public Food(PostDto postDto, String foodImgUrl) {
         this.name = postDto.getPostingFoodName();
