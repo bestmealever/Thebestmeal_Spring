@@ -24,7 +24,9 @@ public class Posting extends Timestamped{
     @Column
     private String postingMemo;
 
-    //무한 루프... 방지..
+    @Column(nullable = true)
+    private String foodImgUrl;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -37,6 +39,7 @@ public class Posting extends Timestamped{
     public Posting(PostDto postDto, User user, Food food) {
         this.postingMemo = postDto.getPostingMemo();
         this.postingFoodName = postDto.getPostingFoodName();
+//        this.foodImgUrl = foodImgUrl;
         this.user = user;
         this.food = food;
     }
