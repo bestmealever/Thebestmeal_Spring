@@ -145,15 +145,11 @@ function step3() {
                                 <progress class="progress is-normal" value="75" max="100">75%</progress>
                                 <div class = "form-group">
                   
-<!--                                s3 전 임시로 넣어보기 url -->
                                             <input id="foodimages" type="file" name="avatar" />
                                             <!--코멘트-->
                                             <div style="width:450px;  float: left;">
                                                 <input class="input is-rounded" style="text-align: center; height:200px; border-radius: 20px;  margin: 10px 0 0 0; word-wrap: break-word;" type="text" id="comment" placeholder="이 음식을 소개해주세요! (최대 45자까지 입력 가능합니다)" maxlength='45'>
                                             </div>
-<!--                                           JS 안되서 주석처리한 코드. -->
-                                            <!--   <form id="foodimages" enctype="multipart/form-data" style="display: inline-block;">-->
-<!--                                <input type="file" id="foodimages" name="images" accept="image/*">-->
                                 </div>
                                     
 
@@ -169,21 +165,6 @@ function step3() {
 }
 
 
-// function foodPicUpload() {
-//     foodImgUrl = new FormData($('#foodimages')[0]);
-//     // console.log($('#images')[0][0].files[0])
-//     // $.ajax({
-//     //     type:"POST",
-//     //     url: "/api/post",
-//     //     processData: false,
-//     //     contentType: false,
-//     //     data: foodImgUrl,
-//     //     success: function(response){
-//     //         alert("업로드 성공");
-//     //     }
-//     // })
-// }
-
 
 function save() {
     foodImgUrl = $('#foodimages').val();
@@ -193,18 +174,9 @@ function save() {
     data.append( "postingFoodName", postingFoodName);
     data.append( "postingCat", postingCat);
     data.append("postingEmo", postingEmo);
-    data.append("imageUrl", $('#foodimages')[0].files[0] );
+    data.append("foodImgUrl", $('#foodimages')[0].files[0] );
     data.append( "postingMemo", postingMemo);
 
-
-    // let data = {
-    //     "postingFoodName": postingFoodName,
-    //     "postingCat": postingCat,
-    //     "postingEmo": postingEmo,
-    //     "postingMemo": postingMemo
-    // }
-
-    // data.append("foodImgUrl", $('#foodimages')[0].files[0]);
 
     console.log(data)
 
@@ -241,80 +213,3 @@ function save() {
     });
 }
 
-// 이전 파이썬 코드 + s3에 이미지 저장 + 미리보기 하는 코드 (추후 수정 필요)
-
-// 이미지 미리보기 이벤트 이미지 업로드는 포스팅과 별도로 할지?
-
-//맨 마지막 추천한 음식은 ~ 코드 작업 중 (내가 추천한.. 데이터들 가져올 때)
-
-// function makeListPost(article, index) {
-//     let tags ='';
-//     for (let i=0; i<article['tags'].length; i++) {
-//         console.log(article['tags'][i])
-//         tags += " #"+article['tags'][i]['name'];
-//     }
-//     let tempHtml = `<tr>
-//                 <th scope = "row">${index}</th>
-//                 <td><a href="/view?idx=${article['idx']}">${article['title']}</td>
-//                 <td>${article['comments'].length}</td>
-//                 <td>${tags}</td>
-//                 <td>${article['createdAt']}</td>
-//             </tr>`
-//
-//     $("#list-post").append(tempHtml);
-//
-//     console.log(tags);
-//
-// }
-
-//
-// function save() {
-
-// }
-
-
-//파이썬 버전 코드
-//
-// function save() {
-//     let form_data = new FormData($('#upload-file')[0]);
-//     let comment = $("#comment").val();
-//     console.log(comment)
-//     form_data.append("comment_give", comment)
-//
-//     $.ajax({
-//         type: 'POST',
-//         url: '/fileupload',
-//         data: form_data,
-//         processData: false,
-//         contentType: false,
-//         success: function (response) {
-//             console.log(response['doc2'])
-//             let foodurl = response['doc2']['url']
-//             let name = response['doc2']['name']
-//             let comment = response['doc2']['comment']
-//             let category = response['doc2']['category']
-//             let emotion = response['doc2']['emotion']
-//             console.log(foodurl, name, comment)
-//             let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>
-//                             <progress class="progress is-normal" value="100" max="100">100%</progress>
-//                             <div id="posting_result_img" style="background-image:url('${foodurl}')"></div>
-//                             <div class="posting_result">
-//                                 <p class="posting_title">당신의 추천 음식</p>
-//                                 <p class="posting_foodname">${name}</p>
-//                                 <p class="posting_comment">${comment}</p>
-//                                 <p>
-//                                 <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">${name}</span>
-//                                 <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">존맛탱</span>
-//                                 <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">추천감사</span>
-//                                 </p>
-//                             </div>
-//                             <div class="button-group-out">
-//                                <button class="button next-stage" onclick="window.location.href='/'">홈</button>
-//                             </div>
-//                             `
-//             let btnGroup = $('#button-group')
-//             btnGroup.empty()
-//             btnGroup.append(temp_html)
-//         },
-//     });
-// }

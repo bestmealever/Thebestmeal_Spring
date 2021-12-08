@@ -57,9 +57,6 @@ public class PostingController {
             return new Tag(food, tag, "category");
         }).collect(Collectors.toList());
         this.tagRepository.saveAll(tags2);
-        //posting 저장 (foodId, userId, post 내용 저장)
-        //.get() -> 그냥 Food 클래스의.. null check(Optional 객체로 한번 감싸짐) 이렇게 쓰면
-        //Optional null이 get()
         Food food2 = (Food)this.foodRepository.findByName(postDto.getPostingFoodName()).get();
         Posting posting = new Posting(postDto, user, food2);
         this.postingRepository.save(posting);

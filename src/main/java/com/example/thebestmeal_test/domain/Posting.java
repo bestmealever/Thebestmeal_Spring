@@ -24,10 +24,9 @@ public class Posting extends Timestamped{
     @Column
     private String postingMemo;
 
-//    @Column(nullable = false)
-//    private String foodImgUrl;
+    @Column(nullable = true)
+    private String foodImgUrl;
 
-    //무한 루프... 방지..
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)

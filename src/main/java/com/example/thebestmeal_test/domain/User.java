@@ -66,7 +66,6 @@ public class User extends Timestamped {
         this.profilePhoto = "/images/profile_pic.jpg";
     }
 
-
     public void update(String uploadImageUrl) {
         this.profilePhoto = uploadImageUrl;
     }
