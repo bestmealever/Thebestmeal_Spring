@@ -30,6 +30,7 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="js/main.js" rel="script"></script>
 
     <!-- 구글 폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,50 +54,61 @@
     </style>
 
     <script>
-
         $(document).ready(function () {
             //토큰이 있으면 로그인 화면
+
+            // 헤더에 토큰값 넣어 ajax 호출
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                if (localStorage.getItem('token')) {
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                }
+            });
             if (localStorage.getItem("token")) {
                 $("#logout").css("display", "");
                 $("#mypage").css("display", "");
                 $("#login").css("display", "none");
                 $("#username").html(localStorage.getItem("username"));
 
-                //로그인 된 사용자의 인덱스, 하트를 눌렀는지 확인해서 노출
-                $.ajax({
-                    type: "GET",
-                    url: "/liked",
-                    success: function (response) {
-                        console.log(response)
-                        for (let i = 0; i < response.length; i++) {
-                            let foodList = response[i]
-                            console.log(foodList);
-                            console.log(foodList['id']);
-                            getList(foodList);
-                        }
-                    }
-                })
             } else {
                 //토큰이 없으면 로그아웃된 화면
                 $("#userMessege").empty();
                 $("#logout").css("display", "none");
                 $("#mypage").css("display", "none");
-                //로그인 안된 사용자 인덱스
-                $.ajax({
-                    type: "GET",
-                    url: "/liked",
-                    success: function (response) {
-                        console.log(response);
-                        for (let i = 0; i < response.length; i++) {
+            }
+            $.ajax({
+                type: "GET",
+                url: "/liked",
+                success: function (response) {
+                    console.log(response);
+                    for (let i = 0; i < response.length; i++) {
+                        if (localStorage.getItem("token")) {
+                            let class_heart = response[i]['likedFood'].length === 1 ? "bi-heart-fill" : "bi-heart"
                             let foodList = response[i]
                             console.log(foodList);
                             console.log(foodList['id']);
+                            console.log(foodList['likedFood'])
                             let temp = `
                                 <div id="${foodList['id']}"  class="foodListCard">
                                     <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
                                     <div class="foodInfo">
                                         <p class="foodListCardName">${foodList['name']}</p>
-                                        <i class="bi bi-heart" id="heart" onclick="alert('로그인후 이용해주세요')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
+                                        <i class="bi ${class_heart}" id="heart${foodList['id']}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['cnt']}</span>
+                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
+                                    </div>
+                                </div>
+                                    `
+                            $('#foodList').append(temp);
+                            Tag(foodList);
+                        } else {
+                            let foodList = response[i]
+                            console.log(foodList);
+                            console.log(foodList['id'])
+                            let temp = `
+                                <div id="${foodList['id']}"  class="foodListCard">
+                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
+                                    <div class="foodInfo">
+                                        <p class="foodListCardName">${foodList['name']}</p>
+                                        <i class="bi bi-heart" id="heart${foodList['id']}" onclick="alert('로그인 후 이용해주세요!')"></i><span class="likedLength">${foodList['cnt']}</span>
                                         <p class="foodListCardTags" id="tags${foodList['id']}"></p>
                                     </div>
                                 </div>
@@ -105,34 +117,9 @@
                             Tag(foodList);
                         }
                     }
-                })
-            }
-            function getList(foodList) {
-                $.ajax({
-                    type: "GET",
-                    url: `/likedCheck/${foodList['id']}`,
-                    async: false,
-                    success: function (response) {
-                        getList2(response,foodList)
-                    }
-                })
-            }
-            function getList2(response,foodList){
-                let class_heart = response === true ? "bi-heart-fill" : "bi-heart"
-                let temp = `
-                            <div id="${foodList['id']}" class="foodListCard">
-                                <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-                                <div class="foodInfo">
-                                    <p class="foodListCardName">${foodList['name']}</p>
-                                    <i id="heart${foodList['id']}" class="bi ${class_heart}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['likedFood'].length}</span>
-                                    <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-                                </div>
-                            </div>
-                            `
-                $('#foodList').append(temp);
-                //정렬이 id 순서대로 안이루어지는 이유는 아마도 통신 속도때문? async: false 로 해결!
-                Tag(foodList);
-            }
+                }
+            })
+
             $("#logout").click(function () {
                 //로그아웃
                 localStorage.removeItem("token");
@@ -147,56 +134,6 @@
                 }
             });
         })
-
-        function Tag(foodList) {
-            for (let i = 0; i < foodList['tags'].length; i++) {
-                let tags = foodList['tags'][i]
-                let tag = tags['tagName']
-                if (tag === "korean") {
-                    let tag_korean = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">한식</span>`
-                    $(`#tags${foodList['id']}`).append(tag_korean);
-                } else if (tag === "western") {
-                    let tag_western = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">양식</span>`
-                    $(`#tags${foodList['id']}`).append(tag_western);
-                } else if (tag === "chinese") {
-                    let tag_chinese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">중식</span>`
-                    $(`#tags${foodList['id']}`).append(tag_chinese);
-                } else if (tag === "japanese") {
-                    let tag_japanese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">일식</span>`
-                    $(`#tags${foodList['id']}`).append(tag_japanese);
-                } else if (tag === "supper") {
-                    let tag_supper = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">야식</span>`
-                    $(`#tags${foodList['id']}`).append(tag_supper);
-                } else if (tag === "snack") {
-                    let tag_snack = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">분식</span>`
-                    $(`#tags${foodList['id']}`).append(tag_snack);
-                } else if (tag === "fastfood") {
-                    let tag_fastfood = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">패스트푸드</span>`
-                    $(`#tags${foodList['id']}`).append(tag_fastfood);
-                } else if (tag === "salad") {
-                    let tag_salad = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">샐러드</span>`
-                    $(`#tags${foodList['id']}`).append(tag_salad);
-                } else if (tag === "many_time") {
-                    let tag_manytime = `<span class="badge text-dark" style="background-color: lightgray;margin-left:5px;">시간 많을 때</span>`
-                    $(`#tags${foodList['id']}`).append(tag_manytime);
-                } else if (tag === "perfect") {
-                    let tag_perfect = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">완벽한 식사</span>`
-                    $(`#tags${foodList['id']}`).append(tag_perfect);
-                } else if (tag === "stressed") {
-                    let tag_stressed = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">스트레스 받을 때</span>`
-                    $(`#tags${foodList['id']}`).append(tag_stressed);
-                } else if (tag === "fatty") {
-                    let tag_fatty = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">기름 진거 땡길 때</span>`
-                    $(`#tags${foodList['id']}`).append(tag_fatty);
-                } else if (tag === "no_time") {
-                    let tag_notime = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">시간 없을 떄</span>`
-                    $(`#tags${foodList['id']}`).append(tag_notime);
-                } else if (tag === "needsugar") {
-                    let tag_needsugar = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">당 땡겨</span>`
-                    $(`#tags${foodList['id']}`).append(tag_needsugar);
-                }
-            }
-        }
 
         function heart(id) {
             if ($(`#heart${id}`).hasClass("bi bi-heart")) {
@@ -232,20 +169,6 @@
         function is_password(asValue) {
             var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
             return regExp.test(asValue);
-        }
-
-        function onclickAdmin() {
-            // Get the checkbox
-            var checkBox = document.getElementById("admin-check");
-            // Get the output text
-            var box = document.getElementById("admin-token");
-
-            // If the checkbox is checked, display the output text
-            if (checkBox.checked == true){
-                box.style.display = "block";
-            } else {
-                box.style.display = "none";
-            }
         }
 
         function signup() {
@@ -376,6 +299,38 @@
                 $('#toSignupButton').text('회원가입 하러가기')
             }
         }
+
+        function styleReset() {
+            $('#signUpText').attr('style','display:none')
+            $('#LoginText').attr('style','display:inline')
+
+            $('#idCheckButton').attr('style','display:none')
+            $('#help-id').attr('style','display:none')
+            $('#help-password').attr('style','display:none')
+            $('#emailBox').attr('style','display:none')
+            $('#signupButton').attr('style','display:none')
+            $('#kakaoLoginbutton').attr('style','display:block')
+            $('#loginButton').attr('style','display:block')
+            $('#kakaoSignupbutton').attr('style','display:none')
+
+            $('#toSignupButton').text('회원가입 하러가기')
+        }
+
+        function styleReset1() {
+            $('#signUpText').attr('style','display:none')
+            $('#LoginText').attr('style','display:inline')
+
+            $('#idCheckButton').attr('style','display:none')
+            $('#help-id').attr('style','display:none')
+            $('#help-password').attr('style','display:none')
+            $('#emailBox').attr('style','display:none')
+            $('#signupButton').attr('style','display:none')
+            $('#kakaoLoginbutton').attr('style','display:block')
+            $('#loginButton').attr('style','display:block')
+            $('#kakaoSignupbutton').attr('style','display:none')
+
+            $('#toSignupButton').text('회원가입 하러가기')
+        }
         function login() {
             let info = {
                 username: $("#loginusername").val(),
@@ -406,12 +361,11 @@
                 <div class="nav-title-box">
 
                     <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
-                    <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
-                    <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
-                    <a href="/" class="nave-menu-text nav-menu">이세상 음식 전부보기</a>
+                    <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
+                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
                 </div>
                 <div class="nav-botton-box">
-                    <button class="nav-button" data-bs-toggle="modal" data-bs-target="#LoginModal" id="login" >로그인</button>
+                    <button class="nav-button" data-bs-toggle="modal" data-bs-target="#LoginModal" id="login" onclick="styleReset()" >로그인</button>
                     <button class="nav-button" id="logout">로그아웃</button>
                     <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지
 
@@ -424,7 +378,7 @@
         <div class="modal fade modal-signin" tabindex="-1" role="dialog" id="LoginModal"
              aria-labelledby="exampleModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" >
                 <div class="modal-content rounded-5 shadow">
                     <div class="modal-header p-5 pb-4 border-bottom-0">
                         <!-- <h5 class="modal-title">Modal title</h5> -->
@@ -435,39 +389,39 @@
 
                     <div class="modal-body p-5 pt-0">
 
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control rounded-4" id="loginusername"
-                                       placeholder="아이디">
-                                <label for="loginusername">아이디</label>
-                            </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-4" id="loginusername"
+                                   placeholder="아이디">
+                            <label for="loginusername">아이디</label>
+                        </div>
                         <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" style="display: none;" id = "idCheckButton" onclick="idCheck()">
                             아이디 중복확인
                         </button>
                         <div class="text-muted help help-id" style="display: none;" id="help-id">&nbsp;&nbsp;영문과 숫자 사용 가능. 2-10자 길이<br/></div>
-                            <div class="form-floating mb-3">
-                                <input type="password" class="form-control rounded-4" id="password"
-                                       placeholder="비밀번호">
-                                <label for="password">비밀번호</label>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control rounded-4" id="password"
+                                   placeholder="비밀번호">
+                            <label for="password">비밀번호</label>
 
-                            </div>
+                        </div>
                         <div class="text-muted help help-password" style="display: none;" id="help-password">&nbsp;&nbsp;영문과 숫자 필수 포함, 8-20자<br/></div>
 
-                            <div class="form-floating mb-3" style="display: none;" id="emailBox">
-                                <input type="email" class="form-control rounded-4" id="email"
-                                       placeholder="이메일">
-                                <label for="email">이메일</label>
-                            </div>
-                            <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" style="display: none;" onclick="signup()" id="signupButton">회원가입하기</button>
-                            <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" onclick="login()" id="loginButton">로그인</button>
-                            <small class="text-muted" style="display: none;" id="help-signup">회원가입하시면 정보 제공에 동의하시는겁니다.</small>
-                            <hr class="my-4">
-                            <h2 class="fs-5 fw-bold mb-3"></h2>
-                            <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" style="display: none;" onclick="lok()" id="kakaoSignupbutton">
-                                카카오 회원가입하기
-                            </button>
+                        <div class="form-floating mb-3" style="display: none;" id="emailBox">
+                            <input type="email" class="form-control rounded-4" id="email"
+                                   placeholder="이메일">
+                            <label for="email">이메일</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" style="display: none;" onclick="signup()" id="signupButton">회원가입하기</button>
+                        <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" onclick="login()" id="loginButton">로그인</button>
+                        <small class="text-muted" style="display: none;" id="help-signup">회원가입하시면 정보 제공에 동의하시는겁니다.</small>
+                        <hr class="my-4">
+                        <h2 class="fs-5 fw-bold mb-3"></h2>
+                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" style="display: none;" onclick="lok()" id="kakaoSignupbutton">
+                            카카오 회원가입하기
+                        </button>
                         <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" onclick="lok()" id="kakaoLoginbutton">
-                                카카오 로그인하기
-                            </button>
+                            카카오 로그인하기
+                        </button>
 
 
                         <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-4" type="submit" onclick="change()" id="toSignupButton">
@@ -492,7 +446,7 @@
                     <div>
                         <button type="button" class="main-button" data-bs-toggle="modal"
                                 data-bs-target="#SignupPlzModal"
-                                onclick="">추천하기
+                                onclick="window.location.href ='/posting.html'">추천하기
                         </button>
                         <button class="main-button" onclick="window.location.href ='/recommend.html'">추천받기</button>
                     </div>

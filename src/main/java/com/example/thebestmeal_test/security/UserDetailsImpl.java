@@ -1,11 +1,13 @@
 package com.example.thebestmeal_test.security;
 
 import com.example.thebestmeal_test.domain.User;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+
 
 public class UserDetailsImpl implements UserDetails {
 

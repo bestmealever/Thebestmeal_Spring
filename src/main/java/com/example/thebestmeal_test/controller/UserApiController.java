@@ -6,9 +6,11 @@ import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.dto.*;
 import com.example.thebestmeal_test.repository.FoodRepository;
 import com.example.thebestmeal_test.repository.LikedFoodRepository;
+import com.example.thebestmeal_test.repository.RecommendedRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
-import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
+import com.example.thebestmeal_test.service.AwsService;
+import com.example.thebestmeal_test.service.RecommendedService;
 import com.example.thebestmeal_test.service.UserService;
 import com.example.thebestmeal_test.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,8 @@ public class UserApiController {
     private final FoodRepository foodRepository;
     private final LikedFoodRepository likedFoodRepository;
     private final AwsService awsService;
+    private final RecommendedRepository recommendedRepository;
+    private final RecommendedService recommendedService;
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -48,6 +53,14 @@ public class UserApiController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
+//    @PostMapping(value = "/login/kakao")
+//    public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
+//        String username = userService.kakaoLogin(socialLoginDto.getToken());
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//        final String token = jwtTokenUtil.generateToken(userDetails);
+//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+//    }
+
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
         String username = userService.kakaoLogin(socialLoginDto.getToken());
@@ -82,10 +95,14 @@ public class UserApiController {
         return response;
     }
 
-    //food 보여주기
+
     @GetMapping("/liked")
-    public List<Food> getFoodList() {
-        return foodRepository.findTop12ByOrderByLikedFoodDesc();
+    public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails != null) {
+            return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
+        } else {
+            return foodRepository.findTop12ByOrderByCntDesc();
+        }
     }
 
     //likedfood 개수
@@ -109,6 +126,7 @@ public class UserApiController {
     }
 
     //좋아요
+    @Transactional
     @PostMapping("/liked/{id}")
     public Boolean updateLikeFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Boolean response = likedFoodCheckd(id,userDetails);
@@ -123,6 +141,7 @@ public class UserApiController {
             );
             LikedFood likedFood = new LikedFood(food,user);
             likedFoodRepository.save(likedFood);
+            userService.updateCnt(id);
         }
         return response;
     }
@@ -136,13 +155,14 @@ public class UserApiController {
         Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
         Long LikedFoodId = likedFoodFound.get().getIdx();
         likedFoodRepository.deleteById(LikedFoodId);
+        userService.updateCntM(id);
         return "삭제!";
     }
 
     //마이페이지
     @GetMapping("/mypage")
-    public Optional<User> getMyinfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userRepository.findByUsername(userDetails.getUsername());
+    public MyPageDto getMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return recommendedService.toMyPageInfo(userDetails);
     }
 
     //마이페이지 상태 메세지 수정
@@ -178,5 +198,7 @@ public class UserApiController {
         Boolean response = likedFoodFound.isPresent();
         return response;
     }
+
+
 
 }
