@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,7 +27,10 @@ public class Food extends Timestamped {
 
     @Column
      private String imageUrl;
-//   private String foodImgUrl;
+
+    @Column
+    @ColumnDefault("0")
+    private int cnt;
 
     @OneToMany(mappedBy = "food")
     private Set<Tag> tags;
@@ -45,5 +49,9 @@ public class Food extends Timestamped {
     public Food(String name, String imageUrl) {
         this.name = name;
         this.imageUrl = imageUrl;
+    }
+
+    public void update(int cnt) {
+        this.cnt += cnt;
     }
 }

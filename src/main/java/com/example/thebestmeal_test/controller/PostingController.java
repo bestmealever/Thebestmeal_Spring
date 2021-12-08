@@ -14,12 +14,12 @@ import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.service.PostingService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -47,8 +47,7 @@ public class PostingController {
         this.foodRepository.save(food);
         //category 저장
 //        List<String> items1 = Arrays.asList(postDto.getPostingTag());
-        List<Tag> tags1 = (List)postDto.getPostingEmo().stream().map((tag) ->
-        {
+        List<Tag> tags1 = (List)postDto.getPostingEmo().stream().map((tag) -> {
             return new Tag(food, tag, "emotion");
         }).collect(Collectors.toList());
         this.tagRepository.saveAll(tags1);
@@ -82,4 +81,3 @@ public class PostingController {
     }
 
 }
-

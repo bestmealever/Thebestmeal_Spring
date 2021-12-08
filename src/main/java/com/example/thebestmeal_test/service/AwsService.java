@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.example.thebestmeal_test.domain.User;
+import com.example.thebestmeal_test.dto.PostDto;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
