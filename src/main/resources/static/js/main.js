@@ -2,6 +2,12 @@ let categoryWant;
 let emotionWant;
 let yesterdayEat;
 
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+    if (localStorage.getItem('token')) {
+        jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    }
+})
+
 let foodObjArray;
 let foodObjArrayNum;
 let foodName;
@@ -234,20 +240,91 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
     btnGroup.append(temp_html)
 }
 
-
 // 카카오 페이지로 이동
 function viewKakao(foodName) {
-    // console.log(foodName)
-    // window.location.href = `/api/kakao?foodName=${foodName}`
-    // window.location.href = `/api/kakao`
-    window.location.href = `kakao.html?foodName=${foodName}`
+    console.log('TT')
+    $.ajax({
+        type: "GET",
+        url: `/api/recommended?foodName=${foodName}`,
+        success: function (response) {
+            console.log(response)
+            window.location.href = `kakao.html?foodName=${foodName}`
+        }
+    })
+}
 
+function Tag(foodList) {
+    for (let i = 0; i < foodList['tags'].length; i++) {
+        let tags = foodList['tags'][i]
+        let tag = tags['tagName']
+        if (tag === "korean") {
+            let tag_korean = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">한식</span>`
+            $(`#tags${foodList['id']}`).append(tag_korean);
+        } else if (tag === "western") {
+            let tag_western = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">양식</span>`
+            $(`#tags${foodList['id']}`).append(tag_western);
+        } else if (tag === "chinese") {
+            let tag_chinese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">중식</span>`
+            $(`#tags${foodList['id']}`).append(tag_chinese);
+        } else if (tag === "japanese") {
+            let tag_japanese = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">일식</span>`
+            $(`#tags${foodList['id']}`).append(tag_japanese);
+        } else if (tag === "supper") {
+            let tag_supper = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">야식</span>`
+            $(`#tags${foodList['id']}`).append(tag_supper);
+        } else if (tag === "snack") {
+            let tag_snack = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">분식</span>`
+            $(`#tags${foodList['id']}`).append(tag_snack);
+        } else if (tag === "fastfood") {
+            let tag_fastfood = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">패스트푸드</span>`
+            $(`#tags${foodList['id']}`).append(tag_fastfood);
+        } else if (tag === "salad") {
+            let tag_salad = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">샐러드</span>`
+            $(`#tags${foodList['id']}`).append(tag_salad);
+        } else if (tag === "many_time") {
+            let tag_manytime = `<span class="badge text-dark" style="background-color: lightgray;margin-left:5px;">시간 많을 때</span>`
+            $(`#tags${foodList['id']}`).append(tag_manytime);
+        } else if (tag === "perfect") {
+            let tag_perfect = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">완벽한 식사</span>`
+            $(`#tags${foodList['id']}`).append(tag_perfect);
+        } else if (tag === "stressed") {
+            let tag_stressed = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">스트레스 받을 때</span>`
+            $(`#tags${foodList['id']}`).append(tag_stressed);
+        } else if (tag === "fatty") {
+            let tag_fatty = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">기름 진거 땡길 때</span>`
+            $(`#tags${foodList['id']}`).append(tag_fatty);
+        } else if (tag === "no_time") {
+            let tag_notime = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">시간 없을 떄</span>`
+            $(`#tags${foodList['id']}`).append(tag_notime);
+        } else if (tag === "needsugar") {
+            let tag_needsugar = `<span class="badge text-dark" style="background-color: lightgray; margin-left:5px;">당 땡겨</span>`
+            $(`#tags${foodList['id']}`).append(tag_needsugar);
+        }
+    }
+}
 
-    // $.ajax({
-    //     type: "GET",
-    //     url: "/api/kakao",
-    //     // data: {foodName:foodName},
-    //     success: function() {
-    //     }
-    // })
+function heart(id) {
+    if ($(`#heart${id}`).hasClass("bi bi-heart")) {
+        $(`#heart${id}`).removeClass("bi-heart").addClass("bi-heart-fill");
+        console.log(id);
+        $.ajax({
+            type: "POST",
+            url: `/liked/${id}`,
+            success: function (response) {
+                console.log(response);
+                window.location.reload();
+            }
+        })
+    } else {
+        $(`#heart${id}`).removeClass("bi-heart-fill").addClass("bi-heart");
+        console.log(id);
+        $.ajax({
+            type: "DELETE",
+            url: `/liked/${id}`,
+            success: function (response) {
+                console.log(response);
+                window.location.reload();
+            }
+        })
+    }
 }
