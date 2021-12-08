@@ -11,7 +11,6 @@ import com.example.thebestmeal_test.repository.PostingRepository;
 import com.example.thebestmeal_test.repository.TagRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
-import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.service.PostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,27 +32,30 @@ public class PostingController {
     private final FoodRepository foodRepository;
     private final TagRepository tagRepository;
     private final PostingService postingService;
-    private final AwsService awsService;
 
-    @Transactional
     @PostMapping("/post")
-    public void postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public void postFood(@RequestBody PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
                 () -> new NullPointerException("그런 사람 없는데요?"));
-        String foodImgUrl = awsService.uploadFoodImg(postDto.getFoodImgUrl());
-        Food food = new Food(postDto,foodImgUrl);
-        foodRepository.save(food);
 
+//       food 저장
+        Food food = new Food(postDto);
+        foodRepository.save(food);
+        //category 저장
+//        List<String> items1 = Arrays.asList(postDto.getPostingTag());
         List<Tag> tags1 = postDto.getPostingEmo().stream().map(tag -> new Tag(food, tag, "emotion")).collect(Collectors.toList());
         tagRepository.saveAll(tags1);
-
+        //emotion 저장
         List<Tag> tags2 = postDto.getPostingCat().stream().map(tag -> new Tag(food, tag, "category")).collect(Collectors.toList());
         tagRepository.saveAll(tags2);
-
+        //posting 저장 (foodId, userId, post 내용 저장)
+        //.get() -> 그냥 Food 클래스의.. null check(Optional 객체로 한번 감싸짐) 이렇게 쓰면
+        //Optional null이 get()
         Food food2 = foodRepository.findByName(postDto.getPostingFoodName()).get();
-
+//        Food food2 = foodRepository.findByName(postDto.getPostingFoodName()).get();
         Posting posting = new Posting(postDto, user, food2);
         postingRepository.save(posting);
+
     }
 
     @PostMapping("/foodcheck")
@@ -66,6 +66,5 @@ public class PostingController {
         Boolean response = found.isPresent();
         System.out.println(response);
         return response;
-        }
     }
-
+}

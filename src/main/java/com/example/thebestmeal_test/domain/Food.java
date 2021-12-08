@@ -38,20 +38,13 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy = "food")
     private Set<LikedFood> likedFood;
 
-//    public Food(PostDto postDto) {
-//        this.name = postDto.getPostingFoodName();
-//        this.imageUrl = postDto.getFoodImgUrl();
-//    }
+    @OneToMany(mappedBy="food")
+    private List<Recommended> recommendeds;
 
-//    public Food(String name, String imageUrl) {
-//        this.name = name;
-//        this.imageUrl = imageUrl;
-//    }
-
-    public Food(PostDto postDto, String foodImgUrl) {
-        this.name = postDto.getPostingFoodName();
-        this.imageUrl = foodImgUrl;
-    }
+    public Food(PostDto postDto) {
+            this.name = postDto.getPostingFoodName();
+            this.imageUrl = postDto.getFoodImgUrl();
+        }
 
     public void update(int cnt) {
         this.cnt += cnt;

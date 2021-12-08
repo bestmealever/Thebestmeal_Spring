@@ -17,6 +17,6 @@ public class PostDto {
     private String postingFoodName;
     private List<String> postingEmo;
     private List<String> postingCat;
-    private MultipartFile foodImgUrl;
+    private String foodImgUrl;
     private String postingMemo;
 }
