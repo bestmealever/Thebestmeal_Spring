@@ -26,7 +26,7 @@ public class Food extends Timestamped {
     private String name;
 
     @Column
-    private String imageUrl;
+     private String imageUrl;
 
     @Column
     @ColumnDefault("0")
@@ -41,10 +41,15 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy="food")
     private List<Recommended> recommendeds;
 
-    public Food(PostDto postDto) {
-            this.name = postDto.getPostingFoodName();
-            this.imageUrl = postDto.getFoodImgUrl();
-        }
+    public Food(PostDto postDto, String imageUrl) {
+        this.name = postDto.getPostingFoodName();
+        this.imageUrl = imageUrl;
+    }
+
+    public Food(String name, String imageUrl) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 
     public void update(int cnt) {
         this.cnt += cnt;
