@@ -1,6 +1,7 @@
 package com.example.thebestmeal_test.domain;
 
 import com.example.thebestmeal_test.dto.UserStatusModifyDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,8 +41,13 @@ public class User extends Timestamped {
     @Column
     private String statusMessage;
 
+    @JsonIgnore
     @OneToMany(mappedBy="user")
     private List<Posting> postings;
+
+    @JsonIgnore
+    @OneToMany(mappedBy="user")
+    private List<Recommended> recommendeds;
 
     @OneToOne
     private LikedFood likedFood;
