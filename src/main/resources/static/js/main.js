@@ -203,6 +203,14 @@ function feeling() {
             url: "/api/recommend",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
+            beforeSend: function () {
+                //통신을 시작할때 처리되는 함수
+                $('html').css("cursor", "wait");   // 현재 html 문서위에 있는 마우스 커서를 로딩 중 커서로 변경
+            },
+            complete: function () {
+                //통신이 완료된 후 처리되는 함수
+                $('html').css("cursor", "auto"); // 통신이 완료 된 후 다시 일반적인 커서 모양으로 변경
+            },
             success: function (response) {
                 console.log("도당체 뭐지")
                 console.log(typeof response)
