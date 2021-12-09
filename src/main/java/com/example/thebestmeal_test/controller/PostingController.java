@@ -38,7 +38,7 @@ public class PostingController {
     @Transactional
     @PostMapping({"/post"})
     public void postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        User user = (User)this.userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> {
+        User user = (User) this.userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> {
             return new NullPointerException("그런 사람 없는데요?");
         });
 //       food 저장
@@ -47,7 +47,7 @@ public class PostingController {
         this.foodRepository.save(food);
         //category 저장
 //        List<String> items1 = Arrays.asList(postDto.getPostingTag());
-        List<Tag> tags1 = (List)postDto.getPostingEmo().stream().map((tag) -> {
+        List<Tag> tags1 = (List) postDto.getPostingEmo().stream().map((tag) -> {
             return new Tag(food, tag, "emotion");
         }).collect(Collectors.toList());
         this.tagRepository.saveAll(tags1);
@@ -56,7 +56,7 @@ public class PostingController {
             return new Tag(food, tag, "category");
         }).collect(Collectors.toList());
         this.tagRepository.saveAll(tags2);
-        Food food2 = (Food)this.foodRepository.findByName(postDto.getPostingFoodName()).get();
+        Food food2 = (Food) this.foodRepository.findByName(postDto.getPostingFoodName()).get();
         Posting posting = new Posting(postDto, user, food2);
         this.postingRepository.save(posting);
 
