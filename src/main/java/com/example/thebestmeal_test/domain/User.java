@@ -9,7 +9,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
-
+@NoArgsConstructor
+@Setter
+@Getter
 @Entity // DB 테이블 역할을 합니다.
 public class User extends Timestamped {
 
@@ -79,86 +81,4 @@ public class User extends Timestamped {
         this.statusMessage = statusModifyDto.getStatusMessage();
     }
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public void setUsername(final String username) {
-        this.username = username;
-    }
-
-    public void setPassword(final String password) {
-        this.password = password;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
-    public void setRole(final UserRole role) {
-        this.role = role;
-    }
-
-    public void setKakaoId(final Long kakaoId) {
-        this.kakaoId = kakaoId;
-    }
-
-    public void setProfilePhoto(final String profilePhoto) {
-        this.profilePhoto = profilePhoto;
-    }
-
-    public void setStatusMessage(final String statusMessage) {
-        this.statusMessage = statusMessage;
-    }
-
-    public void setPostings(final List<Posting> postings) {
-        this.postings = postings;
-    }
-
-    public void setLikedFood(final LikedFood likedFood) {
-        this.likedFood = likedFood;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public UserRole getRole() {
-        return this.role;
-    }
-
-    public Long getKakaoId() {
-        return this.kakaoId;
-    }
-
-    public String getProfilePhoto() {
-        return this.profilePhoto;
-    }
-
-    public String getStatusMessage() {
-        return this.statusMessage;
-    }
-
-    public List<Posting> getPostings() {
-        return this.postings;
-    }
-
-    public LikedFood getLikedFood() {
-        return this.likedFood;
-    }
-
-    public User() {
-    }
 }

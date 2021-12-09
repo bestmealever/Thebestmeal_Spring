@@ -13,6 +13,7 @@ import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.service.PostingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,19 +26,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RequestMapping({"/api"})
 @RestController
 public class PostingController {
-    private final PostingRepository postingRepository;
-    private final UserRepository userRepository;
-    private final FoodRepository foodRepository;
-    private final TagRepository tagRepository;
+
     private final PostingService postingService;
     private final AwsService awsService;
+    private final PostingRepository postingRepository;
+    private final UserRepository userRepository;
+    private final TagRepository tagRepository;
+    private final FoodRepository foodRepository;
 
     @Transactional
     @PostMapping({"/post"})
-    public void postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
+    public String postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
         User user = (User) this.userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> {
             return new NullPointerException("그런 사람 없는데요?");
         });
@@ -60,7 +65,13 @@ public class PostingController {
         Posting posting = new Posting(postDto, user, food2);
         this.postingRepository.save(posting);
 
+        return foodImgUrl;
+
     }
+
+    //controller 분리 시도 중
+//    public String postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+//        return postingService.postFoodService(postDto, userDetails);}
 
     @PostMapping({"/foodcheck"})
     public Boolean foodCheck(@RequestBody FoodCheckDto foodCheckDto) {
@@ -70,14 +81,8 @@ public class PostingController {
         System.out.println(response);
         return response;
     }
-
-    public PostingController(final PostingRepository postingRepository, final UserRepository userRepository, final FoodRepository foodRepository, final TagRepository tagRepository, final PostingService postingService, final AwsService awsService) {
-        this.postingRepository = postingRepository;
-        this.userRepository = userRepository;
-        this.foodRepository = foodRepository;
-        this.tagRepository = tagRepository;
-        this.postingService = postingService;
-        this.awsService = awsService;
-    }
-
 }
+
+
+
+
