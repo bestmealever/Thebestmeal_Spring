@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/liked/**").permitAll()
                 .antMatchers("/liked/count/**").permitAll()
+                .antMatchers("www.thebestmeal.shop/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //jwt 인증 실패 -> authenticationEntryPoint
