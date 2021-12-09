@@ -47,7 +47,6 @@ function step1() {
             //중복 없을 시 진행
             else {
                 let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.2 어떤 종류의 음식인가요? </p>
-                                         <progress class="progress is-normal" value="25" max="100">25%</progress>
                                          <div class="button-group-in">
                                                 <input type="checkbox" id="chk1" class="select-category" value="korean">
                                                 <label class="category" for="chk1">한식</label>
@@ -100,7 +99,6 @@ function step2() {
         console.log(btn_val)
         postingCat = btn_val
         let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.3 어떨 때 먹으면 좋아요? </p>
-                                 <progress class="progress is-normal" value="50" max="100">50%</progress>
                                  <div class="button-group-in">
                                     <input type="checkbox" id="chk1" class="select-category" value="no_time">
                                     <label class="category" for="chk1">시간이 없을 때</label>
@@ -142,7 +140,6 @@ function step3() {
         console.log(postingEmo)
 
         let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.4 음식 사진과 음식 소개를 부탁드려요! </p>
-                                <progress class="progress is-normal" value="75" max="100">75%</progress>
                                 <div class = "form-group">
                   
                                             <input id="foodimages" type="file" name="avatar" />
@@ -189,8 +186,6 @@ function save() {
             console.log(foodImgUrl)
             alert("추천해주셔서 감사합니다!");
             let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>
-                            <progress class="progress is-normal" value="100" max="100">100%</progress>
-<!--                            <div id="posting_result_img" img id="image"></div>-->
                             <div id="posting_result_img" style="background-image:url('${foodImgUrl}')"></div>
                             <div class="posting_result">
                                 <p class="posting_title">당신의 추천 음식</p>
