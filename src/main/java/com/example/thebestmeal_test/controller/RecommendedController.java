@@ -21,6 +21,8 @@ public class RecommendedController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam("foodName") String foodName
     ) {
-        recommendedService.saveRecommendedInfo(userDetails, foodName);
+        if (userDetails != null) {
+            recommendedService.saveRecommendedInfo(userDetails, foodName);
+        }
     }
 }
