@@ -25,11 +25,6 @@ import java.io.IOException;
 public class PostingController {
 
     private final PostingService postingService;
-    private final AwsService awsService;
-    private final PostingRepository postingRepository;
-    private final UserRepository userRepository;
-    private final TagRepository tagRepository;
-    private final FoodRepository foodRepository;
 
     @Transactional
     @PostMapping({"/post"})
