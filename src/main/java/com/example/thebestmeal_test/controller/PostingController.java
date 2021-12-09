@@ -40,7 +40,9 @@ public class PostingController {
 
     @Transactional
     @PostMapping({"/post"})
+
     public String postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
         User user = (User) this.userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> {
             return new NullPointerException("그런 사람 없는데요?");
         });
