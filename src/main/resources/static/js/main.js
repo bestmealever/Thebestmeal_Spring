@@ -225,7 +225,7 @@ function selectFoodOnClient(foodObjArrayNum = 0) {
     }
     foodName = foodObjArray[foodObjArrayNum]['name']
     let temp_html = `<div class="question-h">
-                        <p class="todays">${foodObjArray[foodObjArrayNum]['name']} <span id="recommend">${foodObjArray[foodObjArrayNum]['name']}</span> ${foodObjArray[foodObjArrayNum]['name']}
+                        <p class="todays"> 오늘은, <span id="recommend">${foodObjArray[foodObjArrayNum]['name']}</span> 어때요?!
                         </p>
                     </div>
                     <div class="mealimg" style="background-image: url('${foodObjArray[foodObjArrayNum]['imageUrl']}"
