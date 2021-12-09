@@ -204,9 +204,16 @@ function feeling() {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
             success: function (response) {
-                foodObjArray = response
-                foodObjArrayNum = 0
-                selectFoodOnClient()
+                console.log("도당체 뭐지")
+                console.log(typeof response)
+                if (response === '') {
+                    console.log('???')
+                    alert('추천할 만한 음식이 없네요 ㅠㅠ')
+                } else {
+                    foodObjArray = response
+                    foodObjArrayNum = 0
+                    selectFoodOnClient()
+                }
             }
         })
     }

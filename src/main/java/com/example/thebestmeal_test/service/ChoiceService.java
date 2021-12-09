@@ -56,7 +56,6 @@ public class ChoiceService {
                         FoodNameForEmo.add(tmp);
                     }
                 }
-
                 resultList.addAll(FoodNameForEmo.stream().distinct().collect(Collectors.toList()));
             }
         } else {
@@ -77,15 +76,20 @@ public class ChoiceService {
                     FoodNameForEmo.add(tmp);
                 }
             }
-
-            System.out.println(resultList);
             resultList.addAll(noDup(FoodNameForCat, FoodNameForEmo));
         }
 
         // ObjectMapper mapper = new ObjectMapper();
         // 특정 필드만 보내고 싶으면 modelmapper and dto
 
-        return foodRepository.findAllByNameIn(resultList);
+        System.out.println(resultList);
+
+        if (resultList.isEmpty()) {
+            System.out.println("empty");
+            return null;
+        } else {
+            return foodRepository.findAllByNameIn(resultList);
+        }
     }
 
 
