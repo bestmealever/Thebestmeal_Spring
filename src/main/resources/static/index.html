@@ -183,6 +183,18 @@
             }
         }
 
+        function toposting() {
+            //login 시에는 alert,
+            //아닐 경우에는 '/posting'
+            if (localStorage.getItem("token") == null) {
+                alert('앗, 로그인한 유저만 이용 가능합니다')
+                location.href = '/';
+            } else {
+                location.href = '/posting.html';
+            }
+        }
+
+
         function is_nickname(asValue) {
             var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
             return regExp.test(asValue);
@@ -480,10 +492,11 @@
                     <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
                     <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>
                     <div>
-                        <button type="button" class="main-button" data-bs-toggle="modal"
-                                data-bs-target="#SignupPlzModal"
-                                onclick="window.location.href ='/posting.html'">추천하기
-                        </button>
+<!--                        <button type="button" class="main-button" data-bs-toggle="modal"-->
+<!--                                data-bs-target="#SignupPlzModal"-->
+<!--                                onclick="window.location.href ='/posting.html'">추천하기-->
+<!--                        </button>-->
+                        <button class="main-button" onclick="toposting()">추천하기</button>
                         <button class="main-button" onclick="window.location.href ='/recommend.html'">추천받기</button>
                     </div>
                 </div>

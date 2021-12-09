@@ -1,0 +1,8 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "657625833664.dkr.ecr.ap-northeast-2.amazonaws.com/thebestmeal-ecr",
+    "Update": "true"
+  },
+  "Ports": [ { "ContainerPort" : 8080} ]
+}

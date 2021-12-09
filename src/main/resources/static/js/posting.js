@@ -165,10 +165,9 @@ function step3() {
 }
 
 
-
 function save() {
-    foodImgUrl = $('#foodimages').val();
     postingMemo = $('#comment').val();
+    foodImgUrl = $('#foodimages')[0].files[0];
 
     let data = new FormData();
     data.append( "postingFoodName", postingFoodName);
@@ -176,7 +175,6 @@ function save() {
     data.append("postingEmo", postingEmo);
     data.append("foodImgUrl", $('#foodimages')[0].files[0] );
     data.append( "postingMemo", postingMemo);
-
 
     console.log(data)
 
@@ -187,14 +185,18 @@ function save() {
         contentType: false,
         data: data,
         success: function (response) {
+            foodImgUrl = response
+            console.log(foodImgUrl)
             alert("추천해주셔서 감사합니다!");
             let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>
                             <progress class="progress is-normal" value="100" max="100">100%</progress>
+<!--                            <div id="posting_result_img" img id="image"></div>-->
                             <div id="posting_result_img" style="background-image:url('${foodImgUrl}')"></div>
                             <div class="posting_result">
                                 <p class="posting_title">당신의 추천 음식</p>
                                 <p class="posting_foodname">${postingFoodName}</p>
                                 <p class="posting_comment">${postingMemo}</p>
+                           
                                 <p>
                                 <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">${postingFoodName}</span>
                                 <span class="tag is-warning posting_tag" style="background-color: #FED7BF;">존맛탱</span>
