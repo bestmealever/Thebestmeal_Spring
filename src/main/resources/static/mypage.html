@@ -30,6 +30,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <script src="js/main.js" rel="script"></script>
+    <script src="js/mypage.js" rel="script"></script>
 
     <!-- 구글 폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,242 +74,6 @@
 
     </style>
 
-    <script>
-        $(document).ready(function () {
-            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                if (localStorage.getItem('token')) {
-                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-                }
-            });
-            $("#logout").click(function () {
-                //로그아웃
-                localStorage.removeItem("token");
-                localStorage.removeItem("username");
-                location.href = '/';
-            });
-            //마이페이지 처음 출력 내가 추천받은 음식
-            $.ajax({
-                type: "GET",
-                url: "/mypage",
-                success: function (response) {
-                    console.log(response)
-                    $("#username").html(response['user']['username']);
-                    $('#usercomment').html(response['user']['statusMessage']);
-                    let profile_pic = response['user']['profilePhoto'];
-                    let temp_img = `
-                    <img style="width:70px; height:70px; border-radius: 70px;  object-fit: cover; float:left; " src="${profile_pic}" >`
-                    // $('#profile_pic').attr("src", "/css/food_sample.jpg");
-                    $('#profile_pic').append(temp_img);
-                    let temp_nav = `<div class="mypage-nav" style=" clear:left; margin-top: 30px;">
-                                    <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천받은 음식</strong></a>
-                                    <a href="#" onclick="nav2();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천한 음식</strong></a>
-                                    <a href="#" onclick="nav3();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 남긴 댓글</strong></a>
-                                    <hr style="margin-top:8px;">
-                                </div>
-                                <div id="user-nav"></div>`
-                    $('#user-table').append(temp_nav);
-
-                    for (let i = 0; i < response['foods'].length; i++) {
-                        let foodList = response['foods'][i]
-                        console.log(foodList);
-                        console.log(foodList['id']);
-                        let temp = `
-                                <div id="${foodList['id']}"  class="foodListCard">
-                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-                                    <div class="foodInfo">
-                                        <p class="foodListCardName">${foodList['name']}</p>
-                                        <i class="bi bi-heart" id="heart" onclick=""></i><span class="likedLength">${foodList['likedFood'].length}</span>
-                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-                                    </div>
-                                </div>
-                                    `
-                        $('#foodList').append(temp);
-                        Tag(foodList);
-                    }
-                }
-            })
-        })
-
-        //내가 추천받은 음식 클릭시
-        function nav1() {
-            $.ajax({
-                type: "GET",
-                url: "/mypage",
-                success: function (response) {
-                    console.log(response, "nav1에 뿌려질 정보");
-                    $('#user-table').empty();
-                    $('#user-nav').empty();
-                    let temp_nav = `<div class="mypage-nav" style=" clear:left; margin-top: 30px;">
-                                    <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천받은 음식</strong></a>
-                                    <a href="#" onclick="nav2();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천한 음식</strong></a>
-                                    <a href="#" onclick="nav3();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 남긴 댓글</strong></a>
-                                    <hr style="margin-top:8px;">
-                                </div>
-                                <div id="user-nav"></div>`
-                    $('#user-table').append(temp_nav);
-                    let postings = response["postings"];
-                    for (let i = 0; i < postings.length; i++) {
-                        let postingFoodName = postings[i]['postingFoodName']
-                        let postingMemo = postings[i]['postingMemo']
-                        let date = postings[i]['createdAt']
-                        let temp = `
-                        <p>내가 추천받은 음식: ${postingFoodName},${postingMemo},,${date}</p>
-                        `
-                        $('#user-nav').append(temp);
-                    }
-                }
-            })
-        }
-
-        //내가 추천한 음식 클릭시
-        function nav2() {
-            $.ajax({
-                type: "GET",
-                url: "/mypage",
-                success: function (response) {
-                    console.log(response, "nav2에 뿌려질 정보");
-                    $('#user-table').empty();
-                    $('#user-nav').empty();
-                    let temp_nav = `<div class="mypage-nav" style=" clear:left; margin-top: 30px;">
-                                    <a href="#" onclick="nav1();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천받은 음식</strong></a>
-                                    <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 추천한 음식</strong></a>
-                                    <a href="#" onclick="nav3();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>내가 남긴 댓글</strong></a>
-                                    <hr style="margin-top:8px;">
-                                </div>
-                                <div id="user-nav"></div>`
-                    $('#user-table').append(temp_nav);
-                    let postings = response["postings"];
-                    for (let i = 0; i < postings.length; i++) {
-                        let postingFoodName = postings[i]['postingFoodName']
-                        let postingMemo = postings[i]['postingMemo']
-                        let date = postings[i]['createdAt']
-                        let temp = `
-                                        <div style="width:275px; margin-left:5px; margin-right: 5px; border:1px solid gainsboro; border-radius: 5px; float: left">
-                                            <div class="foodimage" style='width: 275px; height: 275px; border-top-left-radius: 5px; border-top-right-radius: 5px;
-                                            /*background-image:url("/images/food_sample.jpg")*/ background-color: black' ;></div>
-                                            <div class="foodinfo" style="width: 240px; padding: 20px;">
-                                                <p style="font-size: 12pt; font-weight: bold; margin: 0 0 5px 0;">${postingFoodName}</p>
-                                                <i class="bi bi-heart" id="heart" onclick="heart()"></i>
-                                                <p style="font-size: 10pt; margin: 0px; line-height: 15pt;">${postingMemo}</p>
-                                            </div>
-                                        </div>
-                        `
-                        $('#user-nav').append(temp);
-                    }
-                }
-            })
-        }
-
-        //내가 남긴 댓글 클릭시
-        function nav3() {
-            $.ajax({
-                type: "GET",
-                url: "/mypage",
-                success: function (response) {
-                    console.log(response, "nav3에 뿌려질 정보");
-                    let postings = response["postings"];
-                    for (let i = 0; i < postings.length; i++) {
-                        let postingFoodName = postings[i]['postingFoodName']
-                        let postingMemo = postings[i]['postingMemo']
-                        let date = postings[i]['createdAt']
-                        let temp = `
-                        <p>내가 남긴 댓글 출력 : ${postingFoodName},${postingMemo},,${date}</p>
-                        `
-                        $('#user-nav').append(temp);
-                    }
-                }
-            })
-        }
-
-
-        function heart() {
-            if ($("#heart").hasClass("bi-heart")) {
-                $("#heart").removeClass("bi-heart").addClass("bi-heart-fill");
-                // $.ajax({
-                //     type:"POST",
-                //     url:"/liked",
-                //     contentType: "application/json",
-                //     data:JSON.stringify(link),
-                //     success:function(response) {
-                //         $('#좋아요숫자').empty();
-                //         $.ajax({
-                //             type:"GET",
-                //             url:"/liked",
-                //             success:function(response) {
-                //                 let cnt = response['cnt']
-                //                 $('#좋아요숫자').append(cnt);
-                //             }
-                //         })
-                //     }
-                // })
-            } else {
-                $("#heart").removeClass("bi-heart-fill").addClass("bi-heart");
-            }
-        }
-
-        function profilePicUpload() {
-            let images = new FormData($('#images')[0]);
-            // console.log($('#images')[0][0].files[0])
-            $.ajax({
-                type: "POST",
-                url: "/images",
-                processData: false,
-                contentType: false,
-                data: images,
-                success: function (response) {
-                    alert("업로드 성공");
-                    window.location.reload();
-                }
-            })
-        }
-
-        function statusMessageModify() {
-            $.ajax({
-                type: "GET",
-                url: "/mypage",
-                success: function (response) {
-                    console.log(response);
-                    let nowmsg = response['statusMessage']
-                    $("#usercomment").empty()
-                    let input = `
-                                <input type = "text" id = "statusMessage" placeholder="${nowmsg}"/>
-                                <button onclick="statusMessageSave()">저장</button>
-                                <button onclick="statusMessageCancel()">취소</button>
-                                `
-                    $("#usercomment").append(input)
-                }
-            })
-        }
-
-        function statusMessageSave() {
-            let statusMessage = {
-                "statusMessage": $("#statusMessage").val()
-            }
-            $.ajax({
-                type: "PUT",
-                url: "/mypage/statusMessage",
-                contentType: "application/json",
-                data: JSON.stringify(statusMessage),
-                success: function (response) {
-                    alert("저장되었습니다!")
-                    window.location.reload();
-                }
-            })
-        }
-
-        function statusMessageCancel() {
-            $.ajax({
-                type: "GET",
-                url: "/mypage",
-                success: function (response) {
-                    console.log(response);
-                    $("#usercomment").empty()
-                    $('#usercomment').html(response['statusMessage']);
-                }
-            })
-        }
-    </script>
-
 </head>
 <body>
 <div id="page-container">
@@ -319,8 +84,8 @@
                 <div class="nav-title-box">
 
                     <a href="/" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
-                    <a href="/" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
-                    <a href="/" class="nave-menu-text nav-menu">맛있는거 추천받기</a>
+                    <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
+                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
                 </div>
                 <div class="nav-botton-box">
                     <button class="nav-button" id="logout">로그아웃</button>
@@ -346,7 +111,6 @@
                     </label>
                     <input type="file" id="chooseFile" name="images" accept="image/*" onchange="profilePicUpload(this)">
                 </form>
-
             </div>
             <div class="none-box" style="height: 10px; clear:left;"></div>
             <div id="user-table">
