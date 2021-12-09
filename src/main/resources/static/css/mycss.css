@@ -582,7 +582,7 @@
     outline: 0;
     border-radius: 5px;
     background-color: #5ee1b4;
-    width:90px;
+    padding: 0 15px 0 15px;
     height: 39px;
     display: inline-block;
     text-align: center;
