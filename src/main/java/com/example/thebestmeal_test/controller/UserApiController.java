@@ -53,13 +53,6 @@ public class UserApiController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
-//    @PostMapping(value = "/login/kakao")
-//    public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
-//        String username = userService.kakaoLogin(socialLoginDto.getToken());
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//        final String token = jwtTokenUtil.generateToken(userDetails);
-//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
-//    }
 
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
@@ -69,12 +62,6 @@ public class UserApiController {
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
 
-//    //카카오 로그인 callback
-//    @GetMapping("/user/kakao/callback")
-//    public String kakaoLogin(String code) {
-//        userService.kakaoLogin(code);
-//        return "redirect:/";
-//    }
 
     //회원가입
     @PostMapping(value = "/signup")

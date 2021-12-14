@@ -1,7 +1,7 @@
 let postingFoodName;
 let postingCat;
 let postingEmo;
-let foodImgUrl;
+let foodImg;
 let postingMemo;
 
 
@@ -164,13 +164,13 @@ function step3() {
 
 function save() {
     postingMemo = $('#comment').val();
-    foodImgUrl = $('#foodimages')[0].files[0];
+    foodImg = $('#foodimages')[0].files[0];
 
     let data = new FormData();
     data.append( "postingFoodName", postingFoodName);
     data.append( "postingCat", postingCat);
     data.append("postingEmo", postingEmo);
-    data.append("foodImgUrl", $('#foodimages')[0].files[0] );
+    data.append("foodImg", $('#foodimages')[0].files[0] );
     data.append( "postingMemo", postingMemo);
 
     console.log(data)
@@ -182,7 +182,7 @@ function save() {
         contentType: false,
         data: data,
         success: function (response) {
-            foodImgUrl = response
+            let foodImgUrl = response
             console.log(foodImgUrl)
             alert("추천해주셔서 감사합니다!");
             let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>

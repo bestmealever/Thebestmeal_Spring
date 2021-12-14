@@ -49,8 +49,8 @@ public class AwsService {
 
         String originalFilename = multipartFile.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
-        String randaom = random();
-        String fileName = "food" + "/" + randaom + extension;   // S3에 저장된 파일 이름
+        String random = random();
+        String fileName = "food" + "/" + random + extension;   // S3에 저장된 파일 이름
 
         InputStream inputStream = multipartFile.getInputStream();
         putS3(fileName, inputStream, objectMetadata); // s3로 업로드
@@ -69,8 +69,8 @@ public class AwsService {
         Long userId = user.getId();
         String originalFilename = multipartFile.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
-        String randaom = random();
-        String fileName = dirName + "/" + userId + "_" + "profile" + "_" + randaom + extension;   // S3에 저장된 파일 이름
+        String random = random();
+        String fileName = dirName + "/" + userId + "_" + "profile" + "_" + random + extension;   // S3에 저장된 파일 이름
 
         InputStream inputStream = multipartFile.getInputStream();
         putS3(fileName, inputStream, objectMetadata); // s3로 업로드
@@ -115,29 +115,3 @@ public class AwsService {
 
 }
 
-//안되는 코드
-//    public String foodupload(MultipartFile uploadFile) throws IOException {
-//        String origName = uploadFile.getOriginalFilename();
-//        String url;
-//        try {
-//            final String ext = origName.substring(origName.lastIndexOf('.'));
-//            final String saveFileName = getUuid() + ext;
-//
-//            ObjectMetadata objectMetadata = new ObjectMetadata();
-//            objectMetadata.setContentType(uploadFile.getContentType());
-//            objectMetadata.setContentLength(uploadFile.getBytes().length);
-//
-//            InputStream inputStream = uploadFile.getInputStream();
-//            putS3(saveFileName, inputStream, objectMetadata);
-//            url = s3Uri + saveFileName;
-//
-//        } catch (StringIndexOutOfBoundsException e) {
-//            url = null;
-//        }
-//        return url;
-//    }
-//
-//    private static String getUuid() {
-//        return UUID.randomUUID().toString().replaceAll("-", "");
-//    }
-//
