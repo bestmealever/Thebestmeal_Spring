@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class AwsService {
         return uploadImageUrl;
     }
 
+    @Transactional
     public String upload(MultipartFile multipartFile, String dirName, User user) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
@@ -114,4 +116,3 @@ public class AwsService {
 
 
 }
-

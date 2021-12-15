@@ -4,7 +4,9 @@ import com.example.thebestmeal_test.domain.Food;
 import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.domain.UserRole;
 import com.example.thebestmeal_test.dto.SignupRequestDto;
+import com.example.thebestmeal_test.dto.UserDto;
 import com.example.thebestmeal_test.dto.UserStatusModifyDto;
+import com.example.thebestmeal_test.dto.idCheckDto;
 import com.example.thebestmeal_test.kakao.KakaoOAuth2;
 import com.example.thebestmeal_test.kakao.KakaoUserInfo;
 import com.example.thebestmeal_test.repository.FoodRepository;
@@ -48,16 +50,11 @@ public class UserService {
         userRepository.save(found);
     }
 
-    public void updateCnt(Long id) {
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("굿"));
-        food.update(+1);
-        foodRepository.save(food);
-    }
-
-    public void updateCntM(Long id) {
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("굿"));
-        food.update(-1);
-        foodRepository.save(food);
+    public Boolean idCheck(idCheckDto idDto) {
+        String username = idDto.getUsername();
+        Optional<User> found = userRepository.findByUsername(username);
+        Boolean response = found.isPresent();
+        return response;
     }
 
     public void registerUser(SignupRequestDto requestDto) {
