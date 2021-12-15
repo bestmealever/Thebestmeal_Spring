@@ -380,6 +380,13 @@
                     localStorage.setItem("token", response['token']);
                     localStorage.setItem("username", response['username']);
                     location.href = '/';
+                },
+                error : function (request) {
+                    if(request.status === 401) {
+                        alert("등록된 아이디가 없거나 비밀번호를 다시 확인해주세요.")
+                    } if(request.status === 500) {
+                        alert("카카오톡 이메일을 동의해주시거나, 이미 등록된 카카오 유저입니다. 고객센터로 문의해주세요.")
+                    }
                 }
             })
         }
