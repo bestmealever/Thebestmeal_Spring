@@ -47,9 +47,4 @@ public class Posting extends Timestamped{
         this.food = food;
     }
 
-//
-//    public Posting(PostDto postDto) {
-//        this.postingMemo = postDto.getPostingMemo();
-//        this.postingFoodName = postDto.getPostingFoodName();
-//    }
 }

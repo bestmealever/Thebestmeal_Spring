@@ -48,32 +48,55 @@ public class UserApiController {
     private final RecommendedService recommendedService;
     private final LikedService likedService;
 
+    //리팩
+    //회원가입
+    @PostMapping(value = "/signup")
+    public ResponseEntity<?> createUser(@RequestBody SignupRequestDto requestDto) throws Exception {
+        return userService.registerUser(requestDto);
+
+    }
+
+    //    //회원가입 원본
+//    @PostMapping(value = "/signup")
+//    public ResponseEntity<?> createUser(@RequestBody SignupRequestDto userDto) throws Exception {
+//        userService.registerUser(userDto);
+//        authenticate(userDto.getUsername(), userDto.getPassword());
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
+//        final String token = jwtTokenUtil.generateToken(userDetails);
+//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+//    }
+//
+
+    //리팩 완료
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto userDto) throws Exception {
-        authenticate(userDto.getUsername(), userDto.getPassword());
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+        return userService.toCreateAuthenticationToken(userDto);
     }
 
+    //    //로그인 - 원본
+//    @RequestMapping(value = "/login", method = RequestMethod.POST)
+//    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto userDto) throws Exception {
+//        authenticate(userDto.getUsername(), userDto.getPassword());
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
+//        final String token = jwtTokenUtil.generateToken(userDetails);
+//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+//    }
+
+    //리팩
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
-        String username = userService.kakaoLogin(socialLoginDto.getToken());
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+        return userService.kakaoLogin(socialLoginDto);
     }
 
-    //회원가입
-    @PostMapping(value = "/signup")
-    public ResponseEntity<?> createUser(@RequestBody SignupRequestDto userDto) throws Exception {
-        userService.registerUser(userDto);
-        authenticate(userDto.getUsername(), userDto.getPassword());
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
-    }
+    //카카오 로그인 원본
+    //    @PostMapping(value = "/login/kakao")
+//    public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
+//        String username = userService.kakaoLogin(socialLoginDto.getToken());
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//        final String token = jwtTokenUtil.generateToken(userDetails);
+//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+//    }
 
     //아이디 중복확인
     @PostMapping("/signup/idcheck")
@@ -104,15 +127,5 @@ public class UserApiController {
             throw new Exception("파일 사이즈 초과", e);
         }
         return "사진 업로드 성공!";
-    }
-
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
     }
 }
