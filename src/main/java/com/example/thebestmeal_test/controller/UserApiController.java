@@ -10,10 +10,12 @@ import com.example.thebestmeal_test.repository.RecommendedRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.AwsService;
+import com.example.thebestmeal_test.service.LikedService;
 import com.example.thebestmeal_test.service.RecommendedService;
 import com.example.thebestmeal_test.service.UserService;
 import com.example.thebestmeal_test.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,6 +46,7 @@ public class UserApiController {
     private final AwsService awsService;
     private final RecommendedRepository recommendedRepository;
     private final RecommendedService recommendedService;
+    private final LikedService likedService;
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -53,13 +56,6 @@ public class UserApiController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
-//    @PostMapping(value = "/login/kakao")
-//    public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
-//        String username = userService.kakaoLogin(socialLoginDto.getToken());
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//        final String token = jwtTokenUtil.generateToken(userDetails);
-//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
-//    }
 
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
@@ -68,13 +64,6 @@ public class UserApiController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
-
-//    //카카오 로그인 callback
-//    @GetMapping("/user/kakao/callback")
-//    public String kakaoLogin(String code) {
-//        userService.kakaoLogin(code);
-//        return "redirect:/";
-//    }
 
     //회원가입
     @PostMapping(value = "/signup")
@@ -89,75 +78,9 @@ public class UserApiController {
     //아이디 중복확인
     @PostMapping("/signup/idcheck")
     public Boolean checkSameUsername(@RequestBody idCheckDto idDto) {
-        String username = idDto.getUsername();
-        Optional<User> found = userRepository.findByUsername(username);
-        Boolean response = found.isPresent();
-        return response;
+        return userService.idCheck(idDto);
     }
 
-
-    @GetMapping("/liked")
-    public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails != null) {
-            return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
-        } else {
-            return foodRepository.findTop12ByOrderByCntDesc();
-        }
-    }
-
-    //likedfood 개수
-    @GetMapping("/liked/count/{id}")
-    public List<LikedFood> getFoodLikedCount(@PathVariable Long id) {
-        return likedFoodRepository.findByFood_Id(id);
-    }
-
-    //food 보여주기
-    @GetMapping("/liked/{id}")
-    public Food getFood(@PathVariable Long id) {
-        return foodRepository.findById(id).orElseThrow(
-                () -> new NullPointerException("없습니다")
-        );
-    }
-
-    //food 보여주기 로그인 사용자
-    @GetMapping("/likedCheck/{id}")
-    public Boolean likedCheck(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return likedFoodCheckd(id,userDetails);
-    }
-
-    //좋아요
-    @Transactional
-    @PostMapping("/liked/{id}")
-    public Boolean updateLikeFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Boolean response = likedFoodCheckd(id,userDetails);
-        if (response == true) {
-            return response;
-        } else {
-            Food food = foodRepository.findById(id).orElseThrow(
-                    ()->new NullPointerException("그런 음식 없어요")
-            );
-            User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
-                    ()->new NullPointerException("그런 사람 없어요")
-            );
-            LikedFood likedFood = new LikedFood(food,user);
-            likedFoodRepository.save(likedFood);
-            userService.updateCnt(id);
-        }
-        return response;
-    }
-
-    //좋아요 취소
-    @DeleteMapping("/liked/{id}")
-    public String deleteLikedFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-        Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
-        Long LikedFoodId = likedFoodFound.get().getIdx();
-        likedFoodRepository.deleteById(LikedFoodId);
-        userService.updateCntM(id);
-        return "삭제!";
-    }
 
     //마이페이지
     @GetMapping("/mypage")
@@ -174,9 +97,12 @@ public class UserApiController {
 
     //마이페이지 이미지 업로드
     @PostMapping("/images")
-    public String upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        User user = userDetails.getUser();
-        awsService.upload(multipartFile, "profile_pic", user);
+    public String upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
+        try {
+            awsService.upload(multipartFile, "profile_pic", userDetails.getUser());
+        } catch (FileSizeLimitExceededException e) {
+            throw new Exception("파일 사이즈 초과", e);
+        }
         return "사진 업로드 성공!";
     }
 
@@ -189,16 +115,4 @@ public class UserApiController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-
-    private Boolean likedFoodCheckd(Long id, UserDetailsImpl userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-        Optional<LikedFood> likedFoodFound = likedFoodRepository.findByUserAndFood(user,food);
-        Boolean response = likedFoodFound.isPresent();
-        return response;
-    }
-
-
-
 }

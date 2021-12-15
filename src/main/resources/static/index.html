@@ -380,6 +380,13 @@
                     localStorage.setItem("token", response['token']);
                     localStorage.setItem("username", response['username']);
                     location.href = '/';
+                },
+                error : function (request) {
+                    if(request.status === 401) {
+                        alert("아이디 혹은 비밀번호를 다시 확인해주세요")
+                    } if(request.status === 500) {
+                        alert("아이디 혹은 비밀번호를 다시 확인해주세요")
+                    }
                 }
             })
         }

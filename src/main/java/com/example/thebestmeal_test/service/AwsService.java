@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class AwsService {
         return uploadImageUrl;
     }
 
+    @Transactional
     public String upload(MultipartFile multipartFile, String dirName, User user) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
@@ -114,30 +116,3 @@ public class AwsService {
 
 
 }
-
-//안되는 코드
-//    public String foodupload(MultipartFile uploadFile) throws IOException {
-//        String origName = uploadFile.getOriginalFilename();
-//        String url;
-//        try {
-//            final String ext = origName.substring(origName.lastIndexOf('.'));
-//            final String saveFileName = getUuid() + ext;
-//
-//            ObjectMetadata objectMetadata = new ObjectMetadata();
-//            objectMetadata.setContentType(uploadFile.getContentType());
-//            objectMetadata.setContentLength(uploadFile.getBytes().length);
-//
-//            InputStream inputStream = uploadFile.getInputStream();
-//            putS3(saveFileName, inputStream, objectMetadata);
-//            url = s3Uri + saveFileName;
-//
-//        } catch (StringIndexOutOfBoundsException e) {
-//            url = null;
-//        }
-//        return url;
-//    }
-//
-//    private static String getUuid() {
-//        return UUID.randomUUID().toString().replaceAll("-", "");
-//    }
-//

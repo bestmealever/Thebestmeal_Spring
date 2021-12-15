@@ -193,6 +193,11 @@ function profilePicUpload() {
         success: function (response) {
             alert("업로드 성공");
             window.location.reload();
+        },
+        error : function (request) {
+            if(request.status === 500) {
+                alert("사진 형식을 확인해주세요 (용량초과, 이미지 형식이 아님)")
+            } else (alert("에러!"))
         }
     })
 }
