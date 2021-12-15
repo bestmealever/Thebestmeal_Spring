@@ -193,6 +193,11 @@ function profilePicUpload() {
         success: function (response) {
             alert("업로드 성공");
             window.location.reload();
+        },
+        error : function (request) {
+            if(request.status === 500) {
+                alert("사진 용량 1MB 이하, jpg, jpeg, png 형식의 사진만 업로드 가능합니다.")
+            } else (alert("에러!"))
         }
     })
 }
