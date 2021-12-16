@@ -56,17 +56,6 @@ public class UserApiController {
 
     }
 
-    //    //회원가입 원본
-//    @PostMapping(value = "/signup")
-//    public ResponseEntity<?> createUser(@RequestBody SignupRequestDto userDto) throws Exception {
-//        userService.registerUser(userDto);
-//        authenticate(userDto.getUsername(), userDto.getPassword());
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
-//        final String token = jwtTokenUtil.generateToken(userDetails);
-//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
-//    }
-//
-
     //리팩 완료
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -74,14 +63,6 @@ public class UserApiController {
         return userService.toCreateAuthenticationToken(userDto);
     }
 
-    //    //로그인 - 원본
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto userDto) throws Exception {
-//        authenticate(userDto.getUsername(), userDto.getPassword());
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
-//        final String token = jwtTokenUtil.generateToken(userDetails);
-//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
-//    }
 
     //리팩
     @PostMapping(value = "/login/kakao")
@@ -89,14 +70,6 @@ public class UserApiController {
         return userService.kakaoLogin(socialLoginDto);
     }
 
-    //카카오 로그인 원본
-    //    @PostMapping(value = "/login/kakao")
-//    public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
-//        String username = userService.kakaoLogin(socialLoginDto.getToken());
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//        final String token = jwtTokenUtil.generateToken(userDetails);
-//        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
-//    }
 
     //아이디 중복확인
     @PostMapping("/signup/idcheck")
