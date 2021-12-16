@@ -31,16 +31,17 @@ public class PostingService {
     public String toPostFoodService(PostDto postDto, UserDetailsImpl userDetails) throws IOException {
 
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new NullPointerException("그런 사람 없는데요?"));
-        String foodImgUrl = this.awsService.uploadFoodImg(postDto.getFoodImgUrl());
-
+        // FoodImg (파일) foodImgUrl(스트링) 구분
+        String foodImgUrl = awsService.uploadFoodImg(postDto.getFoodImg());
+        // url과 함께 food 저장.
         Food food = new Food(postDto, foodImgUrl);
         foodRepository.save(food);
 
-        // emotion 저장
+        // tag - emotion 저장
         List<Tag> tags1 = postDto.getPostingEmo().stream().map((tag) -> new Tag(food, tag, "emotion")).collect(Collectors.toList());
         tagRepository.saveAll(tags1);
 
-        //category 저장
+        // tag - category 저장
         List<Tag> tags2 = postDto.getPostingCat().stream().map((tag) -> new Tag(food, tag, "category")).collect(Collectors.toList());
         tagRepository.saveAll(tags2);
 
@@ -54,7 +55,7 @@ public class PostingService {
 
     public Boolean foodDupCheck(FoodCheckDto foodCheckDto) {
         String postingFoodName = foodCheckDto.getPostingFoodName();
-        Optional<Food> found = this.foodRepository.findByName(postingFoodName);
+        Optional<Food> found = foodRepository.findByName(postingFoodName);
         Boolean response = found.isPresent();
         System.out.println(response);
         return response;

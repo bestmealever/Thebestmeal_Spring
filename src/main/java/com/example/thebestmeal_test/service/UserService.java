@@ -3,20 +3,23 @@ package com.example.thebestmeal_test.service;
 import com.example.thebestmeal_test.domain.Food;
 import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.domain.UserRole;
-import com.example.thebestmeal_test.dto.SignupRequestDto;
-import com.example.thebestmeal_test.dto.UserDto;
-import com.example.thebestmeal_test.dto.UserStatusModifyDto;
-import com.example.thebestmeal_test.dto.idCheckDto;
+import com.example.thebestmeal_test.dto.*;
 import com.example.thebestmeal_test.kakao.KakaoOAuth2;
 import com.example.thebestmeal_test.kakao.KakaoUserInfo;
 import com.example.thebestmeal_test.repository.FoodRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
+import com.example.thebestmeal_test.security.UserDetailsServiceImpl;
+import com.example.thebestmeal_test.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,32 +35,11 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final KakaoOAuth2 kakaoOAuth2;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    public void updateProfileImg(String uploadImageUrl, User user) {
-        User found = userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        System.out.println(found.getProfilePhoto()); //기본값 출력 -> /images/profile_pic.jpg
-        found.update(uploadImageUrl); //업데이트 해라
-        System.out.println(uploadImageUrl); //업데이트 재료 url 출력
-        System.out.println(found.getProfilePhoto());
-        userRepository.save(found);
-    }
-
-    public void modifyStatusMessage(UserStatusModifyDto statusModifyDto, UserDetailsImpl userDetails) {
-        User found = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-                () -> new NullPointerException("그런 사람 없는데요?"));
-        found.update(statusModifyDto);
-        userRepository.save(found);
-    }
-
-    public Boolean idCheck(idCheckDto idDto) {
-        String username = idDto.getUsername();
-        Optional<User> found = userRepository.findByUsername(username);
-        Boolean response = found.isPresent();
-        return response;
-    }
-
-    public void registerUser(SignupRequestDto requestDto) {
+    //회원 가입
+    public ResponseEntity<?> registerUser(SignupRequestDto requestDto) throws Exception {
         String username = requestDto.getUsername();
         // 회원 ID 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
@@ -77,11 +59,25 @@ public class UserService {
 
         User user = new User(username, password, email, role);
         userRepository.save(user);
+
+        authenticate(requestDto.getUsername(), requestDto.getPassword());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(requestDto.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
 
-    public String kakaoLogin(String token) {
+    //로그인
+    public ResponseEntity<?> toCreateAuthenticationToken(UserDto userDto) throws Exception {
+        authenticate(userDto.getUsername(), userDto.getPassword());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+    }
+
+    //카카오 로그인
+    public ResponseEntity<?> kakaoLogin(SocialLoginDto socialLoginDto) throws Exception {
         // 카카오 OAuth2 를 통해 카카오 사용자 정보 조회
-        KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(token);
+        KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(socialLoginDto.getToken());
         Long kakaoId = userInfo.getId();
         String nickname = userInfo.getNickname();
         String email = userInfo.getEmail();
@@ -107,11 +103,51 @@ public class UserService {
             userRepository.save(kakaoUser);
         }
 
-        // 로그인 처리
         Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return username;
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+
+    }
+
+    //아이디 중복 확인
+    public Boolean idCheck(idCheckDto idDto) {
+        String username = idDto.getUsername();
+        Optional<User> found = userRepository.findByUsername(username);
+        Boolean response = found.isPresent();
+        return response;
+    }
+
+    //인증 메서드
+    public void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
+    }
+
+    //마이페이지 상태 메세지 수정
+    public void modifyStatusMessage(UserStatusModifyDto statusModifyDto, UserDetailsImpl userDetails) {
+        User found = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        found.update(statusModifyDto);
+        userRepository.save(found);
+    }
+
+    //마이페이지 이미지 업로드
+    public void updateProfileImg(String uploadImageUrl, User user) {
+        User found = userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new NullPointerException("그런 사람 없는데요?"));
+        System.out.println(found.getProfilePhoto()); //기본값 출력 -> /images/profile_pic.jpg
+        found.update(uploadImageUrl); //업데이트 해라
+        System.out.println(uploadImageUrl); //업데이트 재료 url 출력
+        System.out.println(found.getProfilePhoto());
+        userRepository.save(found);
     }
 }

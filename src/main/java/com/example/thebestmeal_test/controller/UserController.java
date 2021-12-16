@@ -2,6 +2,7 @@ package com.example.thebestmeal_test.controller;
 
 import com.example.thebestmeal_test.dto.SignupRequestDto;
 import com.example.thebestmeal_test.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,39 +20,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 회원 로그인 페이지
-//    @GetMapping("/user/login")
-//    public String login(Model model) {
-//        return "login";
-//    }
-
-//    @GetMapping("/user/login/error")
-//    public String loginError(Model model) {
-//        model.addAttribute("loginError", true);
-//        return "login";
-//    }
-
-//    // 회원 가입 페이지
-//    @GetMapping("/user/signup")
-//    public String signup(Model model) {
-//        return "signup";
-//    }
-
-//    // 회원 가입 요청 처리
-//    @PostMapping("/user/signup")
-//    public String registerUser(SignupRequestDto requestDto) {
-//        userService.registerUser(requestDto);
-//        return "redirect:/";
-//    }
+//리팩토링 이렇게 해도 되나..?
+//@RequiredArgsConstructor
+//@Controller
+//public class UserController {
 //
-//    @GetMapping("/user/forbidden")
-//    public String forbidden() {
-//        return "forbidden";
-//    }
+//    private final UserService userService;
+//
+//}
 
-//    @GetMapping("/user/mypage")
-//    public String mypage(Model model) {
-//        return "mypage";
-//    }
 
 }

@@ -20,7 +20,7 @@ public class PostDto {
     private String postingFoodName;
     private List<String> postingEmo;
     private List<String> postingCat;
-    private MultipartFile foodImgUrl;
+    private MultipartFile foodImg;
     private String postingMemo;
 
 }
