@@ -22,7 +22,7 @@
 </p> -->
 
 ### 🔗 라이브
-http://Thebestmeal.shop/
+https://www.thebestmeal.shop/
 
 ### 🏠 소개
 '오늘 뭐 먹지?' 서비스는 먹고 싶은 것에 대한 고민을 좀 더 개인에게 맞춰 해결할 수 있지 않을까라는 생각에서 진행해보는 프로젝트입니다. 몇 가지 질문에 대한 답을 통해 그에 맞는 음식을 추천하게 됩니다.
@@ -34,7 +34,7 @@ http://Thebestmeal.shop/
 
 ### 🧙 멤버구성
 
-- :computer: Frontend and Backend - (https://github.com/bestmealever/Thebestmeal)
+- :computer: Frontend and Backend - (https://github.com/bestmealever/Thebestmeal_Spring)
     - 신한국, 이성우, 김지은, 장민
 
 
