@@ -14,6 +14,12 @@ $(document).ready(function () {
         //로그아웃
         localStorage.removeItem("token");
         localStorage.removeItem("username");
+        localStorage.removeItem("nickname");
+        Object.keys(localStorage)
+            .filter(key => key.startsWith('kakao_'))
+            .forEach(key => localStorage.removeItem(key));
+        // Object.keys(localStorage).filter(key => localStorage.getItem(key).startsWith('kakao_')).forEach(key => localStorage.removeItem(key));
+
         location.href = '/';
     });
     //마이페이지 처음 출력 내가 추천받은 음식

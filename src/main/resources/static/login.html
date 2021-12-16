@@ -46,6 +46,7 @@
                 success: function (response) {
                     localStorage.setItem("token", response['token']);
                     localStorage.setItem("username", response['username']);
+                    localStorage.setItem("nickname", response['nickname']);
                     location.href = '/';
                 }
             })
@@ -63,6 +64,7 @@
                         success: function (response) {
                             localStorage.setItem("token", response['token']);
                             localStorage.setItem("username", response['username']);
+                            localStorage.setItem("nickname", response['nickname']);
                             location.href = '/';
                         }
                     })
