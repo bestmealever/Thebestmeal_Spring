@@ -14,8 +14,22 @@ $(document).ready(function () {
         //로그아웃
         localStorage.removeItem("token");
         localStorage.removeItem("username");
+        localStorage.removeItem("nickname");
+        Object.keys(localStorage)
+            .filter(key => key.startsWith('kakao_'))
+            .forEach(key => localStorage.removeItem(key));
+        // Object.keys(localStorage).filter(key => localStorage.getItem(key).startsWith('kakao_')).forEach(key => localStorage.removeItem(key));
+
         location.href = '/';
     });
+
+    //(카카오 로그인) 유무에 따라 OO님 입력값 변경. 카카오: nickname / 일반: username
+    if (localStorage.getItem("nickname")) {
+        $("#welcomename").html(localStorage.getItem("nickname"));
+    }  else {
+        $("#welcomename").html(localStorage.getItem("username"));
+    }
+
     //마이페이지 처음 출력 내가 추천받은 음식
     $.ajax({
         type: "GET",

@@ -82,9 +82,9 @@ public class UserService {
         String nickname = userInfo.getNickname();
         String email = userInfo.getEmail();
 
-        // 우리 DB 에서 회원 Id 와 패스워드
-        // 회원 Id = 카카오 nickname
-        String username = nickname;
+        // username 을 nickname 이 아닌 고유값 KakaoId 로 지정
+        String username = Long.toString(kakaoId);
+
         // 패스워드 = 카카오 Id + ADMIN TOKEN
         String password = kakaoId + ADMIN_TOKEN;
 
@@ -98,8 +98,8 @@ public class UserService {
             String encodedPassword = passwordEncoder.encode(password);
             // ROLE = 사용자
             UserRole role = UserRole.USER;
-
-            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
+            kakaoUser = new User(nickname, username, encodedPassword, email, role, kakaoId);
+//            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
             userRepository.save(kakaoUser);
         }
 
@@ -107,9 +107,10 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        //nickname 추가한 KakaoJwtResponse Dto 사용
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+        return ResponseEntity.ok(new KakaoJwtResponse(token, userDetails.getUsername(), nickname));
 
     }
 

@@ -23,6 +23,9 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String username;
 
+    @Column(nullable = true)
+    private String nickname;
+
     @Column(nullable = false)
     private String password;
 
@@ -63,8 +66,9 @@ public class User extends Timestamped {
         this.profilePhoto = "/images/profile_pic.jpg";
     }
 
-    public User(String username, String password, String email, UserRole role,Long kakaoId) {
+    public User(String nickname, String username, String password, String email, UserRole role, Long kakaoId) {
         this.username = username;
+        this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.role = role;
