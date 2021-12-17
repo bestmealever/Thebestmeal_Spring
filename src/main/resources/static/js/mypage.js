@@ -27,7 +27,7 @@ $(document).ready(function () {
             recommendedList = response['recommendedList']
             postings = response['postings']
 
-            $("#username").html(user['username']);
+            $("#username").html(localStorage.getItem("username"));
             $('#usercomment').html(user['statusMessage']);
             let profile_pic = user['profilePhoto'];
             let temp_img = `

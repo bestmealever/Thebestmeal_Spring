@@ -1,10 +1,8 @@
 package com.example.thebestmeal_test.service;
 
-import com.example.thebestmeal_test.domain.Food;
 import com.example.thebestmeal_test.domain.User;
 import com.example.thebestmeal_test.domain.UserRole;
 import com.example.thebestmeal_test.dto.SignupRequestDto;
-import com.example.thebestmeal_test.dto.UserDto;
 import com.example.thebestmeal_test.dto.UserStatusModifyDto;
 import com.example.thebestmeal_test.dto.idCheckDto;
 import com.example.thebestmeal_test.kakao.KakaoOAuth2;
@@ -20,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -79,7 +76,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String kakaoLogin(String token) {
+    public String[] kakaoLogin(String token) {
         // 카카오 OAuth2 를 통해 카카오 사용자 정보 조회
         KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(token);
         Long kakaoId = userInfo.getId();
@@ -88,7 +85,7 @@ public class UserService {
 
         // 우리 DB 에서 회원 Id 와 패스워드
         // 회원 Id = 카카오 nickname
-        String username = nickname;
+        String username = Long.toString(kakaoId);
         // 패스워드 = 카카오 Id + ADMIN TOKEN
         String password = kakaoId + ADMIN_TOKEN;
 
@@ -103,7 +100,7 @@ public class UserService {
             // ROLE = 사용자
             UserRole role = UserRole.USER;
 
-            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
+            kakaoUser = new User(username, encodedPassword, email, role, kakaoId);
             userRepository.save(kakaoUser);
         }
 
@@ -112,6 +109,10 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return username;
+        String [] kakao = new String[2];
+        kakao[0] = username;
+        kakao[1] = nickname;
+
+        return kakao;
     }
 }

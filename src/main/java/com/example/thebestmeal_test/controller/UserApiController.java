@@ -54,15 +54,17 @@ public class UserApiController {
         authenticate(userDto.getUsername(), userDto.getPassword());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername(),userDetails.getUsername()));
     }
 
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
-        String username = userService.kakaoLogin(socialLoginDto.getToken());
+        String [] kakao = userService.kakaoLogin(socialLoginDto.getToken());
+        String username = kakao[0];
+        String nickname = kakao[1];
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername(),nickname));
     }
 
     //회원가입
@@ -72,7 +74,7 @@ public class UserApiController {
         authenticate(userDto.getUsername(), userDto.getPassword());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername(),userDetails.getUsername()));
     }
 
     //아이디 중복확인
