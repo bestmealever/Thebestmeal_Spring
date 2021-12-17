@@ -22,6 +22,14 @@ $(document).ready(function () {
 
         location.href = '/';
     });
+
+    //(카카오 로그인) 유무에 따라 OO님 입력값 변경. 카카오: nickname / 일반: username
+    if (localStorage.getItem("nickname")) {
+        $("#welcomename").html(localStorage.getItem("nickname"));
+    }  else {
+        $("#welcomename").html(localStorage.getItem("username"));
+    }
+
     //마이페이지 처음 출력 내가 추천받은 음식
     $.ajax({
         type: "GET",
