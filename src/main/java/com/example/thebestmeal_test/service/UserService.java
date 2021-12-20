@@ -39,7 +39,7 @@ public class UserService {
     private final JwtTokenUtil jwtTokenUtil;
 
     //회원 가입
-    public ResponseEntity<?> registerUser(SignupRequestDto requestDto) throws Exception {
+    public void registerUser(SignupRequestDto requestDto) throws Exception {
         String username = requestDto.getUsername();
         // 회원 ID 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
@@ -60,22 +60,12 @@ public class UserService {
         User user = new User(username, password, email, role);
         userRepository.save(user);
 
-        authenticate(requestDto.getUsername(), requestDto.getPassword());
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(requestDto.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
-    }
+//        return user;
 
-    //로그인
-    public ResponseEntity<?> toCreateAuthenticationToken(UserDto userDto) throws Exception {
-        authenticate(userDto.getUsername(), userDto.getPassword());
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
 
     //카카오 로그인
-    public ResponseEntity<?> kakaoLogin(SocialLoginDto socialLoginDto) throws Exception {
+    public User kakaoLogin(SocialLoginDto socialLoginDto) throws Exception {
         // 카카오 OAuth2 를 통해 카카오 사용자 정보 조회
         KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(socialLoginDto.getToken());
         Long kakaoId = userInfo.getId();
@@ -107,11 +97,7 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        //nickname 추가한 KakaoJwtResponse Dto 사용
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new KakaoJwtResponse(token, userDetails.getUsername(), nickname));
-
+        return kakaoUser;
     }
 
     //아이디 중복 확인

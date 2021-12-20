@@ -52,7 +52,11 @@ public class UserApiController {
     //회원가입
     @PostMapping(value = "/signup")
     public ResponseEntity<?> createUser(@RequestBody SignupRequestDto requestDto) throws Exception {
-        return userService.registerUser(requestDto);
+        userService.registerUser(requestDto);
+        authenticate(requestDto.getUsername(), requestDto.getPassword());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(requestDto.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
 
     }
 
@@ -60,16 +64,35 @@ public class UserApiController {
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto userDto) throws Exception {
-        return userService.toCreateAuthenticationToken(userDto);
+        authenticate(userDto.getUsername(), userDto.getPassword());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(userDto.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token, userDetails.getUsername()));
     }
 
 
     //리팩
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
-        return userService.kakaoLogin(socialLoginDto);
+        User kakaoUser = userService.kakaoLogin(socialLoginDto);
+        String username = kakaoUser.getUsername();
+        String nickname = kakaoUser.getNickname();
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new KakaoJwtResponse(token, userDetails.getUsername(), nickname));
+
     }
 
+    //인증 메서드
+    public void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
+    }
 
     //아이디 중복확인
     @PostMapping("/signup/idcheck")
@@ -85,6 +108,8 @@ public class UserApiController {
     }
 
     //마이페이지 상태 메세지 수정
+    //보편적으로 front 에서 처리함. 혹은 백엔드 101 코드.. if (400) -> return 메시지가 아니라 코드를 프론트에 전달.
+    //혹은 http 코드.
     @PutMapping("/mypage/statusMessage")
     public String modifyStatusMessage(@RequestBody UserStatusModifyDto statusModifyDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.modifyStatusMessage(statusModifyDto,userDetails);
@@ -92,6 +117,7 @@ public class UserApiController {
     }
 
     //마이페이지 이미지 업로드
+    //파일 사이즈 초과 -> 파일에 대한 체크. 비즈니스 로직은 보편적으로 서비스에 감. 정해진 게 아님.
     @PostMapping("/images")
     public String upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         try {
