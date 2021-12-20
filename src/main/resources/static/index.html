@@ -68,6 +68,7 @@
                 $("#mypage").css("display", "");
                 $("#login").css("display", "none");
                 $("#username").html(localStorage.getItem("username"));
+                $("#nickname").html(localStorage.getItem("nickname"));
 
             } else {
                 //토큰이 없으면 로그아웃된 화면
@@ -75,6 +76,14 @@
                 $("#logout").css("display", "none");
                 $("#mypage").css("display", "none");
             }
+
+            //(카카오 로그인) 유무에 따라 OO님 입력값 변경. 카카오: nickname / 일반: username
+            if (localStorage.getItem("nickname")) {
+                $("#welcomename").html(localStorage.getItem("nickname"));
+            }  else {
+                $("#welcomename").html(localStorage.getItem("username"));
+            }
+
             $.ajax({
                 type: "GET",
                 url: "/liked",
@@ -141,6 +150,11 @@
                 //로그아웃
                 localStorage.removeItem("token");
                 localStorage.removeItem("username");
+                localStorage.removeItem("nickname");
+                Object.keys(localStorage)
+                    .filter(key => key.startsWith('kakao_'))
+                    .forEach(key => localStorage.removeItem(key));
+                // Object.keys(localStorage).filter(key => localStorage.getItem(key).startsWith('kakao_')).forEach(key => localStorage.removeItem(key));
                 location.href = '/';
             });
 
@@ -148,6 +162,7 @@
             $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                 if (localStorage.getItem('token')) {
                     jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                    // jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
                 }
             });
         })
@@ -290,6 +305,7 @@
                         success: function (response) {
                             localStorage.setItem("token", response['token']);
                             localStorage.setItem("username", response['username']);
+                            localStorage.setItem("nickname", response['nickname']);
                             location.href = '/';
                         }
                     })
@@ -497,7 +513,8 @@
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <h1 class="fw-light"> 오늘 뭐 먹지 ? </h1>
                     <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
-                    <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>
+                    <p class="lead text-muted" id="userMessege"><span id="welcomename"></span> 님 환영합니다!</p>
+<!--                    <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>-->
                     <div>
 <!--                        <button type="button" class="main-button" data-bs-toggle="modal"-->
 <!--                                data-bs-target="#SignupPlzModal"-->
