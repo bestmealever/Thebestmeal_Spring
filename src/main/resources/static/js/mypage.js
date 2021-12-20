@@ -33,7 +33,7 @@ $(document).ready(function () {
     //마이페이지 처음 출력 내가 추천받은 음식
     $.ajax({
         type: "GET",
-        url: "/mypage",
+        url: "backend.thebestmeal.shop/mypage",
         success: function (response) {
             console.log(response)
             user = response['user']
@@ -200,7 +200,7 @@ function profilePicUpload() {
     // console.log($('#images')[0][0].files[0])
     $.ajax({
         type: "POST",
-        url: "/images",
+        url: "backend.thebestmeal.shop/images",
         processData: false,
         contentType: false,
         data: images,
@@ -219,7 +219,7 @@ function profilePicUpload() {
 function statusMessageModify() {
     $.ajax({
         type: "GET",
-        url: "/mypage",
+        url: "backend.thebestmeal.shop/mypage",
         success: function (response) {
             console.log(response);
             let nowmsg = response['statusMessage']
@@ -240,7 +240,7 @@ function statusMessageSave() {
     }
     $.ajax({
         type: "PUT",
-        url: "/mypage/statusMessage",
+        url: "backend.thebestmeal.shop/mypage/statusMessage",
         contentType: "application/json",
         data: JSON.stringify(statusMessage),
         success: function (response) {
@@ -253,7 +253,7 @@ function statusMessageSave() {
 function statusMessageCancel() {
     $.ajax({
         type: "GET",
-        url: "/mypage",
+        url: "backend.thebestmeal.shop/mypage",
         success: function (response) {
             console.log(response);
             $("#usercomment").empty()

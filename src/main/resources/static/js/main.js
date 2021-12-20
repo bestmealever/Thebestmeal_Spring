@@ -200,7 +200,7 @@ function feeling() {
         console.log(data)
         $.ajax({
             type: "POST",
-            url: "/api/recommend",
+            url: "backend.thebestmeal.shop/api/recommend",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
             beforeSend: function () {
@@ -260,7 +260,7 @@ function viewKakao(foodName) {
     console.log('TT')
     $.ajax({
         type: "GET",
-        url: `/api/recommended?foodName=${foodName}`,
+        url: `backend.thebestmeal.shop/api/recommended?foodName=${foodName}`,
         success: function (response) {
             console.log(response)
             window.location.href = `kakao.html?foodName=${foodName}`
@@ -324,7 +324,7 @@ function heart(id) {
         console.log(id);
         $.ajax({
             type: "POST",
-            url: `/liked/${id}`,
+            url: `backend.thebestmeal.shop/liked/${id}`,
             success: function (response) {
                 console.log(response);
                 window.location.reload();
@@ -335,7 +335,7 @@ function heart(id) {
         console.log(id);
         $.ajax({
             type: "DELETE",
-            url: `/liked/${id}`,
+            url: `backend.thebestmeal.shop/liked/${id}`,
             success: function (response) {
                 console.log(response);
                 window.location.reload();
