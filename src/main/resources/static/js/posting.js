@@ -147,16 +147,14 @@ function step3() {
         console.log(postingEmo)
 
         let temp_html = `<p class="question-style" style="margin-bottom: 10px;"> Q.4 음식 사진과 음식 소개를 부탁드려요! </p>
-                                <div class = "form-group">
-                  
-                                            <input id="foodimages" type="file" name="avatar" />
+                                <div class = "form-group">             
                                             <!--코멘트-->
-                                            <div style="width:450px;  float: left;">
-                                                <input class="input is-rounded" style="text-align: center; height:200px; border-radius: 20px;  margin: 10px 0 0 0; word-wrap: break-word;" type="text" id="comment" placeholder="이 음식을 소개해주세요! (최대 45자까지 입력 가능합니다)" maxlength='45'>
+                                            <div style="width:900px;  float: left;">
+                                                <input class="input is-rounded" style="text-align: center; height:100px; border-radius: 20px;  margin: 10px 0 0 0; word-wrap: break-word;" type="text" id="comment" placeholder="이 음식을 소개해주세요! (최대 45자까지 입력 가능합니다)" maxlength='45'>
+                                            <img src="" id="image_container" alt=""이미지 미리보기...">
+                                            <input id="foodimages" type="file" onchange="previewFile()" name="avatar"><br>
                                             </div>
                                 </div>
-                                    
-
                                 <div class="button-group-out">
                                     <button type="button" class="button next-stage" onclick="save()">저장</button>
                                 </div>`
@@ -215,4 +213,18 @@ function save() {
         }
 
     });
+}
+
+function previewFile() {
+    var preview = document.querySelector('img');
+    var file = document.querySelector('input[type=file]').files[0];
+    var reader = new FileReader();
+
+    reader.addEventListener("load", function() {
+        preview.src = reader.result;
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
 }
