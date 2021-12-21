@@ -86,7 +86,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "backend.thebestmeal.shop/liked",
+                url: "/liked",
                 success: function (response) {
                     console.log(response);
                     for (let i = 0; i < response.length; i++) {
@@ -178,7 +178,7 @@
                 console.log(id);
                 $.ajax({
                     type: "POST",
-                    url: `backend.thebestmeal.shop/liked/${id}`,
+                    url: `/liked/${id}`,
                     success: function (response) {
                         console.log(response);
                         window.location.reload();
@@ -189,7 +189,7 @@
                 console.log(id);
                 $.ajax({
                     type: "DELETE",
-                    url: `backend.thebestmeal.shop/liked/${id}`,
+                    url: `/liked/${id}`,
                     success: function (response) {
                         console.log(response);
                         window.location.reload();
@@ -249,7 +249,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: `backend.thebestmeal.shop/signup`,
+                url: `/signup`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {
@@ -276,7 +276,7 @@
             let info = {"username": $("#loginusername").val()};
             $.ajax({
                 type: "POST",
-                url: `backend.thebestmeal.shop/signup/idcheck`,
+                url: `/signup/idcheck`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {
@@ -299,7 +299,7 @@
                 success: function (authObj) {
                     $.ajax({
                         type: 'POST',
-                        url: `backend.thebestmeal.shop/login/kakao`,
+                        url: `/login/kakao`,
                         contentType: "application/json",
                         data: JSON.stringify({'token': authObj['access_token']}),
                         success: function (response) {
@@ -389,7 +389,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: `backend.thebestmeal.shop/login`,
+                url: `/login`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {

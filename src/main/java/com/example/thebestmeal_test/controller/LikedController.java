@@ -19,7 +19,7 @@ public class LikedController {
     private final LikedService likedService;
 
 
-    @GetMapping("backend.thebestmeal.shop/liked")
+    @GetMapping("/liked")
     public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(userDetails != null) {
             return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
@@ -29,13 +29,13 @@ public class LikedController {
     }
 
     //좋아요
-    @PostMapping("backend.thebestmeal.shop/liked/{id}")
+    @PostMapping("/liked/{id}")
     public Boolean updateLikeFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return likedService.liked(id, userDetails);
     }
 
     //좋아요 취소
-    @DeleteMapping("backend.thebestmeal.shop/liked/{id}")
+    @DeleteMapping("/liked/{id}")
     public String deleteLikedFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         likedService.unLiked(id, userDetails);
         return "좋아요를 취소하셨습니다";

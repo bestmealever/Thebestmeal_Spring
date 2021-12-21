@@ -27,12 +27,12 @@ public class PostingController {
     private final PostingService postingService;
 
     @Transactional
-    @PostMapping({"backend.thebestmeal.shop/post"})
+    @PostMapping({"/post"})
     public String postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return postingService.toPostFoodService(postDto, userDetails);
     }
 
-    @PostMapping({"backend.thebestmeal.shop/foodcheck"})
+    @PostMapping({"/foodcheck"})
     public Boolean foodCheck(@RequestBody FoodCheckDto foodCheckDto) {
         return postingService.foodDupCheck(foodCheckDto);
     }

@@ -41,7 +41,7 @@ function step1() {
 
     $.ajax({
         type: "POST",
-        url: "backend.thebestmeal.shop/api/foodcheck",
+        url: "/api/foodcheck",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(data),
         success: function (response) {
@@ -183,7 +183,7 @@ function save() {
 
     $.ajax({
         type: "POST",
-        url: "backend.thebestmeal.shop/api/post",
+        url: "/api/post",
         processData: false,
         contentType: false,
         data: data,

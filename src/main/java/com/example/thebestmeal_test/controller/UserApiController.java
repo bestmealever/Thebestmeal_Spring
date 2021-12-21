@@ -50,7 +50,7 @@ public class UserApiController {
 
     //리팩
     //회원가입
-    @PostMapping(value = "backend.thebestmeal.shop/signup")
+    @PostMapping(value = "/signup")
     public ResponseEntity<?> createUser(@RequestBody SignupRequestDto requestDto) throws Exception {
         return userService.registerUser(requestDto);
 
@@ -58,41 +58,41 @@ public class UserApiController {
 
     //리팩 완료
     //로그인
-    @RequestMapping(value = "backend.thebestmeal.shop/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDto userDto) throws Exception {
         return userService.toCreateAuthenticationToken(userDto);
     }
 
 
     //리팩
-    @PostMapping(value = "backend.thebestmeal.shop/login/kakao")
+    @PostMapping(value = "/login/kakao")
     public ResponseEntity<?> createAuthenticationTokenByKakao(@RequestBody SocialLoginDto socialLoginDto) throws Exception {
         return userService.kakaoLogin(socialLoginDto);
     }
 
 
     //아이디 중복확인
-    @PostMapping("backend.thebestmeal.shop/signup/idcheck")
+    @PostMapping("/signup/idcheck")
     public Boolean checkSameUsername(@RequestBody idCheckDto idDto) {
         return userService.idCheck(idDto);
     }
 
 
     //마이페이지
-    @GetMapping("backend.thebestmeal.shop/mypage")
+    @GetMapping("/mypage")
     public MyPageDto getMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return recommendedService.toMyPageInfo(userDetails);
     }
 
     //마이페이지 상태 메세지 수정
-    @PutMapping("backend.thebestmeal.shop/mypage/statusMessage")
+    @PutMapping("/mypage/statusMessage")
     public String modifyStatusMessage(@RequestBody UserStatusModifyDto statusModifyDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.modifyStatusMessage(statusModifyDto,userDetails);
         return "메세지 수정 완료!";
     }
 
     //마이페이지 이미지 업로드
-    @PostMapping("backend.thebestmeal.shop/images")
+    @PostMapping("/images")
     public String upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         try {
             awsService.upload(multipartFile, "profile_pic", userDetails.getUser());
