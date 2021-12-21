@@ -16,7 +16,7 @@ public class RecommendedController {
 
     private final RecommendedService recommendedService;
 
-    @GetMapping("backend.thebestmeal.shop/recommended")
+    @GetMapping("/recommended")
     public void getUserInfoAndFoodName(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam("foodName") String foodName

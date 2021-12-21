@@ -20,7 +20,7 @@ public class ChoicesController {
 
     private final ChoiceService choiceService;
 
-    @PostMapping("backend.thebestmeal.shop/recommend")
+    @PostMapping("/recommend")
     public List<Food> choice(@RequestBody ChoiceDto choiceDto) {
         return choiceService.toChoiceService(choiceDto);
     }
