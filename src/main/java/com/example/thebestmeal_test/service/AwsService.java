@@ -15,6 +15,7 @@ import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class AwsService {
     @Value("${cloud.aws.s3.uri}")
     public String s3Uri;  // S3 버킷 이름
 
+    //추천하기 음식 이미지 업로드
     public String uploadFoodImg(MultipartFile multipartFile) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
@@ -62,6 +64,16 @@ public class AwsService {
         return uploadImageUrl;
     }
 
+    //마이페이지 이미지 사이즈 체크
+    public void fileCheck(MultipartFile multipartFile, UserDetailsImpl userDetails) throws Exception {
+        try {
+            upload(multipartFile, "profile_pic", userDetails.getUser());
+        } catch (FileSizeLimitExceededException e) {
+            throw new Exception("파일 사이즈 초과", e);
+        }
+    }
+
+    //s3에 이미지 업로드
     @Transactional
     public String upload(MultipartFile multipartFile, String dirName, User user) throws IOException {
         ObjectMetadata objectMetadata = new ObjectMetadata();

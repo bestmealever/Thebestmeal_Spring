@@ -12,6 +12,7 @@ import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.security.UserDetailsServiceImpl;
 import com.example.thebestmeal_test.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -108,16 +110,7 @@ public class UserService {
         return response;
     }
 
-    //인증 메서드
-    public void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
-    }
+
 
     //마이페이지 상태 메세지 수정
     public void modifyStatusMessage(UserStatusModifyDto statusModifyDto, UserDetailsImpl userDetails) {
@@ -126,6 +119,7 @@ public class UserService {
         found.update(statusModifyDto);
         userRepository.save(found);
     }
+
 
     //마이페이지 이미지 업로드
     public void updateProfileImg(String uploadImageUrl, User user) {
