@@ -118,11 +118,6 @@ public class UserApiController {
     @PostMapping("/images")
     public void upload(@RequestParam("images") MultipartFile multipartFile, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         awsService.fileCheck(multipartFile, userDetails);
-        //        try {
-//            awsService.upload(multipartFile, "profile_pic", userDetails.getUser());
-//        } catch (FileSizeLimitExceededException e) {
-//            throw new Exception("파일 사이즈 초과", e);
-//        }
-//        return "사진 업로드 성공!";
+
     }
 }

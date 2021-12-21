@@ -64,7 +64,8 @@ public class AwsService {
         return uploadImageUrl;
     }
 
-    //마이페이지 이미지 사이즈 체크
+    //마이페이지 이미지 사이즈 체크 (아래는톰캣에서의 was 에서 파일 리밋이 걸려있는 것에 대한 에러 설정.)
+    //다양한 에러 상황에 대한 customize 가 되어 있지 않음
     public void fileCheck(MultipartFile multipartFile, UserDetailsImpl userDetails) throws Exception {
         try {
             upload(multipartFile, "profile_pic", userDetails.getUser());

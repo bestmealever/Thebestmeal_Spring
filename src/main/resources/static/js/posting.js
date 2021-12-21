@@ -11,20 +11,21 @@ $(document).ready(function () {
         if (localStorage.getItem('token')) {
             jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
         }
-
-        $("#logout").click(function () {
-            //로그아웃
-            localStorage.removeItem("token");
-            localStorage.removeItem("username");
-            localStorage.removeItem("nickname");
-            Object.keys(localStorage)
-                .filter(key => key.startsWith('kakao_'))
-                .forEach(key => localStorage.removeItem(key));
-            //삭제가 안된다.
-            // Object.keys(localStorage).filter(key => localStorage.getItem(key).startsWith('kakao_')).forEach(key => localStorage.removeItem(key));
-            location.href = '/';
-        });
     })
+
+    $("#logout").click(function () {
+        //로그아웃
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        localStorage.removeItem("nickname");
+        Object.keys(localStorage)
+            .filter(key => key.startsWith('kakao_'))
+            .forEach(key => localStorage.removeItem(key));
+        //삭제가 안된다.
+        // Object.keys(localStorage).filter(key => localStorage.getItem(key).startsWith('kakao_')).forEach(key => localStorage.removeItem(key));
+        location.href = '/';
+    });
+
 })
 
 function step1() {
