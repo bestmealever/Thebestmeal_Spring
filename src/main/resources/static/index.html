@@ -31,6 +31,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="js/main.js" rel="script"></script>
+    <script src="js/base.js"></script>
 
     <!-- 구글 폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +55,6 @@
     </style>
 
     <script>
-        let apiUrl = "https://backend.thebestmeal.shop"
         $(document).ready(function () {
             //토큰이 있으면 로그인 화면
 
@@ -87,7 +87,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "${apiUrl}/liked",
+                url: `${apiUrl}/liked`,
                 success: function (response) {
                     console.log(response);
                     for (let i = 0; i < response.length; i++) {
@@ -418,10 +418,9 @@
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="nav-container">
                 <div class="nav-title-box">
-
                     <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
                     <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
-                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
+                    <a href="javascript:void(0);" class="nave-menu-text nav-menu" onclick="toposting()">맛있는거 추천하기</a>
                 </div>
                 <div class="nav-botton-box">
                     <button class="nav-button" data-bs-toggle="modal" data-bs-target="#LoginModal" id="login"
