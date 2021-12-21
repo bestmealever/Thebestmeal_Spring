@@ -109,9 +109,10 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String [] kakao = new String[2];
-        kakao[0] = username;
-        kakao[1] = nickname;
+//        String [] kakao = new String[2];
+//        kakao[0] = username;
+//        kakao[1] = nickname;
+        String [] kakao = {username, nickname};
 
         return kakao;
     }
