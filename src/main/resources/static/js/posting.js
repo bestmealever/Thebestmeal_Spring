@@ -42,7 +42,7 @@ function step1() {
 
     $.ajax({
         type: "POST",
-        url: "/api/foodcheck",
+        url: `${apiUrl}/api/foodcheck`,
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(data),
         success: function (response) {
@@ -182,7 +182,7 @@ function save() {
 
     $.ajax({
         type: "POST",
-        url: "/api/post",
+        url: `${apiUrl}/api/post`,
         processData: false,
         contentType: false,
         data: data,

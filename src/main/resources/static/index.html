@@ -31,6 +31,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="js/main.js" rel="script"></script>
+    <script src="js/base.js"></script>
 
     <!-- 구글 폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +87,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "/liked",
+                url: `${apiUrl}/liked`,
                 success: function (response) {
                     console.log(response);
                     for (let i = 0; i < response.length; i++) {
@@ -178,7 +179,7 @@
                 console.log(id);
                 $.ajax({
                     type: "POST",
-                    url: `/liked/${id}`,
+                    url: `${apiUrl}/liked/${id}`,
                     success: function (response) {
                         console.log(response);
                         window.location.reload();
@@ -189,7 +190,7 @@
                 console.log(id);
                 $.ajax({
                     type: "DELETE",
-                    url: `/liked/${id}`,
+                    url: `${apiUrl}/liked/${id}`,
                     success: function (response) {
                         console.log(response);
                         window.location.reload();
@@ -249,7 +250,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: `/signup`,
+                url: `${apiUrl}/signup`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {
@@ -276,7 +277,7 @@
             let info = {"username": $("#loginusername").val()};
             $.ajax({
                 type: "POST",
-                url: `/signup/idcheck`,
+                url: `${apiUrl}/signup/idcheck`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {
@@ -299,7 +300,7 @@
                 success: function (authObj) {
                     $.ajax({
                         type: 'POST',
-                        url: `/login/kakao`,
+                        url: `${apiUrl}/login/kakao`,
                         contentType: "application/json",
                         data: JSON.stringify({'token': authObj['access_token']}),
                         success: function (response) {
@@ -389,7 +390,7 @@
             }
             $.ajax({
                 type: 'POST',
-                url: `/login`,
+                url: `${apiUrl}/login`,
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (response) {
