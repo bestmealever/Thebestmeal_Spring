@@ -1,0 +1,109 @@
+###회원가입
+POST http://localhost:8080/signup
+Content-Type: application/json
+
+{
+  "username": "tes9",
+  "password": "test3",
+  "email": "test@nat"
+}
+
+
+### 유저가 포스팅!!! ^0^
+POST http://localhost:8080/article
+Content-Type: multipart/form-data; boundary=---------------------------974767299852498929531610575
+Authorization: Bearer   eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXM5IiwiZXhwIjoxNjQwMjU2MjIwLCJpYXQiOjE2NDAyMzgyMjB9.DNtydyYALKBmIiTlwKADcbEjzMDsJVGauC-KvhRLoFjmlVwXUJIXuYrB9mIWsxImn4TI5sRp8HFxJ5bXDH_5rg
+
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="image"; filename="joincolumn2.jpg"
+Content-Type: text/plain
+
+< /Users/macbookpro/IdeaProjects/Thebestmeal_Spring6/src/main/resources/static/joincolumn2.jpg
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="title"
+Content-Type: text/plain
+
+오마이갓 진짜 되니??
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="foodidx"
+Content-Type: text/plain
+
+867
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="tags"
+Content-Type: text/plain
+
+삼겹살,맛있다,완전짱
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="content"
+Content-Type: text/plain
+
+fffff
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="articleType"
+Content-Type: text/plain
+
+recipe
+-----------------------------974767299852498929531610575--
+
+
+### 유저가 포스팅!!! ^0^
+POST http://localhost:8080/article
+Content-Type: multipart/form-data; boundary=---------------------------974767299852498929531610575
+Authorization: Bearer   eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXM5IiwiZXhwIjoxNjQwMjU2MjIwLCJpYXQiOjE2NDAyMzgyMjB9.DNtydyYALKBmIiTlwKADcbEjzMDsJVGauC-KvhRLoFjmlVwXUJIXuYrB9mIWsxImn4TI5sRp8HFxJ5bXDH_5rg
+
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="title"
+
+뭐먹을까요?
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="content"
+
+fffff
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="articleType"
+
+vote
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="option1Name"
+
+삼겹살
+-----------------------------974767299852498929531610575
+content-Disposition: form-data; name="option2Name"
+
+소고기
+-----------------------------974767299852498929531610575--
+
+### 리스트 불러오기
+GET http://localhost:8080/articles
+Authorization: Bearer Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsImV4cCI6MTY0MDEyMTk4MSwiaWF0IjoxNjQwMTAzOTgxfQ.CK8aHDe0hWKKggr4VMck8B-xr5IfzN5vp5v_anaCB8YriH34-7TFk6q-2QDl_uOiUvXdKpNZNYtLMijOSg1qhA
+Accept: application/json
+
+### 코멘트 작성
+POST http://localhost:8080/article/comment
+Content-Type: application/json
+
+{
+  "id" :  3, "comment": "ㅎㄷㅎㄷㅎㅎ"
+}
+
+### 회원 코멘트 작성
+POST http://localhost:8080/article/comment
+Content-Type: application/json
+Authorization: Bearer   eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0NyIsImV4cCI6MTY0MDI0MTIzMywiaWF0IjoxNjQwMjIzMjMzfQ.ClZ6uNEM98Z2UJtXIl98Q8DRXnjoncOtMqCpMZygPtpEECxA_EM-BZfydIYVzBPVLWXJr9o0UKP7wgoeYPa59Q
+
+{
+  "articleIdx" : 11, "comment": "게시글 1번에 회원 1가 댓글을 달았다"
+}
+### 비회원 코멘트 작성
+POST http://localhost:8080/article/comment
+Content-Type: application/json
+
+{
+  "articleIdx" :  11, "comment": "게시글 10번에 비회원이 댓글을 달았다"
+}
+
+###게시글 삭제(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST,CascadeType.REMOVE})
+DELETE http://localhost:8080/article/23
+Content-Type: application/json
+Authorization: Bearer   eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXM4IiwiZXhwIjoxNjQwMjQ5MzAyLCJpYXQiOjE2NDAyMzEzMDJ9.GCmRs2ntyHegmPUPTVQ1hRjh2dcD34-iwggQVj2x5P_ni9_ODh3dH8iR6yRM5g-gi715m59b0-BIgiki3unZSA
