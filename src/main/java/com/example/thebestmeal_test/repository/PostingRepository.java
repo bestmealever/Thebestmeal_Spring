@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PostingRepository extends JpaRepository<Posting,Long> {
     List<Posting> findAllByUserId(Long id);
+    List<Posting> findAllByStatusIsNull();
+    List<Posting> findAllByStatus(String status);
 }

@@ -222,6 +222,8 @@
         }
 
         function signup() {
+            var checkBox = document.getElementById("admin-check");
+
             let password = $("#password").val();
 
             if ($("#loginusername").hasClass("is-danger")) {
@@ -246,7 +248,9 @@
             let info = {
                 username: $("#loginusername").val(),
                 password: $("#password").val(),
-                email: $("#email").val()
+                email: $("#email").val(),
+                admin:checkBox.checked,
+                adminToken:$("#admin-token").val()
             }
             $.ajax({
                 type: 'POST',

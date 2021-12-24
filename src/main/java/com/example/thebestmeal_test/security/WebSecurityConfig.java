@@ -46,6 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/post").permitAll()
                 .antMatchers("/recommend").permitAll()
                 .antMatchers("/login").permitAll()
+//                .antMatchers("/adminposting").hasRole("ADMIN")
+//                .antMatchers("/admin.html").hasRole("ADMIN")
                 .antMatchers("/**.html").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/css/**").permitAll()
@@ -70,17 +72,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .formLogin()
-                .loginPage("/index.html")
-                .failureUrl("/index.html")
-                .defaultSuccessUrl("/")
-                .permitAll()	//허용
-                .and()
-                .logout()
-                .logoutUrl("/user/logout")
-                .logoutSuccessUrl("/")
-                .permitAll()
+
+                //서버사이드 렌더링 제거로 없어도 되는 url 들
+//                .and()
+//                .formLogin()
+//                .loginPage("/index.html")
+//                .failureUrl("/index.html")
+//                .defaultSuccessUrl("/")
+//                .permitAll()	//허용
+//                .and()
+//                .logout()
+//                .logoutUrl("/user/logout")
+//                .logoutSuccessUrl("/")
+//                .permitAll()
+
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/user/forbidden");	//로그아웃도 허용

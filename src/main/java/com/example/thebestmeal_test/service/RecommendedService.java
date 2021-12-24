@@ -42,7 +42,6 @@ public class RecommendedService {
             foods.add(recommended.getFood());
         }
 
-
         System.out.println(foods);
         MyPageDto dto = new MyPageDto(userDetails.getUser(), foods, recommendedList, postings);
         System.out.println(dto);

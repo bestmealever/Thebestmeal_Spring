@@ -30,6 +30,9 @@ public class Posting extends Timestamped{
     @Column(nullable = true)
     private String foodImgUrl;
 
+    @Column(nullable = true)
+    private String status;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
