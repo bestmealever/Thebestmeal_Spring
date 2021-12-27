@@ -70,8 +70,17 @@ function allPostingList() {
 }
 
 //accept를 누르면, (1) posting의 status 가 accepted 로 바뀐다. (2)
-function accept() {
+function accept(id) {
     console.log(postingsAccepted, 'Accepted postinglist');
+
+    $.ajax({
+        type: "POST",
+        url: `${apiUrl}/postingaccepted/${id}`,
+        success: function (response) {
+            console.log(response);
+            window.location.reload();
+        }
+    })
 }
 
 //decline을 누르면 (1) posting 의 status 가 declined 으로 바뀐다.

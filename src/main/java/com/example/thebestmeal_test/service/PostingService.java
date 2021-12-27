@@ -1,8 +1,5 @@
 package com.example.thebestmeal_test.service;
-import com.example.thebestmeal_test.domain.Food;
-import com.example.thebestmeal_test.domain.Posting;
-import com.example.thebestmeal_test.domain.Tag;
-import com.example.thebestmeal_test.domain.User;
+import com.example.thebestmeal_test.domain.*;
 import com.example.thebestmeal_test.dto.FoodCheckDto;
 import com.example.thebestmeal_test.dto.PostDto;
 import com.example.thebestmeal_test.repository.FoodRepository;
@@ -28,8 +25,8 @@ public class PostingService {
     private final PostingRepository postingRepository;
     private final AwsService awsService;
 
+//    public Food toPostFoodService(PostDto postDto, UserDetailsImpl userDetails) throws IOException {
     public String toPostFoodService(PostDto postDto, UserDetailsImpl userDetails) throws IOException {
-
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new NullPointerException("그런 사람 없는데요?"));
         // FoodImg (파일) foodImgUrl(스트링) 구분
         String foodImgUrl = awsService.uploadFoodImg(postDto.getFoodImg());
@@ -45,13 +42,49 @@ public class PostingService {
         List<Tag> tags2 = postDto.getPostingCat().stream().map((tag) -> new Tag(food, tag, "category")).collect(Collectors.toList());
         tagRepository.saveAll(tags2);
 
-        // 음식명 중복 체크
+        // 음식명 중복 체크를 거쳐 foodRepo에 저장이 된 food 의 데이터만 가져옴 (null값을 걸러준다)
+        // food는 이미 음식객체로 위에서 저장이 되었음. food2는 foodID 와 함께 저장되어서, 나중에 참조가 가능해짐. 위와 값은 같지만, 구분해주기 위해서 food2라고 표시.
         Food food2 = foodRepository.findByName(postDto.getPostingFoodName()).get();
-        Posting posting = new Posting(postDto, user, food2);
+        //status 에 to be reviewed가 자동으로 기본값.
+        PostingStatus status = PostingStatus.ToBeReviewed;
+        //posting 저장
+        Posting posting = new Posting(postDto, user, food2, status);
         postingRepository.save(posting);
 
+
+//        Food food3 =
+//        new Food(food, posting);
+//        foodRepository.save(food3);
+
+
+        Food food3 = foodRepository.findById(posting.getFood().getId()).get();
+        PostingStatus food2Status = food3.getPosting().getStatus();
+        System.out.println(food2Status);
+
+
+        //포스팅이 저장된 후 foodDB에서 postingStatus 가져오기 -> 여전히 posting 이 null임..
+//        PostingStatus food2Status = food2.getPosting().getStatus();
+//        System.out.println(food2Status);
+//        return food2;
+
         return foodImgUrl;
+
+        // food 에 posting 정보와 함께 저장해줘야하나..?
+
+
+        //지울 것
+        // PostingStatus foodStatus = food.getPosting().getStatus();
+//        PostingStatus food2Status = food2.getPosting().getStatus();
+//        System.out.println(foodStatus);
     }
+
+        //지울 것.
+//    public void updatePostingIdforFood(Long id) {
+////        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("굿"));
+////        food.update()
+////        posting.getId()
+//////        food.update(posting_id)
+//    }
 
     public Boolean foodDupCheck(FoodCheckDto foodCheckDto) {
         String postingFoodName = foodCheckDto.getPostingFoodName();

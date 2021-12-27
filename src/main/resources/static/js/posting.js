@@ -189,6 +189,8 @@ function save() {
         success: function (response) {
             let foodImgUrl = response
             console.log(foodImgUrl)
+            //추가
+            console.log(response)
             alert("추천해주셔서 감사합니다!");
             let temp_html = `<p class="question-style" style="margin-bottom: 10px;">END. 음식 추천 완료! </p>
                             <div id="posting_result_img" style="background-image:url('${foodImgUrl}')"></div>

@@ -1,6 +1,7 @@
 package com.example.thebestmeal_test.domain;
 
 import com.example.thebestmeal_test.dto.PostDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +27,7 @@ public class Food extends Timestamped {
     private String name;
 
     @Column
-     private String imageUrl;
+    private String imageUrl;
 
     @Column
     @ColumnDefault("0")
@@ -41,6 +42,11 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy="food")
     private List<Recommended> recommendeds;
 
+//    @JsonIgnore
+    @OneToOne(mappedBy="food")
+    @JoinColumn(nullable = false)
+    private Posting posting;
+
     public Food(PostDto postDto, String imageUrl) {
         this.name = postDto.getPostingFoodName();
         this.imageUrl = imageUrl;
@@ -49,6 +55,13 @@ public class Food extends Timestamped {
     public Food(String name, String imageUrl) {
         this.name = name;
         this.imageUrl = imageUrl;
+    }
+
+    //에러발생
+    public Food(Food food, Posting posting) {
+        this.name = food.getName();
+        this.imageUrl = food.getImageUrl();
+        this.posting = posting;
     }
 
     public void update(int cnt) {
