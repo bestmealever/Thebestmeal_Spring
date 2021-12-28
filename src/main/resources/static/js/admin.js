@@ -60,7 +60,7 @@ function allPostingList() {
                             <p class="foodListCardName">${foodList['name']}</p>
                             <p class="foodListCardTags" id="tags${posting['id']}"></p>
                             <p>작성 일자 : ${posting['createdAt'].substr(0, 10)}</p>
-                            <span class="badge text-dark" style="background-color: lightcoral; margin-left:5px;" id="posting${foodList['id']}"  onclick="accept('${foodList['id']}')">수락</span>
+                            <span class="badge text-dark" style="background-color: lightcoral; margin-left:5px;" id="posting${posting['id']}"  onclick="accept('${posting['id']}')">수락</span>
                             <span class="badge text-dark" style="background-color: lightblue; margin-left:5px;">거절</span>
                         </div>
                     </div>`
@@ -70,7 +70,7 @@ function allPostingList() {
 }
 
 //accept를 누르면, (1) posting의 status 가 accepted 로 바뀐다. (2)
-function accept(id) {
+function accept(id){
     console.log(postingsAccepted, 'Accepted postinglist');
 
     $.ajax({

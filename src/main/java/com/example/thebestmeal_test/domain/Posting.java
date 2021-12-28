@@ -58,4 +58,8 @@ public class Posting extends Timestamped{
         this.status = status;
     }
 
+    public void update(PostingStatus status) {
+        this.status = status;
+    }
+
 }

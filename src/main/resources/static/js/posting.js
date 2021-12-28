@@ -217,6 +217,7 @@ function save() {
     });
 }
 
+
 function previewFile() {
     var preview = document.querySelector('img');
     var file = document.querySelector('input[type=file]').files[0];
@@ -230,3 +231,21 @@ function previewFile() {
         reader.readAsDataURL(file);
     }
 }
+
+//food에 posting 이 저장이 제대로 되었는지. console 찍기.
+// function test() {
+//
+//     $.ajax({
+//         type: "GET",
+//         url: `${apiUrl}/postingtest`,
+//         success: function (response) {
+//             console.log(response);
+//             for (let i = 0; i < response.length; i++) {
+//                 let foodList = response[i]
+//                 console.log(foodList);
+//                 console.log(foodList['id']);
+//                 console.log(foodList['posting'])
+//             }
+//         }
+//     })
+// }

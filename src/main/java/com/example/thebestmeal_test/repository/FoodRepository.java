@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
+    //test
+//   <Food> findById(Long id);
+    //foodDupCheck용
     Optional<Food> findByName(String name);
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
