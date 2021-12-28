@@ -82,6 +82,15 @@
                     case "chat" :
                         console.log("잡담");
                         let chatHtml = `
+<input class="form-control"  id="foodSearch" type="text" placeholder="음식 검색">
+                                <div style="text-align: right; margin:5px 0 20px 0;" >
+                                    <span style="font-size: small; color:gray;">
+                                        오늘뭐먹지? 에 등록 되어있는 음식을 주제로 글을 작성할 수 있어요. 음식 이름으로 검색해보세요!
+                                    </span>
+                                    <span class="badge bg-secondary" onclick="foodDBSearch()">검색하기</span>
+
+                                </div>
+
                                 <div class="mb-3">
                                     <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>
                                 </div>
@@ -93,19 +102,28 @@
                                         <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
                                     </div>
                         `
+                        $("#textContents").empty();
+                        $("#textContents").append(chatHtml);
                         break
                     case "recipe" :
                         console.log("레시피");
 
                         let recipeHtml = `
-                                <div id="recipeFeld">
+                                <input class="form-control"  id="foodSearch" type="text" placeholder="음식 검색">
+                                <div style="text-align: right; margin:5px 0 20px 0;">
+                                <span style="font-size: small; color:gray;">
+                                            오늘뭐먹지? 에 등록 되어있는 음식을 주제로 글을 작성할 수 있어요. 음식 이름으로 검색해보세요!
+                                        </span>
+                                <span class="badge bg-secondary" onclick="foodDBSearch()">검색하기</span>
+
+</div>
+
                                 <div class="mb-3">
-                                        <textarea class="form-control" id="content" rows="3" placeholder="1번 과정"></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="form-control" type="file" id="image">
-                                    </div>
-                                    <div class="col-12">
+                                    <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <input class="form-control" type="file" id="image">
                                 </div>
                                         </div>
                                         <div class="col-12">
@@ -122,12 +140,15 @@
                                 <div class="mb-3">
                                         <textarea class="form-control" id="content" rows="3" placeholder="글 내용" style="height:200px;" ></textarea>
                                     </div>
+                                    <p style="font-size: small; color:gray;">
+                                        고민되는 2가지 옵션을 작성하여 투표를 받을 수 있습니다!
+                                    </p>
                                 <div class="mb-3 ">
-                                        <input type="text" class="form-control" id="option1Name" placeholder="1번 옵션">
+                                        <input type="text" class="form-control" id="option1Name" placeholder="예시) 김치찌개">
                                     </div>
                                     vs
                                     <div class="mb-3 ">
-                                        <input type="text" class="form-control" id="option2Name" placeholder="2번 옵션">
+                                        <input type="text" class="form-control" id="option2Name" placeholder="예시) 된장찌개">
                                     </div>
                                     <input class="form-control" type="file" id="image" name="image">
                                         <div class="col-12">
@@ -144,11 +165,15 @@
                                 <div class="mb-3">
                                         <textarea class="form-control" id="content" rows="3" placeholder="글 내용" style="height:200px;" ></textarea>
                                     </div>
-                            <input id="keyword" type="text" placeholder="식당 검색">
-                            <div class="col-12">
-                                        <button type="submit" class="btn btn-primary" onclick="restaurantSearch()">검색</button>
+                                    <input class="form-control"  id="keyword" type="text" placeholder="식당 검색">
+                                    <div style="text-align: right; margin:5px 0 20px 0;">
+                                    <span style="font-size: small; color:gray;">
+                                        공유하고 싶은 식당을 검색하여 선택해주세요. ex) 가락동 김밥천국
+                                    </span>
+                                    <span class="badge bg-secondary" onclick="restaurantSearch()">검색</span>
                                     </div>
-                                    <div id="map" style="width:100%; height:350px;"></div>
+
+                                    <div id="map" style="width:100%; height:350px; margin-bottom: 20px;"></div>
                                     <input class="form-control" type="file" id="image" name="image">
                                         <div class="col-12">
                                             <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
@@ -158,9 +183,6 @@
                         $("#textContents").empty();
                         $("#textContents").append(mapHtml);
                         loadMap();
-                        break
-                    case "party" :
-                        console.log("같이 먹을 사람 모집해요");
                         break
                 }
             });
@@ -274,7 +296,8 @@
                 data:data,
                 success : function(response) {
                     console.log(data)
-                    console.log(response)
+                    let idx = response.data.id;
+                    window.location.href=`/view.html?idx=${idx}`;
                 }
             })
             // switch ($("#category option:checked").val()) {
@@ -309,42 +332,57 @@
     </header>
 <div class="writeContainer" style="width: 800px; margin:auto; padding-top: 20px; padding-bottom: 20px;">
     <!--본문-->
-    글올리기
+    <p>음식과 관련한 모든 이야기를 나누어보세요!</p>
     <div class="mb-3 ">
         <input type="email" class="form-control" id="title" placeholder="제목">
     </div>
     <select class="form-select" name="category" id="category">
-        <option selected>카테고리를 선택해주세요.</option>
+        <option selected value="chat">카테고리를 선택해주세요. (기본 선택 잡담)</option>
         <option value="chat">잡담</option>
         <option value="recipe">음식 레시피</option>
         <option value="vote">투표</option>
         <option value="place">맛집 소개</option>
-        <option value="party">같이 먹을 사람</option>
     </select>
     <div id="foodSearchBox">
 
-        <input id="foodSearch" type="text" placeholder="음식 검색">
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary" onclick="foodDBSearch()">검색</button>
-        </div>
+
 
     </div>
 
     <!--글 내용-->
     <div id="textContents">
+<!--        <div class="mb-3">-->
+<!--            <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--            <input class="form-control" type="file" id="image" name="image">-->
+<!--        </div>-->
+
+<!--        <div id = "mapContainer">-->
+
+<!--        </div>-->
+
+<!--        <div class="col-12">-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </div>-->
+        <input class="form-control"  id="foodSearch" type="text" placeholder="음식 검색">
+        <div style="text-align: right; margin:5px 0 20px 0;" >
+                                    <span style="font-size: small; color:gray;">
+                                        오늘뭐먹지? 에 등록 되어있는 음식을 주제로 글을 작성할 수 있어요. 음식 이름으로 검색해보세요!
+                                    </span>
+            <span class="badge bg-secondary" onclick="foodDBSearch()">검색하기</span>
+
+        </div>
+
         <div class="mb-3">
             <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>
         </div>
+
         <div class="mb-3">
-            <input class="form-control" type="file" id="image" name="image">
+            <input class="form-control" type="file" id="image">
         </div>
-
-        <div id = "mapContainer">
-
-        </div>
-
         <div class="col-12">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
         </div>
     </div>
 

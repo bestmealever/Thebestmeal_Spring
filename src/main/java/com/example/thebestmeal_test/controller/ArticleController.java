@@ -1,24 +1,24 @@
-package com.example.thebestmeal_test.community;
+package com.example.thebestmeal_test.controller;
 
-import com.example.thebestmeal_test.domain.User;
+import com.example.thebestmeal_test.dto.ArticleDto;
+import com.example.thebestmeal_test.service.ArticleService;
+import com.example.thebestmeal_test.dto.CommentDto;
+import com.example.thebestmeal_test.dto.VoteDto;
+import com.example.thebestmeal_test.domain.*;
+import com.example.thebestmeal_test.repository.ArticleRepository;
+import com.example.thebestmeal_test.repository.CommentRepository;
 import com.example.thebestmeal_test.repository.TagRepository;
-import com.example.thebestmeal_test.responseEntity.BasicResponse;
-import com.example.thebestmeal_test.responseEntity.CommonResponse;
-import com.example.thebestmeal_test.responseEntity.ErrorResponse;
+import com.example.thebestmeal_test.repository.VoteRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +30,7 @@ public class ArticleController {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
+    private final VoteRepository voteRepository;
 
     @PostMapping("/article")
     public ResponseEntity<Message> postArticle(ArticleDto articleDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
@@ -53,10 +54,6 @@ public class ArticleController {
         return response;
     }
 
-//    @GetMapping("/articles")
-//    private List<Article> getArticle() {
-//        return articleRepository.findAll();
-//    }
 
     @PostMapping("/article/comment")
     public String postComment(@RequestBody CommentDto commentDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
@@ -68,32 +65,26 @@ public class ArticleController {
 
     @DeleteMapping("/article/{id}")
     public String deleteArticle(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
-        Long userId = userDetails.getUser().getId();
-        Article article = articleRepository.findById(id).orElseThrow(() -> new NullPointerException("없음"));
-        Long articleId = article.getUser().getId();
-        if (Objects.equals(articleId, userId)) {
-            articleRepository.delete(article);
-            return "삭제 완료!";
-        } else if (!Objects.equals(articleId, userId)) {
-            return "자신이 작성한 글만 삭제 가능합니다.";
-        }
-        return "게시글을 삭제할 수 없습니다.";
+        return articleService.deleteArticle(id, userDetails);
     }
 
     @DeleteMapping("/article/comment/{id}")
     public String deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
-        Long userId = userDetails.getUser().getId();
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new NullPointerException("없음"));
-        Long commentUserId = comment.getUser().getId();
-        if (Objects.equals(commentUserId, userId)) {
-            commentRepository.delete(comment);
-            return "삭제 완료!";
-        }
-        return "자신이 작성한 댓글만 삭제 가능합니다.";
+        return articleService.deleteComment(id, userDetails);
     }
 
     @GetMapping("/articles/{id}")
     public Article getArticles(@PathVariable Long id) {
         return articleRepository.findById(id).orElseThrow(() -> new NullPointerException("없슈"));
+    }
+
+    @GetMapping("/articles")
+    public List<Article> getArticles() {
+        return articleRepository.findAll();
+    }
+
+    @PostMapping("/vote")
+    public void vote(@RequestBody VoteDto voteDto) {
+        articleService.vote(voteDto);
     }
 }

@@ -1,37 +1,30 @@
-package com.example.thebestmeal_test.community;
+package com.example.thebestmeal_test.service;
 
 import com.example.thebestmeal_test.Error.CustomException;
-import com.example.thebestmeal_test.domain.Food;
-import com.example.thebestmeal_test.domain.Tag;
-import com.example.thebestmeal_test.domain.User;
-import com.example.thebestmeal_test.repository.FoodRepository;
-import com.example.thebestmeal_test.repository.TagRepository;
-import com.example.thebestmeal_test.repository.UserRepository;
+import com.example.thebestmeal_test.domain.ArticleType;
+import com.example.thebestmeal_test.domain.*;
+import com.example.thebestmeal_test.dto.ArticleDto;
+import com.example.thebestmeal_test.dto.CommentDto;
+import com.example.thebestmeal_test.dto.VoteDto;
+import com.example.thebestmeal_test.repository.*;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
-import com.example.thebestmeal_test.service.AwsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.example.thebestmeal_test.Error.ErrorCode.FOOD_NOT_FOUND;
 import static com.example.thebestmeal_test.Error.ErrorCode.MEMBER_NOT_FOUND;
-import static com.example.thebestmeal_test.community.ArticleType.*;
 
 @RequiredArgsConstructor
 @Service
@@ -93,24 +86,20 @@ public class ArticleService {
         articleTagRepository.saveAll(tags);
     }
 
-//    public ResponseEntity<?> relatedFood(Long foodid) {
-//        Food food = foodRepository.findById(foodid).orElseThrow(()-> new NullPointerException("음식 없어요"));
-//        if (food == null) {
-//            //그냥 문자로 등록
-//        } {
-//            //food 정보 리턴 -_-
-//        }
-//    }
-
-    public Page<Article> getArticles(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return articleRepository.findAll(pageable);
+    public String deleteArticle(Long id, UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getId();
+        Article article = articleRepository.findById(id).orElseThrow(() -> new NullPointerException("없음"));
+        Long articleId = article.getUser().getId();
+        if (Objects.equals(articleId, userId)) {
+            articleRepository.delete(article);
+            return "삭제 완료!";
+        } else if (!Objects.equals(articleId, userId)) {
+            return "자신이 작성한 글만 삭제 가능합니다.";
+        }
+        return "게시글을 삭제할 수 없습니다.";
     }
 
-    public Page<Article> getAllArticles(int page, int size, String sortBy, boolean isAsc) {
+    public Page<Article> getArticles(int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -129,5 +118,27 @@ public class ArticleService {
         Article article = articleRepository.findById(commentDto.getArticleIdx()).orElseThrow(()-> new NullPointerException("해당 게시글이 지워졌습니다."));
         commentRepository.save(new Comment(article, commentDto.getComment(),user));
         return "회원님이 댓글을 남기셨군요";
+    }
+
+    public String deleteComment(Long id, UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getId();
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new NullPointerException("없음"));
+        Long commentUserId = comment.getUser().getId();
+        if (Objects.equals(commentUserId, userId)) {
+            commentRepository.delete(comment);
+            return "삭제 완료!";
+        }
+        return "자신이 작성한 댓글만 삭제 가능합니다.";
+    }
+
+    public void vote(VoteDto voteDto) {
+        Long voteId = voteDto.getId();
+        Vote vote = voteRepository.findById(voteId).orElseThrow(() -> new NullPointerException("없음"));
+        if (Objects.equals(voteDto.getOptionType(), "option1")) {
+            vote.updateOption1(+1);
+        } else {
+            vote.updateOption2(+1);
+        }
+        voteRepository.save(vote);
     }
 }
