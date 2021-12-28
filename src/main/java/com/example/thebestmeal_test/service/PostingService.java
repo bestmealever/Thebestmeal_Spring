@@ -1,5 +1,4 @@
 package com.example.thebestmeal_test.service;
-import com.example.thebestmeal_test.admin.TestDto;
 import com.example.thebestmeal_test.domain.*;
 import com.example.thebestmeal_test.dto.FoodCheckDto;
 import com.example.thebestmeal_test.dto.PostDto;
@@ -52,20 +51,6 @@ public class PostingService {
         Posting posting = new Posting(postDto, user, food2, status);
         postingRepository.save(posting);
 
-//        Food food3 =
-//        new Food(food, posting);
-//        foodRepository.save(food3);
-
-//
-//        Food food3 = foodRepository.findById(posting.getFood().getId()).get();
-//        PostingStatus food2Status = food3.getPosting().getStatus();
-//        System.out.println(food2Status);
-
-        //포스팅이 저장된 후 foodDB에서 postingStatus 가져오기 -> 여전히 posting 이 null임..
-//        PostingStatus food2Status = food2.getPosting().getStatus();
-//        System.out.println(food2Status);
-//        return food2;
-
         return foodImgUrl;
     }
 
@@ -77,35 +62,28 @@ public class PostingService {
         return response;
     }
 
-    //테스트
-//    public Food foodTest(Long id) {
-//        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-//        System.out.println(food);
-//        return food;
-//    }
+    //삭제 예정 테스트 - Get 요청 food 객체
+    public Food foodTest(Long id) {
+        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
+        System.out.println(food);
+        return food;
+    }
 
-    //테스트 - postingStatus 가져오기 위함.
-        public PostingStatus foodTest(Long id) {
+    //포스트맨 테스트 - Get 요청 food의 postingStatus
+        public PostingStatus foodStatusTest(Long id) {
         Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
         System.out.println(food);
         return food.getPosting().getStatus();
     }
 
-
-}
-
-
-// food 에 posting 정보와 함께 저장해줘야하나..?
-//지울 것
-// PostingStatus foodStatus = food.getPosting().getStatus();
-//        PostingStatus food2Status = food2.getPosting().getStatus();
-//        System.out.println(foodStatus);
-
-
-//지울 것.
-//    public void updatePostingIdforFood(Long id) {
-////        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("굿"));
-////        food.update()
-////        posting.getId()
-//////        food.update(posting_id)
+    //포스트맨 테스트2 - Get 요청 food의 postingStatus - null처리.
+//        public PostingStatus foodStatusTest(Long id) {
+//        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
+//        return food.getPosting().getStatus();
 //    }
+
+    //포스트맨 테스트3 - Get 요청 : List<Food> 를 받아올 것. if food.Posting is not null, postingStatus 가 Accepted 일 때만.
+//    public List<Food> reviewedFoodList() {
+//        List<Food> reviewedFood = foodRepository.findBy(food.getPosting())
+//    }
+}

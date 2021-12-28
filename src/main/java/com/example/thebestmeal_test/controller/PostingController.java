@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping({"/api"})
@@ -39,16 +40,20 @@ public class PostingController {
         return postingService.foodDupCheck(foodCheckDto);
     }
 
-    //test용 삭제할 것.
-//    @GetMapping({"/postingtest/{id}"})
-//    public Food testGetPosting(@PathVariable Long id) {
-//        return postingService.foodTest(id);
-//    }
-    //test용 PostingStatus 를 가져옴 .
+    //test용 삭제할 것. 기존 food db(추천하기로 받아지지 않은)도 조회 가능
     @GetMapping({"/postingtest/{id}"})
-    public PostingStatus testGetPosting(@PathVariable Long id) {
+    public Food testGetPosting(@PathVariable Long id) {
         return postingService.foodTest(id);
     }
+    //test용 PostingStatus 를 가져옴. posting 인 db만 가능함.
+
+    //test용 삭제할 것. food 중 추천하기로 받아진 것의 status 체크
+    @GetMapping({"/foodstatustest/{id}"})
+    public PostingStatus testGetFood(@PathVariable Long id) {
+        return postingService.foodStatusTest(id);
+    }
+
+
 
 
 }

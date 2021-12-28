@@ -39,10 +39,9 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy = "food")
     private Set<LikedFood> likedFood;
 
-    @OneToMany(mappedBy="food")
+    @OneToMany(mappedBy= "food")
     private List<Recommended> recommendeds;
 
-    @JsonIgnore
     @OneToOne(mappedBy="food")
     @JoinColumn(nullable = false)
     private Posting posting;
@@ -57,7 +56,6 @@ public class Food extends Timestamped {
         this.imageUrl = imageUrl;
     }
 
-    //에러발생
     public Food(Food food, Posting posting) {
         this.name = food.getName();
         this.imageUrl = food.getImageUrl();

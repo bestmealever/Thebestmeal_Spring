@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 
 public class AdminService {
-    private final FoodRepository foodRepository;
+//    private final FoodRepository foodRepository;
     private final PostingRepository postingRepository;
 
     public AdminDto toAdminPosting() {
