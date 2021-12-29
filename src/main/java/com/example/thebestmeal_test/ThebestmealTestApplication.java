@@ -1,9 +1,6 @@
 package com.example.thebestmeal_test;
 
-import com.example.thebestmeal_test.domain.Food;
-import com.example.thebestmeal_test.domain.LikedFood;
-import com.example.thebestmeal_test.domain.User;
-import com.example.thebestmeal_test.domain.UserRole;
+import com.example.thebestmeal_test.domain.*;
 import com.example.thebestmeal_test.repository.FoodRepository;
 import com.example.thebestmeal_test.repository.LikedFoodRepository;
 import com.example.thebestmeal_test.repository.TagRepository;
@@ -17,6 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.transaction.Transactional;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.Arrays;
 import java.util.List;

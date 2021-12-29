@@ -73,6 +73,25 @@ public class AwsService {
             throw new Exception("파일 사이즈 초과", e);
         }
     }
+    //게시글 이미지
+    public String uploadCommunityImg(MultipartFile multipartFile) throws IOException {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(multipartFile.getContentType());
+        objectMetadata.setContentLength(multipartFile.getBytes().length); //이미지 변환
+
+        String originalFilename = multipartFile.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+        String random = random();
+        String fileName = "community" + "/" + random + extension;   // S3에 저장된 파일 이름
+
+        InputStream inputStream = multipartFile.getInputStream();
+        putS3(fileName, inputStream, objectMetadata); // s3로 업로드
+
+        String uploadImageUrl = s3Uri + fileName; //url
+
+        System.out.println(uploadImageUrl);
+        return uploadImageUrl;
+    }
 
     //s3에 이미지 업로드
     @Transactional
