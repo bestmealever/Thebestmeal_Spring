@@ -18,10 +18,13 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     Optional<Food> findByName(String name);
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
-    List<Food> findTop12ByOrderByCntDesc();
+    //FindAll테스트
+    List<Food> findAllByPostingIsNullOrPostingStatusIs(PostingStatus Accepted);
+    List<Food> findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus Accepted);
+    //원본 코드
+//    List<Food> findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus Accepted);
 
-    //liked 변경 코드 테스트중 - 같은 쿼리의 인자를 다르게 할 방법이 없을까?
-//    List<Food> findTop12ByOrderByCntDesc(User user);
+//    List<Food> findTop12ByOrderByCntDesc();
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
     List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user);
@@ -32,7 +35,6 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 //    List<Food> findAllByPostingStatus(PostingStatus Accepted);
 
     List<Food> findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
-
 //    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserAndPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
 //    List<Food> findTop12ByOrderByCntDescByPostingStatus(PostingStatus Accepted);
 
@@ -44,7 +46,9 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 //    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserOrPostingIsNullOrPostingStatusOrderByCntDesc(User user, PostingStatus Accepted);
 
     // Posting
-    List<Food> findTop12ByPostingIsNullOrPostingStatusAndLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user, PostingStatus Accepted);
+//    List<Food> findTop12ByPostingIsNullOrPostingStatusAndLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user, PostingStatus Accepted);
+
+    List<Food> findAllByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user);
 
     //PostingRepository에서 가져오는 방법이 있을까..?
 }

@@ -46,6 +46,10 @@ public class Food extends Timestamped {
     @JoinColumn(nullable = false)
     private Posting posting;
 
+    //Specifies that the property or field is not persistent. Transient - 칼럼으로 구성해서 관리할 필요가 없을 때.
+    @Transient
+    private boolean liked = false;
+
     public Food(PostDto postDto, String imageUrl) {
         this.name = postDto.getPostingFoodName();
         this.imageUrl = imageUrl;
