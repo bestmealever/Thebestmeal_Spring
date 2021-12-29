@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Webpage Title -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>오늘 뭐 먹지? | Main</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/mycss.css" rel="stylesheet">
+
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
+          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
+    <!--파비콘-->
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon2.ico"/>
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+
+    <!-- 구글 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;500;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <!--<link href="{{ url_for('static', filename='mycss.css') }}" rel="stylesheet">-->
+    <link href="css/mycss.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!--JS 파일-->
+    <script src="js/posting.js" rel="script"></script>
+    <script src="js/base.js"></script>
+
+    <style>
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                if (localStorage.getItem('token')) {
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                }
+            })
+
+            $.ajax({
+                type : 'GET',
+                url : '/articles',
+                success : function(response) {
+                    console.log(response)
+                    for (var i = 0; i < response.length; i++) {
+                        switch (response[i].articleType) {
+                            case 'chat' :
+                                let image = response[i].image == null ? `<img src="https://thebestmeal.s3.ap-northeast-2.amazonaws.com/community/m7Zlxxrtma.jpg" class="card-img-top" style="width: 100%; height: 200px;">` : `<img src="${response[i].image}" class="card-img-top" style="width: 100%; height: 200px;">`
+                                let chatCard = `
+                                <div class="col">
+                                    <div class="card" onclick="window.location.href = '/view.html?idx=${response[i].id}'">
+                                        ${image}
+                                        <div class="card-body">
+                                        <span class="badge text-dark" style="background-color:#5ee1b4; margin-bottom: 10px;">잡담</span>
+                                            <h5 class="card-title">${response[i].title}</h5>
+                                            <p class="card-text">${response[i].content}</p>
+                                             <p style="font-size: small; color:gray; text-align: right; margin:0;">${response[i].user.nickname}, 작성일 : ${response[i].createdAt}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                `
+                                $("#cardContainer").append(chatCard);
+                                break
+
+                            case 'recipe' :
+                                let image2 = response[i].image == null ? `` : `<img src="${response[i].image}" class="card-img-top" style="width: 100%; height: 200px;">`
+                                let recipeCard = `
+                                <div class="col">
+                                    <div class="card"  onclick="window.location.href = '/view.html?idx=${response[i].id}'">
+                                        ${image2}
+                                        <div class="card-body">
+                                        <span class="badge" style="background-color:tomato;  margin-bottom: 10px;">레시피</span>
+                                            <h5 class="card-title">${response[i].title}</h5>
+                                            <p class="card-text">${response[i].content}</p>
+                                                                                        <p style="font-size: small; color:gray; text-align: right; margin:0;">${response[i].user.nickname}, 작성일 : ${response[i].createdAt}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                `
+                                $("#cardContainer").append(recipeCard);
+                                break
+
+                            case 'place' :
+                                let image3 = response[i].image == null ? `<img src="https://thebestmeal.s3.ap-northeast-2.amazonaws.com/community/PzgbtynaSi.jpg" class="card-img-top" style="width: 100%; height: 200px;">` : `<img src="${response[i].image}" class="card-img-top" style="width: 100%; height: 200px;">`
+                                let placeCard = `
+                                <div class="col">
+                                    <div class="card"  onclick="window.location.href = '/view.html?idx=${response[i].id}'">
+                                        ${image3}
+                                        <div class="card-body">
+                                        <span class="badge text-dark" style="background-color:salmon; margin-bottom: 10px;">맛집 추천</span>
+                                            <h5 class="card-title">${response[i].placeName}</h5>
+                                            <p class="card-text">${response[i].content}</p>
+                                            <p style="font-size: small; color:gray; text-align: right; margin:0;">${response[i].user.nickname}, 작성일 : ${response[i].createdAt}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                `
+                                $("#cardContainer").append(placeCard);
+                                break
+
+                            case 'vote' :
+                                let image4 = response[i].image == null ? `` : `<img src="${response[i].image}" class="card-img-top" style="width: 100%; height: 200px;">`
+                                console.log(response[i].vote)
+                                let voteCard = `
+                                <div class="col">
+                                    <div class="card"  onclick="window.location.href = '/view.html?idx=${response[i].id}'">
+                                        ${image4}
+                                        <div class="card-body">
+                                        <span class="badge bg-warning text-dark" style="margin-bottom: 10px;">투표 부탁</span>
+                                            <h5 class="card-title">${response[i].vote.option1Name} vs ${response[i].vote.option2Name}</h5>
+                                            <p class="card-text">${response[i].content}</p>
+                                            <p class="card-text"></p>
+                                            <p style="font-size: small; color:gray; text-align: right; margin:0;">${response[i].user.nickname}, 작성일 : ${response[i].createdAt}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                `
+                                $("#cardContainer").append(voteCard);
+                                break
+
+                            case 'party' :
+                                break
+
+                        }
+                    }
+                }
+            })
+
+        })
+    </script>
+</head>
+
+
+<body>
+    <!--타이틀부분-->
+    <header>
+        <!--    네비게이션바-->
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="nav-container">
+                <div class="nav-title-box">
+                    <a href="/" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
+                    <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
+                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
+                    <a href="/community.html" class="nave-menu-text nav-menu">커뮤니티</a>
+                </div>
+                <div class="nav-botton-box">
+                    <button class="nav-button" id="logout">로그아웃</button>
+                    <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!--본문-->
+    <p style="font-size:xx-large; font-weight: bold; text-align: center; margin:20px;">도란도란 커뮤니티</p>
+    <p style="text-align: center; ">음식에 대한 이야기를 마음껏 나눠보세요!</p>
+    <div style=" text-align: right;width: 70%;margin: auto;"><span class="badge text-dark" style="font-size: medium; background-color:#5ee1b4;" onclick="window.location.href='/write.html'">글쓰기</span></div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="cardContainer" style="width: 70%; margin:auto">
+
+    </div>
+
+
+    <!--푸터-->
+    <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
+        <div class="container">
+            <p class="float-end mb-1">
+                <a href="#">Back to top</a>
+            </p>
+            <p style="color:white; font-size: 11pt; text-decoration: none; ">
+                <strong>오늘 뭐 먹지?</strong> made by
+                <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>
+                이거사조 is Team 4 in 내일배움캠프. <br>
+                Welcome to <a href="https://spartacodingclub.kr/"
+                              style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
