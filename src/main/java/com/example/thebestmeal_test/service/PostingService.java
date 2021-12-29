@@ -62,25 +62,7 @@ public class PostingService {
         return response;
     }
 
-    //삭제 예정 테스트 - Get 요청 food 객체
-    public Food foodTest(Long id) {
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-        System.out.println(food);
-        return food;
-    }
 
-    //포스트맨 테스트 - Get 요청 food의 postingStatus
-        public PostingStatus foodStatusTest(Long id) {
-        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-        System.out.println(food);
-        return food.getPosting().getStatus();
-    }
-
-    //포스트맨 테스트2 - Get 요청 food의 postingStatus - null처리.
-//        public PostingStatus foodStatusTest(Long id) {
-//        Food food = foodRepository.findById(id).orElseThrow(() -> new NullPointerException("없음."));
-//        return food.getPosting().getStatus();
-//    }
 
     //포스트맨 테스트3 - Get 요청 : List<Food> 를 받아올 것. if food.Posting is not null, postingStatus 가 Accepted 일 때만.
 //    public List<Food> reviewedFoodList() {

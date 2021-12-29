@@ -32,6 +32,19 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 //    List<Food> findAllByPostingStatus(PostingStatus Accepted);
 
     List<Food> findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
-//    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserAndPostingIsNullOrPostingStatusOrderByCntDesc(UserDetails.getUser(), PostingStatus.Accepted);
+
+//    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserAndPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
 //    List<Food> findTop12ByOrderByCntDescByPostingStatus(PostingStatus Accepted);
+
+    //테스트중 기준 테이블을 Posting이 아닌 Food 로 바꿔보기
+    //(1) Food and 문
+//    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserAndPostingIsNullOrPostingStatusOrderByCntDesc(User user, PostingStatus Accepted);
+
+    //(@) Food Or 문
+//    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserOrPostingIsNullOrPostingStatusOrderByCntDesc(User user, PostingStatus Accepted);
+
+    // Posting
+    List<Food> findTop12ByPostingIsNullOrPostingStatusAndLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user, PostingStatus Accepted);
+
+    //PostingRepository에서 가져오는 방법이 있을까..?
 }

@@ -73,6 +73,8 @@ function allPostingList() {
 
 
 function acceptedList() {
+    $('#user-table').empty();
+    $('#user-nav').empty();
     let temp_nav = `<div class="admin-nav" style=" clear:left; margin-top: 30px;">
                         <a href="#" onclick="allPostingList();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>추천하기 음식리스트</strong></a>
                         <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>수락 완료된 음식</strong></a>
