@@ -168,48 +168,6 @@
             });
         })
 
-
-        $.ajax({
-            type: "GET",
-            url: `${apiUrl}/food`,
-            success: function(response) {
-                for (let i = 0; i < response.length; i++) {
-                    let class_heart = response[i]['likedFood'].length === 1 ? "bi-heart-fill" : "bi-heart"
-                    let newList = response[i]
-                    console.log(foodList)
-                    let temp = `
-                                <div id="${newList['id']}"  class="foodListCard">
-                                    <div class="foodImage" style='background-image:url("${newList['imageUrl']}")' data-bs-toggle="modal" data-bs-target="#exampleModal${newList['id']}"></div>
-                                    <div class="foodInfo">
-                                        <p class="foodListCardName">${newList['name']}</p>
-                                        <i class="bi ${class_heart}" id="heart${newList['id']}" onclick="heart('${newList['id']}')"></i><span class="likedLength">${newList['cnt']}</span>
-                                        <p class="foodListCardTags" id="tags${newList['id']}"></p>
-                                    </div>
-                                </div>`
-
-                    $('#newUpdate').append(temp);
-                    Tag(newList);
-                } //else {
-                //     let foodList = response[i]
-                //     console.log(foodList);
-                //     console.log(foodList['id'])
-                //     let temp = `
-                //                 <div id="${foodList['id']}"  class="foodListCard">
-                //                     <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-                //                     <div class="foodInfo">
-                //                         <p class="foodListCardName">${foodList['name']}</p>
-                //                         <i class="bi bi-heart" id="heart${foodList['id']}" onclick="alert('로그인 후 이용해주세요!')"></i><span class="likedLength">${foodList['cnt']}</span>
-                //                         <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-                //                     </div>
-                //                 </div>
-                //                     `
-                //     $('#foodList').append(temp);
-                //     Tag(foodList);
-                // }
-            }
-        })
-
-
         function makeListComment(comment) {
             let tempHtml = `<li class="list-group-item">${comment['comment']}</li>`;
             $("#comment-list").append(tempHtml);
@@ -460,11 +418,9 @@
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="nav-container">
                 <div class="nav-title-box">
-
                     <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
                     <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
-                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
-                    <a href="/collect.html" class="nave-menu-text nav-menu">모든음식 모아보기</a>
+                    <a href="javascript:void(0);" class="nave-menu-text nav-menu" onclick="toposting()">맛있는거 추천하기</a>
                 </div>
                 <div class="nav-botton-box">
                     <button class="nav-button" data-bs-toggle="modal" data-bs-target="#LoginModal" id="login"
@@ -570,23 +526,7 @@
                 </div>
             </div>
         </section>
-        <!-- 추후 인기 있는 음식으로 바꿀 예정 id값 = famousFood-->
-        <div class="cardTheme">
-            <p>인기 있는 음식 Top5</p>
-        </div>
         <div id="foodList" class="foodCardList">
-        </div>
-
-        <div class="cardTheme">
-            <p>따끈따끈한 신상 음식 5가지</p>
-        </div>
-        <div id="newUpdate" class="foodCardList">
-        </div>
-
-        <div class="cardTheme">
-            <p>추천하는 음식 5가지</p>
-        </div>
-        <div id="bestFood" class="foodCardList">
         </div>
 
     </main>

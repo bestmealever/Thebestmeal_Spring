@@ -21,20 +21,10 @@ public class LikedController {
     @GetMapping("/liked")
     public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(userDetails != null) {
-            return foodRepository.findTop5ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
+            return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
         } else {
-            return foodRepository.findTop5ByOrderByCntDesc();
+            return foodRepository.findTop12ByOrderByCntDesc();
         }
-    }
-
-    @GetMapping("/food")
-    public List<Food> newUpdateFood() {
-        return foodRepository.findTop5ByOrderByIdDesc();
-    }
-
-    @GetMapping("/allFood")
-    public List<Food> viewAllFood() {
-        return foodRepository.findAll();
     }
 
     //좋아요
@@ -49,6 +39,4 @@ public class LikedController {
         likedService.unLiked(id, userDetails);
         return "좋아요를 취소하셨습니다";
     }
-
-
 }

@@ -1,574 +1,574 @@
-<!doctype html>
-<html lang="ko" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.88.1">
-    <title> 오늘 뭐 먹지? </title>
+<!--<!doctype html>-->
+<!--<html lang="ko" xmlns="http://www.w3.org/1999/html">-->
+<!--<head>-->
+<!--    <meta charset="utf-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--    <meta name="description" content="">-->
+<!--    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">-->
+<!--    <meta name="generator" content="Hugo 0.88.1">-->
+<!--    <title> 오늘 뭐 먹지? </title>-->
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/album/">
+<!--    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/album/">-->
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
-          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
-    <link href="css/mycss.css" rel="stylesheet">
+<!--    &lt;!&ndash; Bootstrap core CSS &ndash;&gt;-->
+<!--    <link href="css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"-->
+<!--          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">-->
+<!--    <link href="css/mycss.css" rel="stylesheet">-->
 
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-            crossorigin="anonymous"></script>
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<!--    &lt;!&ndash; Bootstrap &ndash;&gt;-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"-->
+<!--            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"-->
+<!--            crossorigin="anonymous"></script>-->
+<!--    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>-->
 
-    <!--파비콘-->
-    <link rel="shortcut icon" type="image/x-icon" href="images/favicon2.ico"/>
-
-
-    <!-- JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="js/main.js" rel="script"></script>
-    <script src="js/base.js"></script>
-    <script src="js/scrollEvent.js"></script>
-    <script src="js/sorting.js"></script>
-
-    <!-- 구글 폰트 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
-
-    <script>
-        $(document).ready(function () {
-            //토큰이 있으면 로그인 화면
-
-            // 헤더에 토큰값 넣어 ajax 호출
-            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                if (localStorage.getItem('token')) {
-                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-                }
-            });
-            if (localStorage.getItem("token")) {
-                $("#logout").css("display", "");
-                $("#mypage").css("display", "");
-                $("#login").css("display", "none");
-                $("#username").html(localStorage.getItem("username"));
-                $("#nickname").html(localStorage.getItem("nickname"));
-
-            } else {
-                //토큰이 없으면 로그아웃된 화면
-                $("#userMessege").empty();
-                $("#logout").css("display", "none");
-                $("#mypage").css("display", "none");
-            }
-
-            //(카카오 로그인) 유무에 따라 OO님 입력값 변경. 카카오: nickname / 일반: username
-            if (localStorage.getItem("nickname")) {
-                $("#welcomename").html(localStorage.getItem("nickname"));
-            }  else {
-                $("#welcomename").html(localStorage.getItem("username"));
-            }
-
-            $.ajax({
-                type: "GET",
-                url: `${apiUrl}/allFood`,
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    for (let i = 0; i < response.length; i++) {
-                        if (localStorage.getItem("token")) {
-                            let class_heart = response[i]['likedFood'].length === 1 ? "bi-heart-fill" : "bi-heart"
-                            let foodList = response[i]
-                            console.log(foodList);
-                            console.log(foodList['id']);
-                            console.log(foodList['likedFood'])
-                            let temp = `
-                                <div id="${foodList['id']}"  class="foodListCard">
-                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")' data-bs-toggle="modal" data-bs-target="#exampleModal${foodList['id']}"></div>
-                                    <div class="foodInfo">
-                                        <p class="foodListCardName">${foodList['name']}</p>
-                                        <i class="bi ${class_heart}" id="heart${foodList['id']}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['cnt']}</span>
-                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-                                    </div>
-                                </div>
-                                <div class="modal fade" id="exampleModal${foodList['id']}">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">${foodList['name']}에 대해 댓글을 남겨 주세요!</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <ul class="list-group" id="comment-list">
-                                                <li class="list-group-item">댓글</li>
-                                            </ul>
-                                            <div class="modal-footer">
-                                                <textarea class="form-control" id="comment" rows="3"></textarea>
-                                                <button type="button" class="btn btn-primary" onclick="setArticleComment()">댓글작성</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                    `
-                            $('#foodList').append(temp);
-                            Tag(foodList);
-                        } else {
-                            let foodList = response[i]
-                            console.log(foodList);
-                            console.log(foodList['id'])
-                            let temp = `
-                                <div id="${foodList['id']}"  class="foodListCard">
-                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-                                    <div class="foodInfo">
-                                        <p class="foodListCardName">${foodList['name']}</p>
-                                        <i class="bi bi-heart" id="heart${foodList['id']}" onclick="alert('로그인 후 이용해주세요!')"></i><span class="likedLength">${foodList['cnt']}</span>
-                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-                                    </div>
-                                </div>
-                                    `
-                            $('#foodList').append(temp);
-                            Tag(foodList);
-                        }
-                    }
-                }
-            })
-
-            $("#logout").click(function () {
-                //로그아웃
-                localStorage.removeItem("token");
-                localStorage.removeItem("username");
-                localStorage.removeItem("nickname");
-                Object.keys(localStorage)
-                    .filter(key => key.startsWith('kakao_'))
-                    .forEach(key => localStorage.removeItem(key));
-                // Object.keys(localStorage).filter(key => localStorage.getItem(key).startsWith('kakao_')).forEach(key => localStorage.removeItem(key));
-                location.href = '/';
-            });
-
-            //헤더에 토큰값 넣어 ajax 호출
-            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                if (localStorage.getItem('token')) {
-                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-                    // jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-                }
-            });
-        })
+<!--    &lt;!&ndash;파비콘&ndash;&gt;-->
+<!--    <link rel="shortcut icon" type="image/x-icon" href="images/favicon2.ico"/>-->
 
 
-        function makeListComment(comment) {
-            let tempHtml = `<li class="list-group-item">${comment['comment']}</li>`;
-            $("#comment-list").append(tempHtml);
-        }
+<!--    &lt;!&ndash; JS &ndash;&gt;-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>-->
+<!--    <script src="js/main.js" rel="script"></script>-->
+<!--    <script src="js/base.js"></script>-->
+<!--    <script src="js/scrollEvent.js"></script>-->
+<!--    <script src="js/sorting.js"></script>-->
 
-        function heart(id) {
-            if ($(`#heart${id}`).hasClass("bi bi-heart")) {
-                $(`#heart${id}`).removeClass("bi-heart").addClass("bi-heart-fill");
-                console.log(id);
-                $.ajax({
-                    type: "POST",
-                    url: `${apiUrl}/liked/${id}`,
-                    success: function (response) {
-                        console.log(response);
-                        window.location.reload();
-                    }
-                })
-            } else {
-                $(`#heart${id}`).removeClass("bi-heart-fill").addClass("bi-heart");
-                console.log(id);
-                $.ajax({
-                    type: "DELETE",
-                    url: `${apiUrl}/liked/${id}`,
-                    success: function (response) {
-                        console.log(response);
-                        window.location.reload();
-                    }
-                })
-            }
-        }
+<!--    &lt;!&ndash; 구글 폰트 &ndash;&gt;-->
+<!--    <link rel="preconnect" href="https://fonts.googleapis.com">-->
+<!--    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">-->
 
-        function toposting() {
-            //login 시에는 alert,
-            //아닐 경우에는 '/posting'
-            if (localStorage.getItem("token") == null) {
-                alert('앗, 로그인한 유저만 이용 가능합니다')
-                location.href = '/';
-            } else {
-                location.href = '/posting.html';
-            }
-        }
+<!--    <style>-->
+<!--        .bd-placeholder-img {-->
+<!--            font-size: 1.125rem;-->
+<!--            text-anchor: middle;-->
+<!--            -webkit-user-select: none;-->
+<!--            -moz-user-select: none;-->
+<!--            user-select: none;-->
+<!--        }-->
 
+<!--        @media (min-width: 768px) {-->
+<!--            .bd-placeholder-img-lg {-->
+<!--                font-size: 3.5rem;-->
+<!--            }-->
+<!--        }-->
+<!--    </style>-->
 
-        function is_nickname(asValue) {
-            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
-            return regExp.test(asValue);
-        }
+<!--    <script>-->
+<!--        $(document).ready(function () {-->
+<!--            //토큰이 있으면 로그인 화면-->
 
-        function is_password(asValue) {
-            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
-            return regExp.test(asValue);
-        }
+<!--            // 헤더에 토큰값 넣어 ajax 호출-->
+<!--            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {-->
+<!--                if (localStorage.getItem('token')) {-->
+<!--                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));-->
+<!--                }-->
+<!--            });-->
+<!--            if (localStorage.getItem("token")) {-->
+<!--                $("#logout").css("display", "");-->
+<!--                $("#mypage").css("display", "");-->
+<!--                $("#login").css("display", "none");-->
+<!--                $("#username").html(localStorage.getItem("username"));-->
+<!--                $("#nickname").html(localStorage.getItem("nickname"));-->
 
-        function signup() {
-            let password = $("#password").val();
+<!--            } else {-->
+<!--                //토큰이 없으면 로그아웃된 화면-->
+<!--                $("#userMessege").empty();-->
+<!--                $("#logout").css("display", "none");-->
+<!--                $("#mypage").css("display", "none");-->
+<!--            }-->
 
-            if ($("#loginusername").hasClass("is-danger")) {
-                alert("아이디를 다시 확인해주세요.")
-                return;
-            } else if (!$("#help-id").hasClass("is-success")) {
-                alert("아이디 중복확인을 해주세요.")
-                return;
-            }
+<!--            //(카카오 로그인) 유무에 따라 OO님 입력값 변경. 카카오: nickname / 일반: username-->
+<!--            if (localStorage.getItem("nickname")) {-->
+<!--                $("#welcomename").html(localStorage.getItem("nickname"));-->
+<!--            }  else {-->
+<!--                $("#welcomename").html(localStorage.getItem("username"));-->
+<!--            }-->
 
-            if (password == "") {
-                $("#help-password").text("  비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
-                $("#password").focus()
-                return;
-            } else if (!is_password(password)) {
-                $("#help-password").text("  비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
-                $("#password").focus()
-                return
-            } else {
-                $("#help-password").text("  사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
-            }
-            let info = {
-                username: $("#loginusername").val(),
-                password: $("#password").val(),
-                email: $("#email").val()
-            }
-            $.ajax({
-                type: 'POST',
-                url: `${apiUrl}/signup`,
-                contentType: "application/json",
-                data: JSON.stringify(info),
-                success: function (response) {
-                    alert("회원가입이 완료되었습니다!!");
-                    //화면 라우터
-                    location.href = '/';
-                }
-            })
-        }
+<!--            $.ajax({-->
+<!--                type: "GET",-->
+<!--                url: `${apiUrl}/allFood`,-->
+<!--                dataType: "json",-->
+<!--                success: function (response) {-->
+<!--                    console.log(response);-->
+<!--                    for (let i = 0; i < response.length; i++) {-->
+<!--                        if (localStorage.getItem("token")) {-->
+<!--                            let class_heart = response[i]['likedFood'].length === 1 ? "bi-heart-fill" : "bi-heart"-->
+<!--                            let foodList = response[i]-->
+<!--                            console.log(foodList);-->
+<!--                            console.log(foodList['id']);-->
+<!--                            console.log(foodList['likedFood'])-->
+<!--                            let temp = `-->
+<!--                                <div id="${foodList['id']}"  class="foodListCard">-->
+<!--                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")' data-bs-toggle="modal" data-bs-target="#exampleModal${foodList['id']}"></div>-->
+<!--                                    <div class="foodInfo">-->
+<!--                                        <p class="foodListCardName">${foodList['name']}</p>-->
+<!--                                        <i class="bi ${class_heart}" id="heart${foodList['id']}" onclick="heart('${foodList['id']}')"></i><span class="likedLength">${foodList['cnt']}</span>-->
+<!--                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="modal fade" id="exampleModal${foodList['id']}">-->
+<!--                                    <div class="modal-dialog">-->
+<!--                                        <div class="modal-content">-->
+<!--                                            <div class="modal-header">-->
+<!--                                                <h5 class="modal-title" id="exampleModalLabel">${foodList['name']}에 대해 댓글을 남겨 주세요!</h5>-->
+<!--                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                                            </div>-->
+<!--                                            <ul class="list-group" id="comment-list">-->
+<!--                                                <li class="list-group-item">댓글</li>-->
+<!--                                            </ul>-->
+<!--                                            <div class="modal-footer">-->
+<!--                                                <textarea class="form-control" id="comment" rows="3"></textarea>-->
+<!--                                                <button type="button" class="btn btn-primary" onclick="setArticleComment()">댓글작성</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                    `-->
+<!--                            $('#foodList').append(temp);-->
+<!--                            Tag(foodList);-->
+<!--                        } else {-->
+<!--                            let foodList = response[i]-->
+<!--                            console.log(foodList);-->
+<!--                            console.log(foodList['id'])-->
+<!--                            let temp = `-->
+<!--                                <div id="${foodList['id']}"  class="foodListCard">-->
+<!--                                    <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>-->
+<!--                                    <div class="foodInfo">-->
+<!--                                        <p class="foodListCardName">${foodList['name']}</p>-->
+<!--                                        <i class="bi bi-heart" id="heart${foodList['id']}" onclick="alert('로그인 후 이용해주세요!')"></i><span class="likedLength">${foodList['cnt']}</span>-->
+<!--                                        <p class="foodListCardTags" id="tags${foodList['id']}"></p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                    `-->
+<!--                            $('#foodList').append(temp);-->
+<!--                            Tag(foodList);-->
+<!--                        }-->
+<!--                    }-->
+<!--                }-->
+<!--            })-->
 
-        function idCheck() {
-            let username = $("#loginusername").val()
-            console.log(username)
-            if (username == "") {
-                $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
-                $("#loginusername").focus()
-                return;
-            }
-            if (!is_nickname(username)) {
-                $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 2-10자 길이").removeClass("is-safe").addClass("is-danger")
-                $("#loginusername").focus()
-                return;
-            }
-            let info = {"username": $("#loginusername").val()};
-            $.ajax({
-                type: "POST",
-                url: `${apiUrl}/signup/idcheck`,
-                contentType: "application/json",
-                data: JSON.stringify(info),
-                success: function (response) {
-                    if (response == true) {
-                        alert("아이디 중복")
-                        $(".help-id").text("  이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")
-                        $("#loginusername").focus()
-                    } else {
+<!--            $("#logout").click(function () {-->
+<!--                //로그아웃-->
+<!--                localStorage.removeItem("token");-->
+<!--                localStorage.removeItem("username");-->
+<!--                localStorage.removeItem("nickname");-->
+<!--                Object.keys(localStorage)-->
+<!--                    .filter(key => key.startsWith('kakao_'))-->
+<!--                    .forEach(key => localStorage.removeItem(key));-->
+<!--                // Object.keys(localStorage).filter(key => localStorage.getItem(key).startsWith('kakao_')).forEach(key => localStorage.removeItem(key));-->
+<!--                location.href = '/';-->
+<!--            });-->
 
-                        $(".help-id").text("  사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")
-                    }
-                }
-            });
-        }
-
-        Kakao.init('f9347e09eab96301ef9d210086833557');
-
-        function lok() {
-            Kakao.Auth.login({
-                success: function (authObj) {
-                    $.ajax({
-                        type: 'POST',
-                        url: `${apiUrl}/login/kakao`,
-                        contentType: "application/json",
-                        data: JSON.stringify({'token': authObj['access_token']}),
-                        success: function (response) {
-                            localStorage.setItem("token", response['token']);
-                            localStorage.setItem("username", response['username']);
-                            localStorage.setItem("nickname", response['nickname']);
-                            location.href = '/';
-                        }
-                    })
-                },
-                fail: function (err) {
-                    alert(JSON.stringify(err))
-                },
-            })
-        }
-
-        function change() {
-            //회원가입
-            if ($('#signUpText').css('display') == 'none') {
-                $('#signUpText').attr('style', 'display:inline')
-                $('#idCheckButton').attr('style', 'display:inline')
-                $('#help-id').attr('style', 'display:inline')
-                $('#help-password').attr('style', 'display:inline')
-                $('#emailBox').attr('style', 'display:block')
-                $('#signupButton').attr('style', 'display:block')
-                $('#kakaoLoginbutton').attr('style', 'display:none')
-                $('#LoginText').attr('style', 'display:none')
-                $('#loginButton').attr('style', 'display:none')
-                $('#kakaoSignupbutton').attr('style', 'display:block')
-                $('#toSignupButton').text('로그인')
-
-            }
-            //로그인
-            else {
-                $('#signUpText').attr('style', 'display:none')
-                $('#LoginText').attr('style', 'display:inline')
-
-                $('#idCheckButton').attr('style', 'display:none')
-                $('#help-id').attr('style', 'display:none')
-                $('#help-password').attr('style', 'display:none')
-                $('#emailBox').attr('style', 'display:none')
-                $('#signupButton').attr('style', 'display:none')
-                $('#kakaoLoginbutton').attr('style', 'display:block')
-                $('#loginButton').attr('style', 'display:block')
-                $('#kakaoSignupbutton').attr('style', 'display:none')
-
-                $('#toSignupButton').text('회원가입 하러가기')
-            }
-        }
-
-        function styleReset() {
-            $('#signUpText').attr('style', 'display:none')
-            $('#LoginText').attr('style', 'display:inline')
-
-            $('#idCheckButton').attr('style', 'display:none')
-            $('#help-id').attr('style', 'display:none')
-            $('#help-password').attr('style', 'display:none')
-            $('#emailBox').attr('style', 'display:none')
-            $('#signupButton').attr('style', 'display:none')
-            $('#kakaoLoginbutton').attr('style', 'display:block')
-            $('#loginButton').attr('style', 'display:block')
-            $('#kakaoSignupbutton').attr('style', 'display:none')
-
-            $('#toSignupButton').text('회원가입 하러가기')
-        }
-
-        function styleReset1() {
-            $('#signUpText').attr('style', 'display:none')
-            $('#LoginText').attr('style', 'display:inline')
-
-            $('#idCheckButton').attr('style', 'display:none')
-            $('#help-id').attr('style', 'display:none')
-            $('#help-password').attr('style', 'display:none')
-            $('#emailBox').attr('style', 'display:none')
-            $('#signupButton').attr('style', 'display:none')
-            $('#kakaoLoginbutton').attr('style', 'display:block')
-            $('#loginButton').attr('style', 'display:block')
-            $('#kakaoSignupbutton').attr('style', 'display:none')
-
-            $('#toSignupButton').text('회원가입 하러가기')
-        }
-
-        function login() {
-            let info = {
-                username: $("#loginusername").val(),
-                password: $("#password").val()
-            }
-            $.ajax({
-                type: 'POST',
-                url: `${apiUrl}/login`,
-                contentType: "application/json",
-                data: JSON.stringify(info),
-                success: function (response) {
-                    localStorage.setItem("token", response['token']);
-                    localStorage.setItem("username", response['username']);
-                    location.href = '/';
-                },
-                error : function (request) {
-                    if(request.status === 401) {
-                        alert("등록된 아이디가 없거나 비밀번호를 다시 확인해주세요.")
-                    } if(request.status === 500) {
-                        alert("카카오톡 이메일을 동의해주시거나, 이미 등록된 카카오 유저입니다. 고객센터로 문의해주세요.")
-                    }
-                }
-            })
-        }
-    </script>
-
-</head>
-<body>
-<div id="page-container">
-    <header>
-
-        <!--    네비게이션바-->
-        <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="nav-container">
-                <div class="nav-title-box">
-
-                    <a href="/index.html" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
-                    <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
-                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
-                    <a href="/collect.html" class="nave-menu-text nav-menu">모든음식 모아보기</a>
-                </div>
-                <div class="nav-botton-box">
-                    <button class="nav-button" data-bs-toggle="modal" data-bs-target="#LoginModal" id="login"
-                            onclick="styleReset()">로그인
-                    </button>
-                    <button class="nav-button" id="logout">로그아웃</button>
-                    <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지
-
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade modal-signin" tabindex="-1" role="dialog" id="LoginModal"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content rounded-5 shadow">
-                    <div class="modal-header p-5 pb-4 border-bottom-0">
-                        <!-- <h5 class="modal-title">Modal title</h5> -->
-                        <h2 class="fw-bold mb-0" style="display: none;" id="signUpText">회원가입</h2>
-                        <h2 class="fw-bold mb-0" id="LoginText">로그인</h2>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body p-5 pt-0">
-
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control rounded-4" id="loginusername"
-                                   placeholder="아이디">
-                            <label for="loginusername">아이디</label>
-                        </div>
-                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" style="display: none;"
-                                id="idCheckButton" onclick="idCheck()">
-                            아이디 중복확인
-                        </button>
-                        <div class="text-muted help help-id" style="display: none;" id="help-id">&nbsp;&nbsp;영문과 숫자 사용
-                            가능. 2-10자 길이<br/></div>
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control rounded-4" id="password"
-                                   placeholder="비밀번호">
-                            <label for="password">비밀번호</label>
-
-                        </div>
-                        <div class="text-muted help help-password" style="display: none;" id="help-password">&nbsp;&nbsp;영문과
-                            숫자 필수 포함, 8-20자<br/></div>
-
-                        <div class="form-floating mb-3" style="display: none;" id="emailBox">
-                            <input type="email" class="form-control rounded-4" id="email"
-                                   placeholder="이메일">
-                            <label for="email">이메일</label>
-                        </div>
-                        <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" style="display: none;"
-                                onclick="signup()" id="signupButton">회원가입하기
-                        </button>
-                        <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" onclick="login()" id="loginButton">
-                            로그인
-                        </button>
-                        <small class="text-muted" style="display: none;" id="help-signup">회원가입하시면 정보 제공에
-                            동의하시는겁니다.</small>
-                        <hr class="my-4">
-                        <h2 class="fs-5 fw-bold mb-3"></h2>
-                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" style="display: none;"
-                                onclick="lok()" id="kakaoSignupbutton">
-                            카카오 회원가입하기
-                        </button>
-                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" onclick="lok()"
-                                id="kakaoLoginbutton">
-                            카카오 로그인하기
-                        </button>
+<!--            //헤더에 토큰값 넣어 ajax 호출-->
+<!--            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {-->
+<!--                if (localStorage.getItem('token')) {-->
+<!--                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));-->
+<!--                    // jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));-->
+<!--                }-->
+<!--            });-->
+<!--        })-->
 
 
-                        <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-4" type="submit"
-                                onclick="change()" id="toSignupButton">
-                            회원가입 하러가기
-                        </button>
+<!--        function makeListComment(comment) {-->
+<!--            let tempHtml = `<li class="list-group-item">${comment['comment']}</li>`;-->
+<!--            $("#comment-list").append(tempHtml);-->
+<!--        }-->
+
+<!--        function heart(id) {-->
+<!--            if ($(`#heart${id}`).hasClass("bi bi-heart")) {-->
+<!--                $(`#heart${id}`).removeClass("bi-heart").addClass("bi-heart-fill");-->
+<!--                console.log(id);-->
+<!--                $.ajax({-->
+<!--                    type: "POST",-->
+<!--                    url: `${apiUrl}/liked/${id}`,-->
+<!--                    success: function (response) {-->
+<!--                        console.log(response);-->
+<!--                        window.location.reload();-->
+<!--                    }-->
+<!--                })-->
+<!--            } else {-->
+<!--                $(`#heart${id}`).removeClass("bi-heart-fill").addClass("bi-heart");-->
+<!--                console.log(id);-->
+<!--                $.ajax({-->
+<!--                    type: "DELETE",-->
+<!--                    url: `${apiUrl}/liked/${id}`,-->
+<!--                    success: function (response) {-->
+<!--                        console.log(response);-->
+<!--                        window.location.reload();-->
+<!--                    }-->
+<!--                })-->
+<!--            }-->
+<!--        }-->
+
+<!--        function toposting() {-->
+<!--            //login 시에는 alert,-->
+<!--            //아닐 경우에는 '/posting'-->
+<!--            if (localStorage.getItem("token") == null) {-->
+<!--                alert('앗, 로그인한 유저만 이용 가능합니다')-->
+<!--                location.href = '/';-->
+<!--            } else {-->
+<!--                location.href = '/posting.html';-->
+<!--            }-->
+<!--        }-->
 
 
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--        function is_nickname(asValue) {-->
+<!--            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;-->
+<!--            return regExp.test(asValue);-->
+<!--        }-->
 
-    </header>
+<!--        function is_password(asValue) {-->
+<!--            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;-->
+<!--            return regExp.test(asValue);-->
+<!--        }-->
 
-    <main>
-        <section class="py-5 text-center container">
-            <div class="row py-lg-5">
-                <div class="col-lg-6 col-md-8 mx-auto">
-                    <h1 class="fw-light"> 음식이 없거나, 뭘 드실지 모를 땐!</h1>
-<!--                    <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>-->
-                    <p class="lead text-muted" id="userMessege"><span id="welcomename"></span> 님 환영합니다!</p>
-                    <!--                    <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>-->
-                    <div>
-                        <!--                        <button type="button" class="main-button" data-bs-toggle="modal"-->
-                        <!--                                data-bs-target="#SignupPlzModal"-->
-                        <!--                                onclick="window.location.href ='/posting.html'">추천하기-->
-                        <!--                        </button>-->
-                        <button class="main-button" onclick="toposting()">추천하기</button>
-                        <button class="main-button" onclick="window.location.href ='/recommend.html'">추천받기</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- 추후 인기 있는 음식으로 바꿀 예정 id값 = famousFood-->
-        <div class="cardTheme">
-            <p>내가 모르는 음식이 있을까?</p>
-            <div class="pagination">
-                정렬:
-                <select id="sorting" onchange="showFood()">
-                    <option value="">전체</option>
-                    <option value="korean">한식</option>
-                    <option value="chinese">중식</option>
-                    <option value="japanese">일식</option>
-                    <option value="western">양식</option>
-                    <option value="snack">분식</option>
-                    <option value="bread">빵</option>
-                    <option value="supper">야식</option>
-                    <option value="fastfood">패스트푸드</option>
-                    <option value="salad">샐러드</option>
-                </select>
-            </div>
-        </div>
-        <div id="foodList" class="foodCardList">
-        </div>
-        <div id="fetchMore"></div>
-    </main>
-    <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
-        <div class="container">
-            <p class="float-end mb-1">
-                <a href="#">Back to top</a>
-            </p>
-            <p style="color:white; font-size: 11pt; text-decoration: none; ">
-                <strong>오늘 뭐 먹지?</strong> made by
-                <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>
-                이거사조 is Team 4 in 내일배움캠프. <br>
-                Welcome to <a href="https://spartacodingclub.kr/"
-                              style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
-            </p>
-        </div>
-    </footer>
-</div>
-</body>
-</html>
+<!--        function signup() {-->
+<!--            let password = $("#password").val();-->
+
+<!--            if ($("#loginusername").hasClass("is-danger")) {-->
+<!--                alert("아이디를 다시 확인해주세요.")-->
+<!--                return;-->
+<!--            } else if (!$("#help-id").hasClass("is-success")) {-->
+<!--                alert("아이디 중복확인을 해주세요.")-->
+<!--                return;-->
+<!--            }-->
+
+<!--            if (password == "") {-->
+<!--                $("#help-password").text("  비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")-->
+<!--                $("#password").focus()-->
+<!--                return;-->
+<!--            } else if (!is_password(password)) {-->
+<!--                $("#help-password").text("  비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")-->
+<!--                $("#password").focus()-->
+<!--                return-->
+<!--            } else {-->
+<!--                $("#help-password").text("  사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")-->
+<!--            }-->
+<!--            let info = {-->
+<!--                username: $("#loginusername").val(),-->
+<!--                password: $("#password").val(),-->
+<!--                email: $("#email").val()-->
+<!--            }-->
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: `${apiUrl}/signup`,-->
+<!--                contentType: "application/json",-->
+<!--                data: JSON.stringify(info),-->
+<!--                success: function (response) {-->
+<!--                    alert("회원가입이 완료되었습니다!!");-->
+<!--                    //화면 라우터-->
+<!--                    location.href = '/';-->
+<!--                }-->
+<!--            })-->
+<!--        }-->
+
+<!--        function idCheck() {-->
+<!--            let username = $("#loginusername").val()-->
+<!--            console.log(username)-->
+<!--            if (username == "") {-->
+<!--                $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")-->
+<!--                $("#loginusername").focus()-->
+<!--                return;-->
+<!--            }-->
+<!--            if (!is_nickname(username)) {-->
+<!--                $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 2-10자 길이").removeClass("is-safe").addClass("is-danger")-->
+<!--                $("#loginusername").focus()-->
+<!--                return;-->
+<!--            }-->
+<!--            let info = {"username": $("#loginusername").val()};-->
+<!--            $.ajax({-->
+<!--                type: "POST",-->
+<!--                url: `${apiUrl}/signup/idcheck`,-->
+<!--                contentType: "application/json",-->
+<!--                data: JSON.stringify(info),-->
+<!--                success: function (response) {-->
+<!--                    if (response == true) {-->
+<!--                        alert("아이디 중복")-->
+<!--                        $(".help-id").text("  이미 존재하는 아이디입니다.").removeClass("is-safe").addClass("is-danger")-->
+<!--                        $("#loginusername").focus()-->
+<!--                    } else {-->
+
+<!--                        $(".help-id").text("  사용할 수 있는 아이디입니다.").removeClass("is-danger").addClass("is-success")-->
+<!--                    }-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+
+<!--        Kakao.init('f9347e09eab96301ef9d210086833557');-->
+
+<!--        function lok() {-->
+<!--            Kakao.Auth.login({-->
+<!--                success: function (authObj) {-->
+<!--                    $.ajax({-->
+<!--                        type: 'POST',-->
+<!--                        url: `${apiUrl}/login/kakao`,-->
+<!--                        contentType: "application/json",-->
+<!--                        data: JSON.stringify({'token': authObj['access_token']}),-->
+<!--                        success: function (response) {-->
+<!--                            localStorage.setItem("token", response['token']);-->
+<!--                            localStorage.setItem("username", response['username']);-->
+<!--                            localStorage.setItem("nickname", response['nickname']);-->
+<!--                            location.href = '/';-->
+<!--                        }-->
+<!--                    })-->
+<!--                },-->
+<!--                fail: function (err) {-->
+<!--                    alert(JSON.stringify(err))-->
+<!--                },-->
+<!--            })-->
+<!--        }-->
+
+<!--        function change() {-->
+<!--            //회원가입-->
+<!--            if ($('#signUpText').css('display') == 'none') {-->
+<!--                $('#signUpText').attr('style', 'display:inline')-->
+<!--                $('#idCheckButton').attr('style', 'display:inline')-->
+<!--                $('#help-id').attr('style', 'display:inline')-->
+<!--                $('#help-password').attr('style', 'display:inline')-->
+<!--                $('#emailBox').attr('style', 'display:block')-->
+<!--                $('#signupButton').attr('style', 'display:block')-->
+<!--                $('#kakaoLoginbutton').attr('style', 'display:none')-->
+<!--                $('#LoginText').attr('style', 'display:none')-->
+<!--                $('#loginButton').attr('style', 'display:none')-->
+<!--                $('#kakaoSignupbutton').attr('style', 'display:block')-->
+<!--                $('#toSignupButton').text('로그인')-->
+
+<!--            }-->
+<!--            //로그인-->
+<!--            else {-->
+<!--                $('#signUpText').attr('style', 'display:none')-->
+<!--                $('#LoginText').attr('style', 'display:inline')-->
+
+<!--                $('#idCheckButton').attr('style', 'display:none')-->
+<!--                $('#help-id').attr('style', 'display:none')-->
+<!--                $('#help-password').attr('style', 'display:none')-->
+<!--                $('#emailBox').attr('style', 'display:none')-->
+<!--                $('#signupButton').attr('style', 'display:none')-->
+<!--                $('#kakaoLoginbutton').attr('style', 'display:block')-->
+<!--                $('#loginButton').attr('style', 'display:block')-->
+<!--                $('#kakaoSignupbutton').attr('style', 'display:none')-->
+
+<!--                $('#toSignupButton').text('회원가입 하러가기')-->
+<!--            }-->
+<!--        }-->
+
+<!--        function styleReset() {-->
+<!--            $('#signUpText').attr('style', 'display:none')-->
+<!--            $('#LoginText').attr('style', 'display:inline')-->
+
+<!--            $('#idCheckButton').attr('style', 'display:none')-->
+<!--            $('#help-id').attr('style', 'display:none')-->
+<!--            $('#help-password').attr('style', 'display:none')-->
+<!--            $('#emailBox').attr('style', 'display:none')-->
+<!--            $('#signupButton').attr('style', 'display:none')-->
+<!--            $('#kakaoLoginbutton').attr('style', 'display:block')-->
+<!--            $('#loginButton').attr('style', 'display:block')-->
+<!--            $('#kakaoSignupbutton').attr('style', 'display:none')-->
+
+<!--            $('#toSignupButton').text('회원가입 하러가기')-->
+<!--        }-->
+
+<!--        function styleReset1() {-->
+<!--            $('#signUpText').attr('style', 'display:none')-->
+<!--            $('#LoginText').attr('style', 'display:inline')-->
+
+<!--            $('#idCheckButton').attr('style', 'display:none')-->
+<!--            $('#help-id').attr('style', 'display:none')-->
+<!--            $('#help-password').attr('style', 'display:none')-->
+<!--            $('#emailBox').attr('style', 'display:none')-->
+<!--            $('#signupButton').attr('style', 'display:none')-->
+<!--            $('#kakaoLoginbutton').attr('style', 'display:block')-->
+<!--            $('#loginButton').attr('style', 'display:block')-->
+<!--            $('#kakaoSignupbutton').attr('style', 'display:none')-->
+
+<!--            $('#toSignupButton').text('회원가입 하러가기')-->
+<!--        }-->
+
+<!--        function login() {-->
+<!--            let info = {-->
+<!--                username: $("#loginusername").val(),-->
+<!--                password: $("#password").val()-->
+<!--            }-->
+<!--            $.ajax({-->
+<!--                type: 'POST',-->
+<!--                url: `${apiUrl}/login`,-->
+<!--                contentType: "application/json",-->
+<!--                data: JSON.stringify(info),-->
+<!--                success: function (response) {-->
+<!--                    localStorage.setItem("token", response['token']);-->
+<!--                    localStorage.setItem("username", response['username']);-->
+<!--                    location.href = '/';-->
+<!--                },-->
+<!--                error : function (request) {-->
+<!--                    if(request.status === 401) {-->
+<!--                        alert("등록된 아이디가 없거나 비밀번호를 다시 확인해주세요.")-->
+<!--                    } if(request.status === 500) {-->
+<!--                        alert("카카오톡 이메일을 동의해주시거나, 이미 등록된 카카오 유저입니다. 고객센터로 문의해주세요.")-->
+<!--                    }-->
+<!--                }-->
+<!--            })-->
+<!--        }-->
+<!--    </script>-->
+
+<!--</head>-->
+<!--<body>-->
+<!--<div id="page-container">-->
+<!--    <header>-->
+
+<!--        &lt;!&ndash;    네비게이션바&ndash;&gt;-->
+<!--        <div class="navbar navbar-dark bg-dark shadow-sm">-->
+<!--            <div class="nav-container">-->
+<!--                <div class="nav-title-box">-->
+
+<!--                    <a href="/index.html" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>-->
+<!--                    <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>-->
+<!--                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>-->
+<!--                    <a href="/collect.html" class="nave-menu-text nav-menu">모든음식 모아보기</a>-->
+<!--                </div>-->
+<!--                <div class="nav-botton-box">-->
+<!--                    <button class="nav-button" data-bs-toggle="modal" data-bs-target="#LoginModal" id="login"-->
+<!--                            onclick="styleReset()">로그인-->
+<!--                    </button>-->
+<!--                    <button class="nav-button" id="logout">로그아웃</button>-->
+<!--                    <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지-->
+
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Modal &ndash;&gt;-->
+<!--        <div class="modal fade modal-signin" tabindex="-1" role="dialog" id="LoginModal"-->
+<!--             aria-labelledby="exampleModalLabel"-->
+<!--             aria-hidden="true">-->
+<!--            <div class="modal-dialog" role="document">-->
+<!--                <div class="modal-content rounded-5 shadow">-->
+<!--                    <div class="modal-header p-5 pb-4 border-bottom-0">-->
+<!--                        &lt;!&ndash; <h5 class="modal-title">Modal title</h5> &ndash;&gt;-->
+<!--                        <h2 class="fw-bold mb-0" style="display: none;" id="signUpText">회원가입</h2>-->
+<!--                        <h2 class="fw-bold mb-0" id="LoginText">로그인</h2>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                    </div>-->
+
+<!--                    <div class="modal-body p-5 pt-0">-->
+
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <input type="text" class="form-control rounded-4" id="loginusername"-->
+<!--                                   placeholder="아이디">-->
+<!--                            <label for="loginusername">아이디</label>-->
+<!--                        </div>-->
+<!--                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" style="display: none;"-->
+<!--                                id="idCheckButton" onclick="idCheck()">-->
+<!--                            아이디 중복확인-->
+<!--                        </button>-->
+<!--                        <div class="text-muted help help-id" style="display: none;" id="help-id">&nbsp;&nbsp;영문과 숫자 사용-->
+<!--                            가능. 2-10자 길이<br/></div>-->
+<!--                        <div class="form-floating mb-3">-->
+<!--                            <input type="password" class="form-control rounded-4" id="password"-->
+<!--                                   placeholder="비밀번호">-->
+<!--                            <label for="password">비밀번호</label>-->
+
+<!--                        </div>-->
+<!--                        <div class="text-muted help help-password" style="display: none;" id="help-password">&nbsp;&nbsp;영문과-->
+<!--                            숫자 필수 포함, 8-20자<br/></div>-->
+
+<!--                        <div class="form-floating mb-3" style="display: none;" id="emailBox">-->
+<!--                            <input type="email" class="form-control rounded-4" id="email"-->
+<!--                                   placeholder="이메일">-->
+<!--                            <label for="email">이메일</label>-->
+<!--                        </div>-->
+<!--                        <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" style="display: none;"-->
+<!--                                onclick="signup()" id="signupButton">회원가입하기-->
+<!--                        </button>-->
+<!--                        <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" onclick="login()" id="loginButton">-->
+<!--                            로그인-->
+<!--                        </button>-->
+<!--                        <small class="text-muted" style="display: none;" id="help-signup">회원가입하시면 정보 제공에-->
+<!--                            동의하시는겁니다.</small>-->
+<!--                        <hr class="my-4">-->
+<!--                        <h2 class="fs-5 fw-bold mb-3"></h2>-->
+<!--                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" style="display: none;"-->
+<!--                                onclick="lok()" id="kakaoSignupbutton">-->
+<!--                            카카오 회원가입하기-->
+<!--                        </button>-->
+<!--                        <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4" onclick="lok()"-->
+<!--                                id="kakaoLoginbutton">-->
+<!--                            카카오 로그인하기-->
+<!--                        </button>-->
+
+
+<!--                        <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-4" type="submit"-->
+<!--                                onclick="change()" id="toSignupButton">-->
+<!--                            회원가입 하러가기-->
+<!--                        </button>-->
+
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--    </header>-->
+
+<!--    <main>-->
+<!--        <section class="py-5 text-center container">-->
+<!--            <div class="row py-lg-5">-->
+<!--                <div class="col-lg-6 col-md-8 mx-auto">-->
+<!--                    <h1 class="fw-light"> 음식이 없거나, 뭘 드실지 모를 땐!</h1>-->
+<!--&lt;!&ndash;                    <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>&ndash;&gt;-->
+<!--                    <p class="lead text-muted" id="userMessege"><span id="welcomename"></span> 님 환영합니다!</p>-->
+<!--                    &lt;!&ndash;                    <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>&ndash;&gt;-->
+<!--                    <div>-->
+<!--                        &lt;!&ndash;                        <button type="button" class="main-button" data-bs-toggle="modal"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                data-bs-target="#SignupPlzModal"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                onclick="window.location.href ='/posting.html'">추천하기&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </button>&ndash;&gt;-->
+<!--                        <button class="main-button" onclick="toposting()">추천하기</button>-->
+<!--                        <button class="main-button" onclick="window.location.href ='/recommend.html'">추천받기</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </section>-->
+<!--        &lt;!&ndash; 추후 인기 있는 음식으로 바꿀 예정 id값 = famousFood&ndash;&gt;-->
+<!--        <div class="cardTheme">-->
+<!--            <p>내가 모르는 음식이 있을까?</p>-->
+<!--            <div class="pagination">-->
+<!--                정렬:-->
+<!--                <select id="sorting" onchange="showFood()">-->
+<!--                    <option value="">전체</option>-->
+<!--                    <option value="korean">한식</option>-->
+<!--                    <option value="chinese">중식</option>-->
+<!--                    <option value="japanese">일식</option>-->
+<!--                    <option value="western">양식</option>-->
+<!--                    <option value="snack">분식</option>-->
+<!--                    <option value="bread">빵</option>-->
+<!--                    <option value="supper">야식</option>-->
+<!--                    <option value="fastfood">패스트푸드</option>-->
+<!--                    <option value="salad">샐러드</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div id="foodList" class="foodCardList">-->
+<!--        </div>-->
+<!--        <div id="fetchMore"></div>-->
+<!--    </main>-->
+<!--    <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">-->
+<!--        <div class="container">-->
+<!--            <p class="float-end mb-1">-->
+<!--                <a href="#">Back to top</a>-->
+<!--            </p>-->
+<!--            <p style="color:white; font-size: 11pt; text-decoration: none; ">-->
+<!--                <strong>오늘 뭐 먹지?</strong> made by-->
+<!--                <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>-->
+<!--                이거사조 is Team 4 in 내일배움캠프. <br>-->
+<!--                Welcome to <a href="https://spartacodingclub.kr/"-->
+<!--                              style="text-decoration: none; color:white;">스파르타코딩클럽</a>.-->
+<!--            </p>-->
+<!--        </div>-->
+<!--    </footer>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

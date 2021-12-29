@@ -12,17 +12,11 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     Optional<Food> findByName(String name);
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds"})
-    List<Food> findTop5ByOrderByCntDesc();
+    List<Food> findTop12ByOrderByCntDesc();
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds"})
-    List<Food> findTop5ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user);
+    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user);
 
     List<Food> findAllByNameIn(List<String> name);
     List<Food> findNameAndImageUrlByNameIn(List<String> name);
-
-    @EntityGraph(attributePaths = {"tags","likedFood","recommendeds"})
-    List<Food> findTop5ByOrderByIdDesc();
-
-    @EntityGraph(attributePaths = {"tags","likedFood","recommendeds"})
-    List<Food> findAll();
 }
