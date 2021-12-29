@@ -6,7 +6,6 @@ import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.LikedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +21,20 @@ public class LikedController {
     @GetMapping("/liked")
     public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(userDetails != null) {
-            return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
+            return foodRepository.findTop5ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
         } else {
-            return foodRepository.findTop12ByOrderByCntDesc();
+            return foodRepository.findTop5ByOrderByCntDesc();
         }
+    }
+
+    @GetMapping("/food")
+    public List<Food> newUpdateFood() {
+        return foodRepository.findTop5ByOrderByIdDesc();
+    }
+
+    @GetMapping("/allFood")
+    public List<Food> viewAllFood() {
+        return foodRepository.findAll();
     }
 
     //좋아요
@@ -40,4 +49,6 @@ public class LikedController {
         likedService.unLiked(id, userDetails);
         return "좋아요를 취소하셨습니다";
     }
+
+
 }

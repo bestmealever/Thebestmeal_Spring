@@ -32,6 +32,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="js/main.js" rel="script"></script>
     <script src="js/base.js"></script>
+    <script src="js/scrollEvent.js"></script>
+    <script src="js/sorting.js"></script>
 
     <!-- 구글 폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,7 +89,8 @@
 
             $.ajax({
                 type: "GET",
-                url: `${apiUrl}/liked`,
+                url: `${apiUrl}/allFood`,
+                dataType: "json",
                 success: function (response) {
                     console.log(response);
                     for (let i = 0; i < response.length; i++) {
@@ -166,47 +169,6 @@
                     // jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
                 }
             });
-        })
-
-
-        $.ajax({
-            type: "GET",
-            url: `${apiUrl}/food`,
-            success: function(response) {
-                for (let i = 0; i < response.length; i++) {
-                    let class_heart = response[i]['likedFood'].length === 1 ? "bi-heart-fill" : "bi-heart"
-                    let newList = response[i]
-                    console.log(foodList)
-                    let temp = `
-                                <div id="${newList['id']}"  class="foodListCard">
-                                    <div class="foodImage" style='background-image:url("${newList['imageUrl']}")' data-bs-toggle="modal" data-bs-target="#exampleModal${newList['id']}"></div>
-                                    <div class="foodInfo">
-                                        <p class="foodListCardName">${newList['name']}</p>
-                                        <i class="bi ${class_heart}" id="heart${newList['id']}" onclick="heart('${newList['id']}')"></i><span class="likedLength">${newList['cnt']}</span>
-                                        <p class="foodListCardTags" id="tags${newList['id']}"></p>
-                                    </div>
-                                </div>`
-
-                    $('#newUpdate').append(temp);
-                    Tag(newList);
-                } //else {
-                //     let foodList = response[i]
-                //     console.log(foodList);
-                //     console.log(foodList['id'])
-                //     let temp = `
-                //                 <div id="${foodList['id']}"  class="foodListCard">
-                //                     <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
-                //                     <div class="foodInfo">
-                //                         <p class="foodListCardName">${foodList['name']}</p>
-                //                         <i class="bi bi-heart" id="heart${foodList['id']}" onclick="alert('로그인 후 이용해주세요!')"></i><span class="likedLength">${foodList['cnt']}</span>
-                //                         <p class="foodListCardTags" id="tags${foodList['id']}"></p>
-                //                     </div>
-                //                 </div>
-                //                     `
-                //     $('#foodList').append(temp);
-                //     Tag(foodList);
-                // }
-            }
         })
 
 
@@ -461,7 +423,7 @@
             <div class="nav-container">
                 <div class="nav-title-box">
 
-                    <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
+                    <a href="/index.html" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
                     <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
                     <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
                     <a href="/collect.html" class="nave-menu-text nav-menu">모든음식 모아보기</a>
@@ -555,8 +517,8 @@
         <section class="py-5 text-center container">
             <div class="row py-lg-5">
                 <div class="col-lg-6 col-md-8 mx-auto">
-                    <h1 class="fw-light"> 오늘 뭐 먹지 ? </h1>
-                    <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>
+                    <h1 class="fw-light"> 음식이 없거나, 뭘 드실지 모를 땐!</h1>
+<!--                    <p class="lead text-muted">간단한 질문에 답하고, 오늘의 식사를 추천 받아 보세요!</p>-->
                     <p class="lead text-muted" id="userMessege"><span id="welcomename"></span> 님 환영합니다!</p>
                     <!--                    <p class="lead text-muted" id="userMessege"><span id="username"></span> 님 환영합니다!</p>-->
                     <div>
@@ -572,23 +534,26 @@
         </section>
         <!-- 추후 인기 있는 음식으로 바꿀 예정 id값 = famousFood-->
         <div class="cardTheme">
-            <p>인기 있는 음식 Top5</p>
+            <p>내가 모르는 음식이 있을까?</p>
+            <div class="pagination">
+                정렬:
+                <select id="sorting" onchange="showFood()">
+                    <option value="">전체</option>
+                    <option value="korean">한식</option>
+                    <option value="chinese">중식</option>
+                    <option value="japanese">일식</option>
+                    <option value="western">양식</option>
+                    <option value="snack">분식</option>
+                    <option value="bread">빵</option>
+                    <option value="supper">야식</option>
+                    <option value="fastfood">패스트푸드</option>
+                    <option value="salad">샐러드</option>
+                </select>
+            </div>
         </div>
         <div id="foodList" class="foodCardList">
         </div>
-
-        <div class="cardTheme">
-            <p>따끈따끈한 신상 음식 5가지</p>
-        </div>
-        <div id="newUpdate" class="foodCardList">
-        </div>
-
-        <div class="cardTheme">
-            <p>추천하는 음식 5가지</p>
-        </div>
-        <div id="bestFood" class="foodCardList">
-        </div>
-
+        <div id="fetchMore"></div>
     </main>
     <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
         <div class="container">

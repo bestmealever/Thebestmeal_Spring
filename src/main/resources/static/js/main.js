@@ -227,9 +227,9 @@ function feeling() {
     }
 }
 
-function feeling_no() {
-    alert('여기도 수정해야 됨...')
-}
+// function feeling_no() {
+//     // alert('여기도 수정해야 됨...')
+// }
 
 function selectFoodOnClient(foodObjArrayNum = 0) {
 

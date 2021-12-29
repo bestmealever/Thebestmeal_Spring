@@ -1,12 +1,10 @@
 package com.example.thebestmeal_test.domain;
 
-import com.example.thebestmeal_test.dto.LikedFoodDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 @NoArgsConstructor
 @Getter
