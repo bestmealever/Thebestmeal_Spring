@@ -8,6 +8,7 @@ import com.example.thebestmeal_test.security.UserDetailsImpl;
 import com.example.thebestmeal_test.service.LikedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +27,13 @@ public class LikedController {
         if(userDetails != null) {
             //likedFood가 null이거나, likedFoodUser가 있는 애 중에서 top 12
             return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
+
             //Cnt 순으로만 보여줌.
         } else {
-            return foodRepository.findTop12ByOrderByCntDesc();
+            // return foodRepository.findTop12ByOrderByCntDesc();
+            //포스팅 추가
+            return foodRepository.findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus.Accepted);
+
         }
 
           //원본 코드
@@ -44,11 +49,11 @@ public class LikedController {
     public List<Food> getreadyFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null) {
             return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
+//            return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserAndPostingIsNullOrPostingStatusOrderByCntDesc(UserDetails.getUser(), PostingStatus.Accepted);
         } else {
-            //테스트 - PostingStatus가 Accepted인 애들.
-            return foodRepository.findAllByPostingStatus(PostingStatus.Accepted);
             //에러 발생
-//            return foodRepository.findTop12ByOrderByCntDescByPostingStatus(PostingStatus.Accepted);
+            return foodRepository.findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus.Accepted);
+
         }
     }
 

@@ -34,10 +34,12 @@ $(document).ready(function () {
 
 function allPostingList() {
     console.log(postings, '전체 postinglist');
+    $('#user-table').empty();
+    $('#user-nav').empty();
     let temp_nav = `<div class="admin-nav" style=" clear:left; margin-top: 30px;">
                         <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>추천하기 음식리스트</strong></a>
-                        <a href="#" onclick="AcceptedList();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>수락 완료된 음식</strong></a>
-                        <a href="#" onclick="DeclinedList();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>거절된 음식</strong></a>
+                        <a href="#" onclick="acceptedList();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>수락 완료된 음식</strong></a>
+                        <a href="#" onclick="declinedList();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>거절된 음식</strong></a>
                         <hr style="margin-top:8px;">
                     </div>
                     <div id="user-nav"></div>`
@@ -68,6 +70,48 @@ function allPostingList() {
         Tag_admin(foodList, posting['id']);
     }
 }
+
+
+function acceptedList() {
+    let temp_nav = `<div class="admin-nav" style=" clear:left; margin-top: 30px;">
+                        <a href="#" onclick="allPostingList();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>추천하기 음식리스트</strong></a>
+                        <a href="#" style="text-decoration: none;  border-bottom: 2px solid; padding-bottom: 10px; color:black; margin-right: 12px; margin-left: 10px;"><strong>수락 완료된 음식</strong></a>
+                        <a href="#" onclick="declinedList();" style="text-decoration: none;color:black; margin-right: 12px; margin-left: 10px;"><strong>거절된 음식</strong></a>
+                        <hr style="margin-top:8px;">
+                    </div>
+                    <div id="user-nav"></div>`
+    $('#user-table').append(temp_nav);
+    $('#adminPostingList').empty();
+    for(let i=0; i<postingsAccepted.length;i++) {
+        //음식 DB detail 과  포스팅 DB 를 모두 받아오기
+        //foodList: [i] - postingsAccepted 된 것 중에 food 객체만 가져옴
+        //posting:[i] - postingsAccepted 전체 리스트
+        let foodList = postingAcceptedFoods[i]
+        let posting = postingsAccepted[i]
+
+        console.log(posting['id'])
+
+        //작성자는 heart 를 누르거나 갯수를 볼 필요도 없다. 애초에 아래 것은 빼주기.
+        // <i class="bi bi-heart" id="heart" onclick=""></i><span class="likedLength">${foodList['likedFood'].length}</span>
+        let temp = `<div id="${foodList['id']}"  class="foodListCard">
+                        <div class="foodImage" style='background-image:url("${foodList['imageUrl']}")'></div>
+                        <div class="foodInfo">
+                            <p class="foodListCardName">${foodList['name']}</p>
+                            <p class="foodListCardTags" id="tags${posting['id']}"></p>
+                            <p>작성 일자 : ${posting['createdAt'].substr(0, 10)}</p>
+                            <span class="badge text-dark" style="background-color: lightcoral; margin-left:5px;" id="posting${posting['id']}"  onclick="accept('${posting['id']}')">수락</span>
+                            <span class="badge text-dark" style="background-color: lightblue; margin-left:5px;">거절</span>
+                        </div>
+                    </div>`
+        $('#adminPostingList').append(temp);
+        Tag_admin(foodList, posting['id']);
+    }
+}
+
+function declinedList() {
+
+}
+
 
 //accept를 누르면, (1) posting의 status 가 accepted 로 바뀐다. (2)
 function accept(id){

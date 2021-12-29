@@ -6,6 +6,7 @@ import com.example.thebestmeal_test.domain.PostingStatus;
 import com.example.thebestmeal_test.domain.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,9 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findNameAndImageUrlByNameIn(List<String> name);
 
     //테스트용 코드
-    List<Food> findAllByPostingStatus(PostingStatus Accepted);
+//    List<Food> findAllByPostingStatus(PostingStatus Accepted);
+
+    List<Food> findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
+//    List<Food> findTop12ByLikedFoodIsNullOrLikedFoodUserAndPostingIsNullOrPostingStatusOrderByCntDesc(UserDetails.getUser(), PostingStatus.Accepted);
 //    List<Food> findTop12ByOrderByCntDescByPostingStatus(PostingStatus Accepted);
 }
