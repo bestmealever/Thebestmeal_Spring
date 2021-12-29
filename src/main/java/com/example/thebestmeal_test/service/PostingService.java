@@ -25,7 +25,6 @@ public class PostingService {
     private final PostingRepository postingRepository;
     private final AwsService awsService;
 
-    //    public Food toPostFoodService(PostDto postDto, UserDetailsImpl userDetails) throws IOException {
     public String toPostFoodService(PostDto postDto, UserDetailsImpl userDetails) throws IOException {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new NullPointerException("그런 사람 없는데요?"));
         // FoodImg (파일) foodImgUrl(스트링) 구분
@@ -37,7 +36,6 @@ public class PostingService {
         // tag - emotion 저장
         List<Tag> tags1 = postDto.getPostingEmo().stream().map((tag) -> new Tag(food, tag, "emotion")).collect(Collectors.toList());
         tagRepository.saveAll(tags1);
-
         // tag - category 저장
         List<Tag> tags2 = postDto.getPostingCat().stream().map((tag) -> new Tag(food, tag, "category")).collect(Collectors.toList());
         tagRepository.saveAll(tags2);
@@ -63,9 +61,4 @@ public class PostingService {
     }
 
 
-
-    //포스트맨 테스트3 - Get 요청 : List<Food> 를 받아올 것. if food.Posting is not null, postingStatus 가 Accepted 일 때만.
-//    public List<Food> reviewedFoodList() {
-//        List<Food> reviewedFood = foodRepository.findBy(food.getPosting())
-//    }
 }

@@ -28,12 +28,5 @@ public class AdminDto {
         this.postingDeclinedFoods = postingDeclinedFoods;
     }
 
-    //
-//    public AdminDto(List<Food> foods,List<Posting> postings, List<Posting> postingsAccepted,  List<Posting> postingsDeclined) {
-//        this.foods = foods;
-//        this.postings = postings;
-//        this.postingsAccepted = postingsAccepted;
-//        this.postingsDeclined = postingsDeclined;
-//    }
 
 }

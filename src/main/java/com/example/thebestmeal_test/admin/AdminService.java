@@ -24,8 +24,6 @@ public class AdminService {
         //postings: posting 전체 리스트
         List<Food> postingFoods = new ArrayList<>();
         List<Posting> postings = postingRepository.findAllByStatus(PostingStatus.ToBeReviewed);
-//        List<Posting> postings = postingRepository.findAllByPostingStatus(PostingStatus.ToBeReviewed);
-//        List<Posting> postings = postingRepository.findAllByStatus("ToBeReviewed");
 //      List<Posting> postings = postingRepository.findAll();
       for (Posting posting: postings) {
           postingFoods.add(posting.getFood());
@@ -36,8 +34,6 @@ public class AdminService {
         //postingAcceptedList:postingAccepted 리스트
         List<Food> postingAcceptedFoods = new ArrayList<>();
         List<Posting> postingAcceptedList = postingRepository.findAllByStatus(PostingStatus.Accepted);
-//        List<Posting> postingAcceptedList = postingRepository.findAllByPostingStatus(PostingStatus.Accepted);
-//        List<Posting> postingAcceptedList = postingRepository.findAll();
         for (Posting posting: postingAcceptedList) {
             postingAcceptedFoods.add(posting.getFood());
         }
@@ -45,8 +41,7 @@ public class AdminService {
         //postingDeclinedFoods: postingDeclined 된 것중에 food 객체만.
         List<Food> postingDeclinedFoods = new ArrayList<>();
         List<Posting> postingDeclinedList = postingRepository.findAllByStatus(PostingStatus.Rejected);
-//        List<Posting> postingDeclinedList = postingRepository.findAllByPostingStatus(PostingStatus.Rejected);
-//        List<Posting> postingDeclinedList = postingRepository.findAll();
+
         for (Posting posting: postingDeclinedList) {
             postingDeclinedFoods.add(posting.getFood());
         }
