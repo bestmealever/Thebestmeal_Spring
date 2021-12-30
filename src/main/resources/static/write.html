@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Webpage Title -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>오늘 뭐 먹지? | Main</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/mycss.css" rel="stylesheet">
+
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css"
+          integrity="sha384-7ynz3n3tAGNUYFZD3cWe5PDcE36xj85vyFkawcF6tIwxvIecqKvfwLiaFdizhPpN" crossorigin="anonymous">
+    <!--파비콘-->
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon2.ico"/>
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f9347e09eab96301ef9d210086833557&libraries=services,clusterer,drawing"></script>
+
+
+
+    <!-- 구글 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;500;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <!--<link href="{{ url_for('static', filename='mycss.css') }}" rel="stylesheet">-->
+    <link href="css/mycss.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!--JS 파일-->
+    <script src="js/posting.js" rel="script"></script>
+    <script src="js/base.js"></script>
+
+    <style>
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #content {
+            height: 400px;
+        }
+        .form-select {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        let LatLngX;
+        let LatLngY;
+        let placeName;
+        let address;
+        let placeUrl;
+
+        $(document).ready(function() {
+
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                if (localStorage.getItem('token')) {
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
+                }
+            })
+
+
+            $('#category').change(function() {
+                switch ($("#category option:checked").val()) {
+                    case "chat" :
+                        console.log("잡담");
+                        let chatHtml = `
+<input class="form-control"  id="foodSearch" type="text" placeholder="음식 검색">
+                                <div style="text-align: right; margin:5px 0 20px 0;" >
+                                    <span style="font-size: small; color:gray;">
+                                        오늘뭐먹지? 에 등록 되어있는 음식을 주제로 글을 작성할 수 있어요. 음식 이름으로 검색해보세요!
+                                    </span>
+                                    <span class="badge bg-secondary" onclick="foodDBSearch()">검색하기</span>
+
+                                </div>
+
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <input class="form-control" type="file" id="image">
+                                </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
+                                    </div>
+                        `
+                        $("#textContents").empty();
+                        $("#textContents").append(chatHtml);
+                        break
+                    case "recipe" :
+                        console.log("레시피");
+
+                        let recipeHtml = `
+                                <input class="form-control"  id="foodSearch" type="text" placeholder="음식 검색">
+                                <div style="text-align: right; margin:5px 0 20px 0;">
+                                <span style="font-size: small; color:gray;">
+                                            오늘뭐먹지? 에 등록 되어있는 음식을 주제로 글을 작성할 수 있어요. 음식 이름으로 검색해보세요!
+                                        </span>
+                                <span class="badge bg-secondary" onclick="foodDBSearch()">검색하기</span>
+
+</div>
+
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <input class="form-control" type="file" id="image">
+                                </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
+                                        </div>
+
+                        `
+                        $("#textContents").empty();
+                        $("#textContents").append(recipeHtml);
+                        break
+                    case "vote" :
+                        console.log("투표");
+                        let voteHtml = `
+                                <div class="mb-3">
+                                        <textarea class="form-control" id="content" rows="3" placeholder="글 내용" style="height:200px;" ></textarea>
+                                    </div>
+                                    <p style="font-size: small; color:gray;">
+                                        고민되는 2가지 옵션을 작성하여 투표를 받을 수 있습니다!
+                                    </p>
+                                <div class="mb-3 ">
+                                        <input type="text" class="form-control" id="option1Name" placeholder="예시) 김치찌개">
+                                    </div>
+                                    vs
+                                    <div class="mb-3 ">
+                                        <input type="text" class="form-control" id="option2Name" placeholder="예시) 된장찌개">
+                                    </div>
+                                    <input class="form-control" type="file" id="image" name="image">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
+                                        </div>
+
+                        `
+                        $("#textContents").empty();
+                        $("#textContents").append(voteHtml);
+                        break
+                    case "place" :
+                        console.log("맛집을 공유합니다");
+                        let mapHtml = `
+                                <div class="mb-3">
+                                        <textarea class="form-control" id="content" rows="3" placeholder="글 내용" style="height:200px;" ></textarea>
+                                    </div>
+                                    <input class="form-control"  id="keyword" type="text" placeholder="식당 검색">
+                                    <div style="text-align: right; margin:5px 0 20px 0;">
+                                    <span style="font-size: small; color:gray;">
+                                        공유하고 싶은 식당을 검색하여 선택해주세요. ex) 가락동 김밥천국
+                                    </span>
+                                    <span class="badge bg-secondary" onclick="restaurantSearch()">검색</span>
+                                    </div>
+
+                                    <div id="map" style="width:100%; height:350px; margin-bottom: 20px;"></div>
+                                    <input class="form-control" type="file" id="image" name="image">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
+                                        </div>
+
+                        `
+                        $("#textContents").empty();
+                        $("#textContents").append(mapHtml);
+                        loadMap();
+                        break
+                }
+            });
+        });
+
+        function foodDBSearch() {
+            let food = $("#foodSearch").val();
+            console.log(food)
+        }
+        //Kakao.init('f9347e09eab96301ef9d210086833557');
+        let keywordQuery = '이태원 맛집';
+        function restaurantSearch() {
+            keywordQuery = $("#keyword").val();
+            console.log(keywordQuery)
+            loadMap()
+
+        }
+        function loadMap(listener) {
+            let infowindow = new kakao.maps.InfoWindow({zIndex:1});
+
+            let mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                mapOption = {
+                    center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+            // 지도를 생성합니다
+            let map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 장소 검색 객체를 생성합니다
+            let ps = new kakao.maps.services.Places();
+
+            // 키워드로 장소를 검색합니다
+            ps.keywordSearch(keywordQuery, placesSearchCB);
+
+            // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+            function placesSearchCB (data, status, pagination) {
+                if (status === kakao.maps.services.Status.OK) {
+
+                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                    // LatLngBounds 객체에 좌표를 추가합니다
+                    var bounds = new kakao.maps.LatLngBounds();
+
+                    for (var i=0; i<data.length; i++) {
+                        displayMarker(data[i]);
+                        bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+                    }
+
+                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+                    map.setBounds(bounds);
+                }
+            }
+
+            // 지도에 마커를 표시하는 함수입니다
+            function displayMarker(place) {
+
+                // 마커를 생성하고 지도에 표시합니다
+                let marker = new kakao.maps.Marker({
+                    map: map,
+                    position: new kakao.maps.LatLng(place.y, place.x)
+                });
+
+                // 마커에 클릭이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'click', function (mouseEvent) {
+
+                    console.log(place)
+                    // 클릭한 위도, 경도 정보를 가져옵니다
+                    let LatLng = new kakao.maps.LatLng(place.y, place.x);
+                    LatLngX = place.x;
+                    LatLngY = place.y;
+                    placeName = place.place_name;
+                    address = place.road_address_name;
+                    placeUrl = place.place_url;
+
+                    let markerInfo = `
+                    <div style="padding:5px;font-size:12px;">
+                    <a href = "${place.place_url}" style="text-decoration: none; font-weight: bold;">${place.place_name}</a>
+                    <br/> ${place.category_name}
+                    <br/> ${place.road_address_name}
+                    </div>
+                    <button onclick="choicePlace()">선택하기</button>
+                    `
+                    // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+                    infowindow.setContent(markerInfo);
+                    infowindow.open(map, marker);
+                });
+            }
+        }
+        function choicePlace() {
+            console.log("선택하는 척")
+        }
+        function postArticle(){
+            let image = $("#image")[0].files[0];
+            let data = new FormData();
+            data.append("content" , $("#content").val());
+            data.append("title" , $("#title").val());
+            data.append("articleType" , $("#category option:checked").val());
+            if( typeof image != 'undefined') data.append( "image", $("#image")[0].files[0] );
+            data.append("option1Name" , $("#option1Name").val());
+            data.append("option2Name" , $("#option2Name").val());
+            data.append("x" , LatLngX);
+            data.append("y" , LatLngY);
+            data.append("placeName" , placeName);
+            data.append("placeAddress" , address);
+            data.append("placeUrl" , placeUrl);
+            $.ajax({
+                type:"POST",
+                url:"/article",
+                processData: false,
+                contentType: false,
+                data:data,
+                success : function(response) {
+                    console.log(data)
+                    let idx = response.data.id;
+                    window.location.href=`/view.html?idx=${idx}`;
+                }
+            })
+            // switch ($("#category option:checked").val()) {
+            //     case "chat" : console.log("chat 통신")
+            //         break
+            //     case "vote" : console.log("vote 에이젝스")
+            //         break
+            // }
+        }
+
+    </script>
+</head>
+
+
+<body>
+    <!--타이틀부분-->
+    <header>
+        <!--    네비게이션바-->
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="nav-container">
+                <div class="nav-title-box">
+                    <a href="/" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
+                    <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
+                    <a href="/posting.html" class="nave-menu-text nav-menu">맛있는거 추천하기</a>
+                </div>
+                <div class="nav-botton-box">
+                    <button class="nav-button" id="logout">로그아웃</button>
+                    <button class="nav-button" onclick="window.location.href = '/mypage.html'" id="mypage">마이페이지</button>
+                </div>
+            </div>
+        </div>
+    </header>
+<div class="writeContainer" style="width: 800px; margin:auto; padding-top: 20px; padding-bottom: 20px;">
+    <!--본문-->
+    <p>음식과 관련한 모든 이야기를 나누어보세요!</p>
+    <div class="mb-3 ">
+        <input type="email" class="form-control" id="title" placeholder="제목">
+    </div>
+    <select class="form-select" name="category" id="category">
+        <option selected value="chat">카테고리를 선택해주세요. (기본 선택 잡담)</option>
+        <option value="chat">잡담</option>
+        <option value="recipe">음식 레시피</option>
+        <option value="vote">투표</option>
+        <option value="place">맛집 소개</option>
+    </select>
+    <div id="foodSearchBox">
+
+
+
+    </div>
+
+    <!--글 내용-->
+    <div id="textContents">
+<!--        <div class="mb-3">-->
+<!--            <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--            <input class="form-control" type="file" id="image" name="image">-->
+<!--        </div>-->
+
+<!--        <div id = "mapContainer">-->
+
+<!--        </div>-->
+
+<!--        <div class="col-12">-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </div>-->
+        <input class="form-control"  id="foodSearch" type="text" placeholder="음식 검색">
+        <div style="text-align: right; margin:5px 0 20px 0;" >
+                                    <span style="font-size: small; color:gray;">
+                                        오늘뭐먹지? 에 등록 되어있는 음식을 주제로 글을 작성할 수 있어요. 음식 이름으로 검색해보세요!
+                                    </span>
+            <span class="badge bg-secondary" onclick="foodDBSearch()">검색하기</span>
+
+        </div>
+
+        <div class="mb-3">
+            <textarea class="form-control" id="content" rows="3" placeholder="내용을 입력해주세요"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <input class="form-control" type="file" id="image">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary" onclick="postArticle()">Submit</button>
+        </div>
+    </div>
+
+</div>
+
+
+
+    <!--푸터-->
+    <footer class="text-muted py-5" id="footer" style="background-color: #222529; height: 140px">
+        <div class="container">
+            <p class="float-end mb-1">
+                <a href="#">Back to top</a>
+            </p>
+            <p style="color:white; font-size: 11pt; text-decoration: none; ">
+                <strong>오늘 뭐 먹지?</strong> made by
+                <a href="https://github.com/bestmealever" style="text-decoration: none; color:white;">이거사조</a>. <br>
+                이거사조 is Team 4 in 내일배움캠프. <br>
+                Welcome to <a href="https://spartacodingclub.kr/"
+                              style="text-decoration: none; color:white;">스파르타코딩클럽</a>.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

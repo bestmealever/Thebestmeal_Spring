@@ -36,12 +36,10 @@ public class RecommendedService {
     public MyPageDto toMyPageInfo(UserDetailsImpl userDetails) {
         List<Food> foods = new ArrayList<>();
         List<Posting> postings = postingRepository.findAllByUserId(userDetails.getUser().getId());
-
         List<Recommended> recommendedList = recommendedRepository.findAllByUserId(userDetails.getUser().getId());
         for (Recommended recommended : recommendedList) {
             foods.add(recommended.getFood());
         }
-
 
         System.out.println(foods);
         MyPageDto dto = new MyPageDto(userDetails.getUser(), foods, recommendedList, postings);

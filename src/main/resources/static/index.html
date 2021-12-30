@@ -85,6 +85,9 @@
                 $("#welcomename").html(localStorage.getItem("username"));
             }
 
+
+
+
             $.ajax({
                 type: "GET",
                 url: `${apiUrl}/liked`,
@@ -222,6 +225,8 @@
         }
 
         function signup() {
+            var checkBox = document.getElementById("admin-check");
+
             let password = $("#password").val();
 
             if ($("#loginusername").hasClass("is-danger")) {
@@ -246,7 +251,9 @@
             let info = {
                 username: $("#loginusername").val(),
                 password: $("#password").val(),
-                email: $("#email").val()
+                email: $("#email").val(),
+                admin:checkBox.checked,
+                adminToken:$("#admin-token").val()
             }
             $.ajax({
                 type: 'POST',
@@ -421,6 +428,7 @@
                     <a href="#" class="title nav-text" style="padding-top: 5px;">오늘 뭐 먹지?</a>
                     <a href="/recommend.html" class="nave-menu-text nav-menu">뭐먹을지 추천받기</a>
                     <a href="javascript:void(0);" class="nave-menu-text nav-menu" onclick="toposting()">맛있는거 추천하기</a>
+                    <a href="/community.html" class="nave-menu-text nav-menu">커뮤니티</a>
                 </div>
                 <div class="nav-botton-box">
                     <button class="nav-button" data-bs-toggle="modal" data-bs-target="#LoginModal" id="login"
