@@ -156,7 +156,7 @@
                     $("#commentContainers").append(commentHtml);
                     for (let i = 0; i<response.comments.length; i++) {
                         console.log(response.comments[i])
-                        if (response.comments[i].user === []) {
+                        if (response.comments[i].user === null) {
                             let commentListHtml = `
                                 익명 : ${response.comments[i].comment}
                                 <div class="col-12">
