@@ -251,10 +251,9 @@
             let info = {
                 username: $("#loginusername").val(),
                 password: $("#password").val(),
-                email: $("#email").val(),
-                admin:checkBox.checked,
-                adminToken:$("#admin-token").val()
+                email: $("#email").val()
             }
+
             $.ajax({
                 type: 'POST',
                 url: `${apiUrl}/signup`,
