@@ -95,7 +95,7 @@
                     console.log(response);
                     for (let i = 0; i < response.length; i++) {
                         if (localStorage.getItem("token")) {
-                            let class_heart = response[i]['likedFood'].length === 1 ? "bi-heart-fill" : "bi-heart"
+                            let class_heart = response[i]['liked'] === true ? "bi-heart-fill" : "bi-heart"
                             let foodList = response[i]
                             console.log(foodList);
                             console.log(foodList['id']);
@@ -192,8 +192,8 @@
                 $(`#heart${id}`).removeClass("bi-heart-fill").addClass("bi-heart");
                 console.log(id);
                 $.ajax({
-                    type: "DELETE",
-                    url: `${apiUrl}/liked/${id}`,
+                    type: "POST",
+                    url: `${apiUrl}/unliked/${id}`,
                     success: function (response) {
                         console.log(response);
                         window.location.reload();
