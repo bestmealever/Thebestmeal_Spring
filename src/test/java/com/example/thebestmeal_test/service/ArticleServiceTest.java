@@ -157,7 +157,6 @@ class ArticleServiceTest {
         // then
         String a = articleService.deleteArticle(article.getId(), userDetailsImpl2);
         assertThat(a).contains("자신이 작성한 글만 삭제");
-
     }
 
 
