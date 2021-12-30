@@ -33,7 +33,7 @@ public class LikedController {
     @GetMapping("/liked")
     public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(userDetails != null) {
-            List<Food> foods =  foodRepository.findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus.Accepted);
+            List<Food> foods =  foodRepository.findFirst12ByPostingIsNullOrPostingStatusIsOrderByCntDesc(PostingStatus.Accepted);
             for(Food food : foods){
                 if(food.getLikedFood().stream().filter( e-> e.getUser().getId().equals(userDetails.getUser().getId())).count() > 0 ){
                     food.setLiked(true);
