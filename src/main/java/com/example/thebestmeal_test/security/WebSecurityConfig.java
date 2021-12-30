@@ -38,6 +38,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.headers().frameOptions().disable();
+        //cors 설정 추가
+        http.cors();
 
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
@@ -93,9 +95,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/user/forbidden");	//로그아웃도 허용
-
-        //cors 설정 추가
-        http.cors();
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
