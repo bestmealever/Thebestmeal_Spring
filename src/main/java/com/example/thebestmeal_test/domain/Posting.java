@@ -15,9 +15,6 @@ import javax.persistence.*;
 @Entity
 public class Posting extends Timestamped{
 
-//    Identity로 바꿔야함.  기존 DB 랑 충돌하니 물리적 DB 지우고 올리기.
-//    @GeneratedValue(strategy = GenerationType.AUTO.IDENTITY)
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

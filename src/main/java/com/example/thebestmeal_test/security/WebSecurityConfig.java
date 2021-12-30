@@ -66,6 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/static/images/**").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/liked/**").permitAll()
+                .antMatchers("/food/**").permitAll()
+                .antMatchers("/allFood/**").permitAll()
                 .antMatchers("/liked/count/**").permitAll()
                 .antMatchers("/onlyreadyfoodlist").permitAll()
                 .antMatchers("/api/postingtest/**").permitAll()
@@ -97,5 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/user/forbidden");	//로그아웃도 허용
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors();
+
     }
 }

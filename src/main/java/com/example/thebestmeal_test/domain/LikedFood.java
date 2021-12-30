@@ -1,19 +1,17 @@
 package com.example.thebestmeal_test.domain;
 
-import com.example.thebestmeal_test.dto.LikedFoodDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 @NoArgsConstructor
 @Getter
 @Entity
 public class LikedFood extends Timestamped{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
     @JsonIgnore

@@ -1,5 +1,6 @@
 package com.example.thebestmeal_test.domain;
 
+import com.example.thebestmeal_test.security.UserDetailsImpl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -100,4 +101,5 @@ public class Article extends Timestamped {
         this.placeAddress = placeAddress;
         this.image = url;
     }
+
 }

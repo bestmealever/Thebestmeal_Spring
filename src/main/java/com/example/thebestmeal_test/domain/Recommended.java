@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 public class Recommended extends Timestamped {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 

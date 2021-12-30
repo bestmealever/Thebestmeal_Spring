@@ -31,20 +31,16 @@ function want() {
                                         <div class="button-group-in">
                                             <input type="checkbox" id="chk1" class="select-category" value="no_time">
                                             <label class="category" for="chk1">시간이 없어요</label>
-
                                             <input type="checkbox" id="chk2" class="select-category" value="many_time">
                                             <label class="category" for="chk2">시간 많아요!</label>
-
                                             <input type="checkbox" id="chk3" class="select-category" value="perfect">
                                             <label class="category" for="chk3">완벽한 저녁이 필요해요!</label>
                                         </div>
                                         <div class="button-group-in">
                                             <input type="checkbox" id="chk4" class="select-category" value="needsugar">
                                             <label class="category" for="chk4">당 떨어져요 ㅠ</label>
-
                                             <input type="checkbox" id="chk5" class="select-category" value="stressed">
                                             <label class="category" for="chk5">스트레스 받았어요</label>
-
                                             <input type="checkbox" id="chk6" class="select-category" value="fatty">
                                             <label class="category" for="chk6">기름진게 땡기네요!</label>
                                         </div>
@@ -66,30 +62,24 @@ function want_no() {
                                     <div class="button-group-in">
                                         <input type="checkbox" id="chk1" class="select-category" value="korean">
                                         <label class="category" for="chk1">한식</label>
-
                                         <input type="checkbox" id="chk2" class="select-category" value="chinese">
                                         <label class="category" for="chk2">중식</label>
-
                                         <input type="checkbox" id="chk3" class="select-category" value="japanese">
                                         <label class="category" for="chk3">일식</label>
                                     </div>
                                     <div class="button-group-in">
                                         <input type="checkbox" id="chk4" class="select-category" value="western">
                                         <label class="category" for="chk4">양식</label>
-
                                         <input type="checkbox" id="chk5" class="select-category" value="snack">
                                         <label class="category" for="chk5">분식</label>
-
                                         <input type="checkbox" id="chk6" class="select-category" value="bread">
                                         <label class="category" for="chk6">빵</label>
                                     </div>
                                     <div class="button-group-in">
                                         <input type="checkbox" id="chk7" class="select-category" value="supper">
                                         <label class="category" for="chk7">야식</label>
-
                                         <input type="checkbox" id="chk8" class="select-category" value="fastfood">
                                         <label class="category" for="chk8">패스트푸드</label>
-
                                         <input type="checkbox" id="chk9" class="select-category" value="salad">
                                         <label class="category" for="chk9">샐러드</label>
                                     </div>
@@ -121,20 +111,16 @@ function yesterday() {
                                         <div class="button-group-in">
                                             <input type="checkbox" id="chk1" class="select-category" value="no_time">
                                             <label class="category" for="chk1">시간이 없어요</label>
-
                                             <input type="checkbox" id="chk2" class="select-category" value="many_time">
                                             <label class="category" for="chk2">시간 많아요!</label>
-
                                             <input type="checkbox" id="chk3" class="select-category" value="perfect">
                                             <label class="category" for="chk3">완벽한 저녁이 필요해요!</label>
                                         </div>
                                         <div class="button-group-in">
                                             <input type="checkbox" id="chk4" class="select-category" value="needsugar">
                                             <label class="category" for="chk4">당 떨어져요 ㅠ</label>
-
                                             <input type="checkbox" id="chk5" class="select-category" value="stressed">
                                             <label class="category" for="chk5">스트레스 받았어요</label>
-
                                             <input type="checkbox" id="chk6" class="select-category" value="fatty">
                                             <label class="category" for="chk6">기름진게 땡기네요!</label>
                                         </div>
@@ -156,20 +142,16 @@ function yesterday_no() {
                             <div class="button-group-in">
                                     <input type="checkbox" id="chk1" class="select-category" value="no_time">
                                     <label class="category" for="chk1">시간이 없어요</label>
-
                                     <input type="checkbox" id="chk2" class="select-category" value="many_time">
                                     <label class="category" for="chk2">시간 많아요!</label>
-
                                     <input type="checkbox" id="chk3" class="select-category" value="perfect">
                                     <label class="category" for="chk3">완벽한 저녁이 필요해요!</label>
                                 </div>
                                 <div class="button-group-in">
                                     <input type="checkbox" id="chk4" class="select-category" value="needsugar">
                                     <label class="category" for="chk4">당 떨어져요 ㅠ</label>
-
                                     <input type="checkbox" id="chk5" class="select-category" value="stressed">
                                     <label class="category" for="chk5">스트레스 받았어요</label>
-
                                     <input type="checkbox" id="chk6" class="select-category" value="fatty">
                                     <label class="category" for="chk6">기름진게 땡기네요!</label>
                                 </div>
@@ -228,7 +210,7 @@ function feeling() {
 }
 
 function feeling_no() {
-    alert('여기도 수정해야 됨...')
+    // alert('여기도 수정해야 됨...')
 }
 
 function selectFoodOnClient(foodObjArrayNum = 0) {
