@@ -16,7 +16,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     Optional<Food> findByName(String name);
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
-    List<Food> findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus Accepted);
+    List<Food> findFirst12ByPostingIsNullOrPostingStatusIsOrderByCntDesc(PostingStatus Accepted);
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
     List<Food> findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
