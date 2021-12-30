@@ -1,5 +1,6 @@
 package com.example.thebestmeal_test.domain;
 
+import com.example.thebestmeal_test.dto.UserDto;
 import com.example.thebestmeal_test.dto.UserStatusModifyDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
