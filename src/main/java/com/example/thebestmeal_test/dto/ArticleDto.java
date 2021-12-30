@@ -1,6 +1,7 @@
 package com.example.thebestmeal_test.dto;
 
 import com.example.thebestmeal_test.domain.ArticleType;
+import com.example.thebestmeal_test.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +34,12 @@ public class ArticleDto {
         this.option1Name = option1Name;
         this.option2Name = option2Name;
         this.articleType = articleType;
+    }
+
+    public ArticleDto(String title, String content, ArticleType articleType) {
+        this.title = title;
+        this.content = content;
+        this.articleType = articleType;
+
     }
 }
