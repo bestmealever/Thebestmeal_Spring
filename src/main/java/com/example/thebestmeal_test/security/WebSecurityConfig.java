@@ -97,5 +97,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/user/forbidden");	//로그아웃도 허용
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors();
+
     }
 }
