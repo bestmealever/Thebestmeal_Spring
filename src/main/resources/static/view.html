@@ -156,12 +156,13 @@
                     $("#commentContainers").append(commentHtml);
                     for (let i = 0; i<response.comments.length; i++) {
                         console.log(response.comments[i])
-                        if (response.comments[i].user === []) {
+                        if (response.comments[i].user === null) {
                             let commentListHtml = `
-                                익명 : ${response.comments[i].comment}
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-primary" onclick="deleteComment(${response.comments[i].id})">댓글 삭제하기</button>
-                                </div>
+
+
+<hr>
+<p style="font-size: small; color:gray;">익명의 방문자, 작성일 : ${response.comments[i].createdAt} <span class="badge bg-secondary" onclick="deleteComment(${response.comments[i].id})">댓글 삭제하기</span></p>
+                            ${response.comments[i].comment}
                             `
                             $("#commentList").append(commentListHtml);
                         } else {
@@ -252,11 +253,11 @@
 
         function deleteComment(id) {
             $.ajax ({
-                type : "DELETE",
+                type : "POST",
                 url:`${apiUrl}/article/comment/${id}`,
                 success : function(response) {
-                    alert("삭제 완료!")
-                    console.log(response)
+                    alert(response)
+                    location.reload();
                 }
             })
         }
