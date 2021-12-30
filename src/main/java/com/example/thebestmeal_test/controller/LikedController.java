@@ -54,7 +54,7 @@ public class LikedController {
     }
 
     //좋아요 취소
-    @DeleteMapping("/liked/{id}")
+    @PostMapping("/unliked/{id}")
     public String deleteLikedFood(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         likedService.unLiked(id, userDetails);
         return "좋아요를 취소하셨습니다";
