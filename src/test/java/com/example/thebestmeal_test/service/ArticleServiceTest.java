@@ -6,9 +6,7 @@ import com.example.thebestmeal_test.dto.UserDto;
 import com.example.thebestmeal_test.repository.ArticleRepository;
 import com.example.thebestmeal_test.repository.UserRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,12 +22,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ArticleServiceTest {
-    @Mock
+    @Autowired
     ArticleRepository articleRepository;
 
-    @Mock
+    @Autowired
     UserRepository userRepository;
 
     User nowUser;
@@ -45,6 +43,7 @@ class ArticleServiceTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("articleType vote 게시글이 잘 생성되는지 확인")
     void createArticleVote() throws IOException {
 
