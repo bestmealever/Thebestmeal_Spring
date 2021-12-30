@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -34,12 +35,14 @@ class ArticleServiceTest {
 
     @BeforeEach
     void beforeEach() throws IOException {
+        String username = "testmokito";
         User user = new User(
-                "testmokito", "testmokito1", "test@test.com", UserRole.USER
+                username, "testmokito1", "test@test.com", UserRole.USER
         );
         this.nowUser = user;
-        User user1 = userRepository.findByUsername("testmokito").orElseThrow(()->new NullPointerException("아이디 없네요"));
-        assertEquals("유저 생성 확인.", user.getId(), user1.getId());
+//        User user1 = userRepository.findByUsername("testmokito").orElseThrow(()->new NullPointerException("아이디 없네요"));
+//        assertEquals("유저 생성 확인.", user.getId(), user1.getId());
+        assertThat(user.getUsername()).isEqualTo(username);
     }
 
     @Test
@@ -61,7 +64,8 @@ class ArticleServiceTest {
                 ()->new NullPointerException("글 생성 안됨"));
 
         // then
-        assertEquals("글 생성 확인.", article.getId(), articleTest.getId());
+        //assertEquals("글 생성 확인.", article.getId(), articleTest.getId());
+        assertThat(article.getTitle()).isEqualTo(articleDto.getTitle());
     }
 
 
