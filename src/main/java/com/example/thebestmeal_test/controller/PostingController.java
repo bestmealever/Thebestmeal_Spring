@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping({"/api"})
+@RequestMapping("/api")
 @RestController
 public class PostingController {
 
@@ -30,12 +30,12 @@ public class PostingController {
     private final FoodRepository foodRepository;
 
     @Transactional
-    @PostMapping({"/post"})
+    @PostMapping("/post")
     public String postFood(PostDto postDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return postingService.toPostFoodService(postDto, userDetails);
     }
 
-    @PostMapping({"/foodcheck"})
+    @PostMapping("/foodcheck")
     public Boolean foodCheck(@RequestBody FoodCheckDto foodCheckDto) {
         return postingService.foodDupCheck(foodCheckDto);
     }
