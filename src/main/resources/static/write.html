@@ -290,7 +290,7 @@
             data.append("placeUrl" , placeUrl);
             $.ajax({
                 type:"POST",
-                url:"/article",
+                url:`${apiUrl}/article`,
                 processData: false,
                 contentType: false,
                 data:data,

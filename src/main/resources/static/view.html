@@ -79,7 +79,7 @@
 
             $.ajax({
                 type: "GET",
-                url: `/articles/${id}`,
+                url: `${apiUrl}/articles/${id}`,
                 success: function (response) {
                     console.log(response)
                     button(id)
@@ -221,7 +221,7 @@
             }
             $.ajax({
                 type: "POST",
-                url:"/article/comment",
+                url:`${apiUrl}/article/comment`,
                 data:JSON.stringify(comment),
                 contentType : "application/json",
                 success: function (response) {
@@ -242,7 +242,7 @@
         function deleteArticle(id) {
             $.ajax ({
                 type : "DELETE",
-                url:`/article/${id}`,
+                url:`${apiUrl}/article/${id}`,
                 success : function(response) {
                     alert(response)
                     window.location.href = 'community.html';
@@ -253,7 +253,7 @@
         function deleteComment(id) {
             $.ajax ({
                 type : "DELETE",
-                url:`/article/comment/${id}`,
+                url:`${apiUrl}/article/comment/${id}`,
                 success : function(response) {
                     alert("삭제 완료!")
                     console.log(response)
@@ -269,7 +269,7 @@
             }
             $.ajax({
                 type : 'POST',
-                url : '/vote',
+                url : `${apiUrl}/vote`,
                 contentType : 'application/json',
                 data : JSON.stringify(data),
                 success : function(response) {
