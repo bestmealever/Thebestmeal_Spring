@@ -24,11 +24,9 @@ public class AdminService {
         //postings: posting 전체 리스트
         List<Food> postingFoods = new ArrayList<>();
         List<Posting> postings = postingRepository.findAllByStatus(PostingStatus.ToBeReviewed);
-//      List<Posting> postings = postingRepository.findAll();
       for (Posting posting: postings) {
           postingFoods.add(posting.getFood());
       }
-//        System.out.println(postingFoods);
 
         //postingAcceptedFoods: postingAccepted 된 것 중에 food 객체만
         //postingAcceptedList:postingAccepted 리스트

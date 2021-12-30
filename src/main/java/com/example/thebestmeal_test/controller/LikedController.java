@@ -26,14 +26,13 @@ public class LikedController {
     private final PostingRepository postingRepository;
 
 
-    //메인에 올라간 음식 중 (추천하기로 받아진 음식은) Admin- Declined 여서는 안됨.
-    ////    @GetMapping("/onlyreadyfoodlist") - 포스트맨 테스트용.
+    //메인에 올라간 음식 중 (추천하기로 받아진 음식은) Admin- Declined 안됨.
+    //food 클래스 형태의 foods 라는 객체 리스트 만든다.
+    //foods 리스트에서 food를 for 문을 돌아 꺼내온다. user의 Id 와 동일한지 비교한다.
+    //liked의 기본값은 false 지만 해당 userId와 likedFood의 userId가 일치한다면, setLiked를 True라고 한다.
     @GetMapping("/liked")
     public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(userDetails != null) {
-            //food 클래스 형태의 foods 라는 객체 리스트 만든다.
-            //foods 리스트에서 food를 for 문을 돌아 꺼내온다. user의 Id 와 동일한지 비교한다.
-            //liked의 기본값은 false 지만 해당 userId와 likedFood의 userId가 일치한다면, setLiked를 True라고 한다.
             List<Food> foods =  foodRepository.findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus.Accepted);
             for(Food food : foods){
                 if(food.getLikedFood().stream().filter( e-> e.getUser().getId().equals(userDetails.getUser().getId())).count() > 0 ){
@@ -43,7 +42,6 @@ public class LikedController {
             return foods;
 
         } else {
-            //포스팅 추가
             return foodRepository.findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus.Accepted);
         }
     }
