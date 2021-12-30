@@ -35,7 +35,6 @@ public class LikedController {
             //foods 리스트에서 food를 for 문을 돌아 꺼내온다. user의 Id 와 동일한지 비교한다.
             //liked의 기본값은 false 지만 해당 userId와 likedFood의 userId가 일치한다면, setLiked를 True라고 한다.
             List<Food> foods =  foodRepository.findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus.Accepted);
-
             for(Food food : foods){
                 if(food.getLikedFood().stream().filter( e-> e.getUser().getId().equals(userDetails.getUser().getId())).count() > 0 ){
                     food.setLiked(true);

@@ -15,10 +15,11 @@ import javax.persistence.*;
 @Entity
 public class Posting extends Timestamped{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    Identity로 바꿔야함.  기존 DB 랑 충돌하니 물리적 DB 지우고 올리기.
 //    @GeneratedValue(strategy = GenerationType.AUTO.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -26,12 +27,6 @@ public class Posting extends Timestamped{
 
     @Column
     private String postingMemo;
-
-//    @Column(nullable = true)
-//    private String foodImgUrl;
-
-//    @Column(nullable = true)
-//    private String status;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
