@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Getter
 public class Vote extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long voteId;
 
     @Column(nullable = false)
