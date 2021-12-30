@@ -1,5 +1,8 @@
 package com.example.thebestmeal_test.controller;
 
+import com.example.thebestmeal_test.admin.AdminDto;
+import com.example.thebestmeal_test.domain.Food;
+import com.example.thebestmeal_test.domain.PostingStatus;
 import com.example.thebestmeal_test.dto.FoodCheckDto;
 import com.example.thebestmeal_test.dto.PostDto;
 import com.example.thebestmeal_test.repository.FoodRepository;
@@ -11,13 +14,11 @@ import com.example.thebestmeal_test.service.AwsService;
 import com.example.thebestmeal_test.service.PostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping({"/api"})
@@ -25,6 +26,8 @@ import java.io.IOException;
 public class PostingController {
 
     private final PostingService postingService;
+    //테스트용
+    private final FoodRepository foodRepository;
 
     @Transactional
     @PostMapping({"/post"})

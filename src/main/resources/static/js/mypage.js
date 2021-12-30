@@ -31,6 +31,8 @@ $(document).ready(function () {
     }
 
     //마이페이지 처음 출력 내가 추천받은 음식
+    //foods: foodDB의 상세 정보를 받음.
+    //recommendedList: 추천받기 시점
     $.ajax({
         type: "GET",
         url: `${apiUrl}/mypage`,

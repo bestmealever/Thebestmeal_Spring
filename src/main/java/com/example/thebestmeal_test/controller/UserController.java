@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-//리팩토링 이렇게 해도 되나..?
+//아래 코드로 교체 (검토 할 것)
 //@RequiredArgsConstructor
 //@Controller
 //public class UserController {

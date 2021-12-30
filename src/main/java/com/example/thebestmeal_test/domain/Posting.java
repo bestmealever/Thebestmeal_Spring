@@ -16,10 +16,10 @@ import javax.persistence.*;
 public class Posting extends Timestamped{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    // Identity로 바꿔야함.  기존 DB 랑 충돌하니 물리적 DB 지우고 올리기.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    Identity로 바꿔야함.  기존 DB 랑 충돌하니 물리적 DB 지우고 올리기.
 //    @GeneratedValue(strategy = GenerationType.AUTO.IDENTITY)
-    private Long postingId;
+    private Long id;
 
     @Column(nullable = false)
     private String postingFoodName;
@@ -27,24 +27,39 @@ public class Posting extends Timestamped{
     @Column
     private String postingMemo;
 
-    @Column(nullable = true)
-    private String foodImgUrl;
+//    @Column(nullable = true)
+//    private String foodImgUrl;
+
+//    @Column(nullable = true)
+//    private String status;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private PostingStatus status;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(nullable = false)
     private User user;
 
-    @ManyToOne
+    @JsonIgnore
+    @OneToOne
     @JoinColumn(nullable = false)
     private Food food;
 
-    public Posting(PostDto postDto, User user, Food food) {
+
+    //PostingStatus 추가 foodImgUrl 제거 (이미 foodDB에 있는 칼럼)
+    public Posting(PostDto postDto, User user, Food food, PostingStatus status) {
         this.postingMemo = postDto.getPostingMemo();
         this.postingFoodName = postDto.getPostingFoodName();
-        this.foodImgUrl = foodImgUrl;
+//        this.foodImgUrl = foodImgUrl;
         this.user = user;
         this.food = food;
+        this.status = status;
+    }
+
+    public void update(PostingStatus status) {
+        this.status = status;
     }
 
 }
