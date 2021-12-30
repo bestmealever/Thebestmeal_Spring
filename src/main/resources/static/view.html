@@ -241,7 +241,7 @@
 
         function deleteArticle(id) {
             $.ajax ({
-                type : "DELETE",
+                type : "POST",
                 url:`${apiUrl}/article/${id}`,
                 success : function(response) {
                     alert(response)
