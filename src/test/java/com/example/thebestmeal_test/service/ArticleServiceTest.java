@@ -18,7 +18,9 @@ import java.lang.reflect.Array;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -111,7 +113,7 @@ class ArticleServiceTest {
         ArticleType articleType = ArticleType.chat;
         ArticleDto articleDto = new ArticleDto(title, content, articleType);
         Article article = articleService.postArticle(articleDto, userDetails);
-
+        //댓글을 달 새로운 유저 생성
         String username = "testmokito2";
         SignupRequestDto signupRequest = new SignupRequestDto(username, "testmokito1", "test@test.com",false,"");
         userService.registerUser(signupRequest);
@@ -132,8 +134,30 @@ class ArticleServiceTest {
         for (Comment commentsss : savedComment) {
             Long id = commentsss.getArticle().getId();
             System.out.println(commentsss.getComment());
-            assertEquals("코멘트 생성 확인.", article.getId(), 33);
+            assertEquals("코멘트 생성 확인.", article.getId(), id);
         }
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("본인이 작성하지 않은 게시글 삭제")
+    void deleteArticle() throws Exception {
+        //given
+        ArticleType articleType = ArticleType.chat;
+        ArticleDto articleDto = new ArticleDto(title, content, articleType);
+        Article article = articleService.postArticle(articleDto, userDetails);
+
+        //게시글 삭제할 새로운 유저 생성
+        String username = "testmokito2";
+        SignupRequestDto signupRequest = new SignupRequestDto(username, "testmokito1", "test@test.com",false,"");
+        userService.registerUser(signupRequest);
+        User hacker = userRepository.findByUsername(username).orElseThrow(()->new NullPointerException("아이디 없네요"));
+        UserDetailsImpl userDetailsImpl2 = new UserDetailsImpl(hacker);
+
+        // then
+        String a = articleService.deleteArticle(article.getId(), userDetailsImpl2);
+        assertThat(a).contains("자신이 작성한 글만 삭제");
+
     }
 
 
