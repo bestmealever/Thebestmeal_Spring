@@ -253,11 +253,11 @@
 
         function deleteComment(id) {
             $.ajax ({
-                type : "DELETE",
+                type : "POST",
                 url:`${apiUrl}/article/comment/${id}`,
                 success : function(response) {
-                    alert("삭제 완료!")
-                    console.log(response)
+                    alert(response)
+                    location.reload();
                 }
             })
         }
