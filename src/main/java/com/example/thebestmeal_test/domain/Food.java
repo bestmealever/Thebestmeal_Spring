@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity
 public class Food extends Timestamped {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY))
     @Id
     private Long id;
 

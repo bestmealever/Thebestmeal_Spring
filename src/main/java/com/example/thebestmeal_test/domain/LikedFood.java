@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 public class LikedFood extends Timestamped{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
     @JsonIgnore
