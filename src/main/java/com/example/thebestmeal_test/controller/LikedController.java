@@ -32,15 +32,8 @@ public class LikedController {
     //liked의 기본값은 false 지만 해당 userId와 likedFood의 userId가 일치한다면, setLiked를 True라고 한다.
     @GetMapping("/liked")
     public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails != null) {
-            List<Food> foods =  foodRepository.findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus.Accepted);
-            for(Food food : foods){
-                if(food.getLikedFood().stream().filter( e-> e.getUser().getId().equals(userDetails.getUser().getId())).count() > 0 ){
-                    food.setLiked(true);
-                }
-            }
-            return foods;
-
+        if (userDetails != null) {
+            return foodRepository.findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(userDetails.getUser());
         } else {
             return foodRepository.findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus.Accepted);
         }
@@ -60,3 +53,16 @@ public class LikedController {
         return "좋아요를 취소하셨습니다";
     }
 }
+
+//    @GetMapping("/liked")
+//    public List<Food> getFoodList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        if(userDetails != null) {
+//            List<Food> foods =  foodRepository.findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus.Accepted);
+//            for(Food food : foods){
+//                if(food.getLikedFood().stream().filter( e-> e.getUser().getId().equals(userDetails.getUser().getId())).count() > 0 ){
+//                    food.setLiked(true);
+//                }
+//            }
+//            return foods;
+
+//        }

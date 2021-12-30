@@ -16,11 +16,14 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     Optional<Food> findByName(String name);
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
-    List<Food> findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus Accepted);
+    List<Food>findTop12ByLikedFoodIsNullOrLikedFoodUserOrderByCntDesc(User user);
 
     @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
     List<Food> findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
 
     List<Food> findAllByNameIn(List<String> name);
-
 }
+
+// LikedFood/Posting 연결 코드 (SQL 에러 발생)
+//    @EntityGraph(attributePaths = {"tags","likedFood","recommendeds", "posting"})
+//    List<Food> findTop12ByPostingIsNullOrPostingStatusIs(PostingStatus Accepted);
