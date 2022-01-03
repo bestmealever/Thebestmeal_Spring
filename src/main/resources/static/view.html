@@ -258,6 +258,12 @@
                 success : function(response) {
                     alert(response)
                     location.reload();
+
+                },
+                error : function (request) {
+                    if(request.status === 500) {
+                        alert("댓글을 삭제할 수 없습니다.")
+                    }
                 }
             })
         }

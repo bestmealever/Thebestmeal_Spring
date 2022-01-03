@@ -127,8 +127,10 @@ public class ArticleService {
         if (Objects.equals(commentUserId, userId)) {
             commentRepository.delete(comment);
             return "삭제 완료!";
+        } else if (!Objects.equals(commentUserId, userId)) {
+            return "자신이 작성한 댓글만 삭제 가능합니다.";
         }
-        return "자신이 작성한 댓글만 삭제 가능합니다.";
+        return "댓글을 삭제할 수 없습니다.";
     }
 
     public void vote(VoteDto voteDto) {
