@@ -22,5 +22,4 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findTop12ByPostingIsNullOrPostingStatusOrderByCntDesc(PostingStatus Accepted);
 
     List<Food> findAllByNameIn(List<String> name);
-
 }
