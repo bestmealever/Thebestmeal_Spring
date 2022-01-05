@@ -30,6 +30,11 @@ public class PostingService {
         // FoodImg (파일) foodImgUrl(스트링) 구분
         String foodImgUrl = awsService.uploadFoodImg(postDto.getFoodImg());
         // url과 함께 food 저장.
+        // 음식 추천 API 자체 중복 체크 예외 처리.
+        Optional<Food> found = foodRepository.findByName(postDto.getPostingFoodName());
+        if (found.isPresent()) {
+            throw new IllegalArgumentException("중복된 음식이 존재합니다.");
+        }
         Food food = new Food(postDto, foodImgUrl);
         foodRepository.save(food);
 

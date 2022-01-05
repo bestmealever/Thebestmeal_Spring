@@ -68,7 +68,7 @@ public class ArticleController {
         return articleService.deleteArticle(id, userDetails);
     }
 
-    @DeleteMapping("/article/comment/{id}")
+    @PostMapping("/article/comment/{id}")
     public String deleteComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
         return articleService.deleteComment(id, userDetails);
     }
