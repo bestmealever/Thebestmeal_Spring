@@ -42,6 +42,7 @@ public class Food extends Timestamped {
     @OneToMany(mappedBy= "food")
     private List<Recommended> recommendeds;
 
+    @JsonIgnore
     @OneToOne(mappedBy="food")
     @JoinColumn(nullable = false)
     private Posting posting;
