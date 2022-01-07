@@ -9,10 +9,14 @@ import java.util.List;
 
 public interface PostingRepository extends JpaRepository<Posting,Long> {
 
-//    @EntityGraph(attributePaths = {"tags","recommendeds","food","user","likedFood"})
-    List<Posting> findAllByUserId(Long id);
+// mypage 용도
+@EntityGraph(attributePaths = {"food", "user"})
+List<Posting> findAllByUserId(Long id);
 
-//    @EntityGraph(attributePaths = {"food","user"})
+//Unable to locate Attribute  with the the given name [likedFood] on this ManagedTyp
+// @EntityGraph(attributePaths = {"food", "user", "tags", "likedFood", "recommendeds"})
+// admin 용도
+//  @EntityGraph(attributePaths = {"food","user"})
     List<Posting> findAllByStatus(PostingStatus postingstatus);
 
 }

@@ -55,6 +55,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //토큰 생성
+    //reference: https://medium.com/swlh/spring-boot-security-jwt-hello-world-example-b479e457664c
     //1. 토큰에 대한 claims 정의
     // Define  claims of the token, like Issuer(발행자), Expiration(만료시간), Subject(제목), and the ID(아이디)
     //2. HS512 algorithm 과 secret key를 이용하여 jwt 를 사용하는 것에 서명.

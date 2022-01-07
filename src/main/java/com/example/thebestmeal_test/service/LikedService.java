@@ -21,6 +21,14 @@ public class LikedService {
     private final LikedFoodRepository likedFoodRepository;
     private final UserService userService;
 
+//    public LikedService(UserRepository userRepository, FoodRepository foodRepository, LikedFoodRepository likedFoodRepository, UserService userService) {
+//        this.userRepository = userRepository;
+//        this.foodRepository = foodRepository;
+//        this.likedFoodRepository = likedFoodRepository;
+//        this.userService = userService;
+//
+//    }
+
     @Transactional
     public Boolean liked(Long id, UserDetailsImpl userDetails) {
         Boolean response = likedFoodCheckd(id,userDetails);
