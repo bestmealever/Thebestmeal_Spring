@@ -27,7 +27,7 @@ public class StatusAlarmController {
 
     @GetMapping("/statusAlarms")
     public List<StatusAlarmDto.Response> getStatusAlarms() {
-//        int i = 1/0;
+        int i = 1/0; // (의도적인 에러 발생을 위한 임시 코드)
         List<StatusAlarm> statusAlarms = statusAlarmService.getStatusAlarms();
         List<StatusAlarmDto.Response> response = modelMapper.map(statusAlarms, new TypeToken<List<StatusAlarmDto.Response>>() {}.getType());
         return response;
