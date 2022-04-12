@@ -102,12 +102,4 @@ public class Article extends Timestamped {
         this.placeAddress = placeAddress;
         this.image = url;
     }
-
-    // Slack 상태 메세지 관련 생성자
-    public Article(ArticleDto.Request request, String url) {
-        this.title = request.getTitle();
-        this.content = request.getContent();
-        this.image = url;
-    }
-
 }

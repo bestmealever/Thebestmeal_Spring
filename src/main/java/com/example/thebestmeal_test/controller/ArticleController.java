@@ -92,17 +92,4 @@ public class ArticleController {
     public void vote(@RequestBody VoteDto voteDto) {
         articleService.vote(voteDto);
     }
-
-    // 상태관리 메세지
-    @PostMapping("/article/message")
-    public Article setArticle(ArticleDto.Request request) throws IOException {
-        return articleService.setArticle(request);
-    }
-
-    @GetMapping("/article/messages")
-    public List<ArticleDto.Response> getMessages() {
-        List<Article> articles = articleService.getArticle();
-        List<ArticleDto.Response> response = modelMapper.map(articles, new TypeToken<List<ArticleDto.Response>>() {}.getType());
-        return response;
-    }
 }
