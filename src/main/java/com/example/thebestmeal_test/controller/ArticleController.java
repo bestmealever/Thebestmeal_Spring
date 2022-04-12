@@ -11,6 +11,8 @@ import com.example.thebestmeal_test.repository.TagRepository;
 import com.example.thebestmeal_test.repository.VoteRepository;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +33,9 @@ public class ArticleController {
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
     private final VoteRepository voteRepository;
+    private final ModelMapper modelMapper;
+
+
 
     @PostMapping("/article")
     public ResponseEntity<Message> postArticle(ArticleDto articleDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
@@ -86,5 +91,18 @@ public class ArticleController {
     @PostMapping("/vote")
     public void vote(@RequestBody VoteDto voteDto) {
         articleService.vote(voteDto);
+    }
+
+    // 상태관리 메세지
+    @PostMapping("/article/message")
+    public Article setArticle(ArticleDto.Request request) throws IOException {
+        return articleService.setArticle(request);
+    }
+
+    @GetMapping("/article/messages")
+    public List<ArticleDto.Response> getMessages() {
+        List<Article> articles = articleService.getArticle();
+        List<ArticleDto.Response> response = modelMapper.map(articles, new TypeToken<List<ArticleDto.Response>>() {}.getType());
+        return response;
     }
 }

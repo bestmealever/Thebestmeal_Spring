@@ -40,6 +40,22 @@ public class ArticleDto {
         this.title = title;
         this.content = content;
         this.articleType = articleType;
+    }
 
+    // Slack 상태 메세지 전송을 위한 내부 클래스
+    @Getter
+    @Setter
+    public static class Request {
+        private String title;
+        private String content;
+        private MultipartFile image;
+    }
+
+    @Getter
+    @Setter
+    public static class Response {
+        private Long idx;
+        private String title;
+        private String imageUrl;
     }
 }

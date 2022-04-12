@@ -1,5 +1,6 @@
 package com.example.thebestmeal_test.domain;
 
+import com.example.thebestmeal_test.dto.ArticleDto;
 import com.example.thebestmeal_test.security.UserDetailsImpl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -99,6 +100,13 @@ public class Article extends Timestamped {
         this.placeName = placeName;
         this.placeUrl = placeUrl;
         this.placeAddress = placeAddress;
+        this.image = url;
+    }
+
+    // Slack 상태 메세지 관련 생성자
+    public Article(ArticleDto.Request request, String url) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
         this.image = url;
     }
 

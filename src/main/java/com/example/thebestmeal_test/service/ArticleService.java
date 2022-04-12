@@ -143,4 +143,23 @@ public class ArticleService {
         }
         voteRepository.save(vote);
     }
+
+    public Article setArticle(ArticleDto.Request request) throws IOException {
+        String url = null;
+        if(request.getImage() != null) url = awsService.upload(request.getImage());
+        Article article = new Article(request, url);
+        articleRepository.save(article);
+
+        return article;
+    }
+
+    public Article getArticle(Long id) {
+        return articleRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("해당 아이디가 존재하지 않습니다.")
+        );
+    }
+
+    public List<Article> getArticle() {
+        return articleRepository.findAll();
+    }
 }

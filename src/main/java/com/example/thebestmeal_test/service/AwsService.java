@@ -145,6 +145,43 @@ public class AwsService {
         }
     }
 
+    // Slack 상태 메세지를 위한 aws업로드 메소드
+    public String upload(MultipartFile uploadFile) throws IOException {
+        String origName = uploadFile.getOriginalFilename();
+        String url;
+        try {
+            String ext = origName.substring(origName.lastIndexOf('.'));
+            String saveFileName = getUuid() + ext;
 
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(uploadFile.getContentType());
+            objectMetadata.setContentLength(uploadFile.getBytes().length);
 
+            InputStream inputStream = uploadFile.getInputStream();
+            uploadOnS3(saveFileName, inputStream, objectMetadata);
+            url = s3Uri + saveFileName;
+        } catch (StringIndexOutOfBoundsException e) {
+            url = null;
+        }
+        return url;
+    }
+
+    private static String getUuid() {
+        return UUID.randomUUID().toString().replaceAll("-","");
+    }
+
+    private void uploadOnS3(String findName, InputStream inputStream, ObjectMetadata objectMetadata) {
+
+        TransferManager transferManager = TransferManagerBuilder.standard().withS3Client(amazonS3Client).build();
+        PutObjectRequest request = new PutObjectRequest(bucket, findName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead);
+        Upload upload = transferManager.upload(request);
+
+        try {
+            upload.waitForCompletion();
+        } catch (AmazonClientException amazonClientException) {
+            log.error(amazonClientException.getMessage());
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
+    }
 }
