@@ -96,8 +96,8 @@ public class UserApiController {
 
     //아이디 중복확인
     @PostMapping("/signup/idcheck")
-    public Boolean checkSameUsername(@RequestBody idCheckDto idDto) {
-        return userService.idCheck(idDto);
+    public boolean checkSameUsername(@RequestBody String username) {
+        return userService.idCheck(username);
     }
 
 

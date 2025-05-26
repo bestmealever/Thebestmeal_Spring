@@ -269,7 +269,7 @@
 
         function idCheck() {
             let username = $("#loginusername").val()
-            console.log(username)
+            //console.log(username)
             if (username == "") {
                 $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#loginusername").focus()
@@ -280,12 +280,14 @@
                 $("#loginusername").focus()
                 return;
             }
-            let info = {"username": $("#loginusername").val()};
+            //let info = {"username": $("#loginusername").val()};
+            // let info = {"username": username};
+            console.log(username);
             $.ajax({
                 type: "POST",
                 url: `${apiUrl}/signup/idcheck`,
                 contentType: "application/json",
-                data: JSON.stringify(info),
+                data: JSON.stringify(username),
                 success: function (response) {
                     if (response == true) {
                         alert("아이디 중복")

@@ -44,8 +44,7 @@ public class UserService {
     public void registerUser(SignupRequestDto requestDto) throws Exception {
         String username = requestDto.getUsername();
         // 회원 ID 중복 확인
-        Optional<User> found = userRepository.findByUsername(username);
-        if (found.isPresent()) {
+        if (idCheck(username)) {
             throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
         }
         String password = passwordEncoder.encode(requestDto.getPassword());
@@ -103,14 +102,10 @@ public class UserService {
     }
 
     //아이디 중복 확인
-    public Boolean idCheck(idCheckDto idDto) {
-        String username = idDto.getUsername();
-        Optional<User> found = userRepository.findByUsername(username);
-        Boolean response = found.isPresent();
-        return response;
+    public boolean idCheck(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
     }
-
-
 
     //마이페이지 상태 메세지 수정
     public void modifyStatusMessage(UserStatusModifyDto statusModifyDto, UserDetailsImpl userDetails) {
